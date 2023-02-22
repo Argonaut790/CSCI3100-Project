@@ -57,3 +57,11 @@ body {
 #icon {
     width: 5rem;
 }
+
+img {
+    width: 2.5rem;
+}
+
+.mr-1 {
+    margin: 0 0.5rem 0 0;
+}

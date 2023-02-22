@@ -12,6 +12,13 @@ body {
 
 #lhs {
     padding: 0;
+    position: fixed;
+    width: auto;
+}
+
+#rhs {
+    position: fixed;
+    width: 19rem;
 }
 
 #tweet {
@@ -52,6 +59,7 @@ body {
 
 #user {
     height: auto;
+    margin: 0 2rem 0 0;
 }
 
 #icon {
@@ -65,3 +73,25 @@ img {
 .mr-1 {
     margin: 0 0.5rem 0 0;
 }
+
+/* scrollbar */
+  /* width */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #6c757d;
+    border-radius: 100px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #1DA1F2
+  }

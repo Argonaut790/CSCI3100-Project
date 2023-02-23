@@ -42,10 +42,8 @@ body {
     border-width: 0 0 1px 0;
     border-color: gray;
     border-style: solid;
-}
-
-#nav {
-    height: 80%;
+    position: sticky;
+    top: 0;
 }
 
 #search-engine {
@@ -58,21 +56,17 @@ body {
     width: max(2rem,5vw);
 }
 
-#top-left {
-    height: 10%;
-}
-
 #user {
-    height: auto;
-    margin: 0 2rem 0 0;
+    position: absolute;
+    bottom: 0;
 }
 
 #icon {
-    width: 5rem;
+    width: 8rem;
 }
 
 img {
-    width: 2.5rem;
+    width: 2rem;
 }
 
 .mr-1 {
@@ -89,6 +83,10 @@ img {
 .post {
     padding: 1rem;
     margin: 3rem;
+}
+
+.h4 {
+    font-size: 1.3rem;
 }
 
 /* scrollbar */

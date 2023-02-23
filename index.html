@@ -11,50 +11,51 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="css/style.css"> 
     </head>
-    <body class="text-light bg-dark">
+    <body class="text-light">
         <div class="container px-4 vh-100">
             <div class="row gx-5 h-100">
-              <div class="col-md-3 bg-dark h-100" id="nav">
+              <div class="col-md-3 h-100" id="nav">
                 <!-- left side -->
                 <div class="container-fluid h-100" id="lhs">
                     <div class="row h3 head d-flex align-items-center" id="top-left">
                         <img src="./images/twittericon.png" id="icon" alt="icon">
                         Rettiwt
                     </div>
-                    <div class="row d-flex align-items-center" id="nav">
+                    <div class="row d-flex" id="nav">
                         <nav class="h4 nav flex-column">
                             <a class="nav-link" href="#">
-                                <img src="./images/home.png" class="mr-1">
+                                <img src="./images/home.png" class="mr-1 white-img">
                                 Home
                             </a>
                             <a class="nav-link" href="#">
-                                <img src="./images/explore.png" class="mr-1">
+                                <img src="./images/explore.png" class="mr-1 white-img">
                                 Explore
                             </a>
                             <a class="nav-link" href="#">
-                                <img src="./images/chat.png" class="mr-1">
+                                <img src="./images/chat.png" class="mr-1 white-img">
                                 Chat
                             </a>
                             <a class="nav-link" href="#">
-                                <img src="./images/user.png" class="mr-1">
+                                <img src="./images/user.png" class="mr-1 white-img">
                                 Profile
                             </a>
                             <a class="nav-link h5 text-center" id="tweet" href="#">Tweet</a>
                         </nav>
                     </div>
                     <div class="row h4 d-flex align-items-md-center" id="user">
-                            <img src="./images/avatar.png" class="rounded float-start" id="avatar" alt="avatar">
+                            <img src="./images/avatar.png" class="rounded float-start white-img" id="avatar" alt="avatar">
                             Username #ID
                     </div>
                 </div>
               </div>
-              <div class="col-md-6 bg-dark" id="content">
+              <div class="col-md-6" id="content">
                 <div class="container-fluid" id="top-mid">
                     <!-- middle part -->
                     <div class="row">                
                         <div class="p-3 h3 head d-flex align-items-center">Home</div>
                     </div>
-                </div>      
+                </div>
+                <div class="row mask post">
                 <div class="h1 text-break">
                     ............................................................................................................................
                     ............................................................................................................................
@@ -70,13 +71,15 @@
                     ............................................................................................................................
                     ............................................................................................................................
                     ............................................................................................................................
-                </div>  
+                </div>
+                </div> 
               </div>
-              <div class="col-md-3 bg-dark" id="explore">
+              <div class="col-md-3" id="explore">
                 <!-- right side -->
                 <div class="container-fluid h-100 p-0" id="rhs">
                     <div class="row form-floating" id="search-engine-div">
                         <input class="form-control text-light" id="search-engine" placeholder="Search Tags">
+                        <img src="images/search.png" class="white-img">
                         <label for="search-engine" class="d-flex align-items-md-center">Search Twitter</label>
                     </div>
                 </div>

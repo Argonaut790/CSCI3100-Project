@@ -12,13 +12,13 @@
         <link rel="stylesheet" type="text/css" href="css/style.css"> 
     </head>
     <body class="text-light">
-        <div class="container px-4 vh-100">
+        <div class="container px-4 h-100">
             <div class="row gx-5 h-100">
-              <div class="col-md-3 h-100" id="nav">
+              <div class="col-md vh-100" id="nav">
                 <!-- left side -->
                 <div class="container-fluid h-100" id="lhs">
                     <div class="row h3 head d-flex align-items-center" id="top-left">
-                        <img src="./images/twittericon.png" id="icon" alt="icon">
+                        <img src="./images/twittericon.png" class="mr-1 white-img" id="icon" alt="icon">
                         Rettiwt
                     </div>
                     <div class="row d-flex" id="nav">
@@ -49,10 +49,14 @@
                 </div>
               </div>
               <div class="col-md-6" id="content">
-                <div class="container-fluid" id="top-mid">
+                <div class="container-fluid top-p-1" id="top-mid">
                     <!-- middle part -->
                     <div class="row">                
-                        <div class="p-3 h3 head d-flex align-items-center">Home</div>
+                        <div class="h3 head d-flex">Home</div>
+                    </div>
+                    <div class="row">                
+                        <div class="col h4 head text-center" id="you">You</div>
+                        <div class="col h4 head text-center" id="">Following</div>
                     </div>
                 </div>
                 <div class="row mask post">
@@ -74,13 +78,17 @@
                 </div>
                 </div> 
               </div>
-              <div class="col-md-3" id="explore">
+              <div class="col-md vh-100" id="explore">
                 <!-- right side -->
                 <div class="container-fluid h-100 p-0" id="rhs">
-                    <div class="row form-floating" id="search-engine-div">
-                        <input class="form-control text-light" id="search-engine" placeholder="Search Tags">
-                        <img src="images/search.png" class="white-img">
-                        <label for="search-engine" class="d-flex align-items-md-center">Search Twitter</label>
+                    <div >
+                        <div class="form-floating" id="search-engine-div">
+                            <input class="form-control text-light" id="search-engine" placeholder="Search Tags">
+                            <label for="search-engine" class="d-flex align-items-md-center">
+                                <img src="./images/search.png" class="white-img" id="search-icon">
+                                Search Twitter
+                            </label>
+                        </div>
                     </div>
                 </div>
               </div>

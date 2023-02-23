@@ -13,20 +13,24 @@ body {
 
 #lhs {
     padding: 0;
-    position: fixed;
     width: auto;
 }
 
-#rhs {
-    position: fixed;
-    width: 19rem;
+#explore {
+    position: sticky;
+    top: 0;
 }
 
 #tweet {
-    background-color: #1DA1F2;
+    background-color: #c844ff;
     margin: 1rem;
-    border-radius: 50px;
+    border-radius: 20px;
     padding: 0.7rem;
+}
+
+#nav{
+    position: sticky;
+    top: 0;
 }
 
 .nav-link {
@@ -36,6 +40,10 @@ body {
 
 .white-img {
     filter: brightness(0) invert(1);
+}
+
+#top-left {
+    margin: 3rem 0;
 }
 
 #top-mid {
@@ -48,21 +56,27 @@ body {
 
 #search-engine {
     background-color: black;
-    margin: 1rem 0;
-    border-radius: 50px;
+    margin: 2rem 0;
+    border-radius: 20px;
+    height: 3rem;
 }
 
-#avatar {
-    width: max(2rem,5vw);
+#search-icon {
+    width: 1.3rem;
+    margin: 0 0.4rem;
 }
 
 #user {
     position: absolute;
-    bottom: 0;
+    bottom: 1rem;
 }
 
 #icon {
-    width: 8rem;
+    width: 5rem!important;
+}
+
+#avatar {
+    width: 5rem!important;
 }
 
 img {
@@ -89,6 +103,16 @@ img {
     font-size: 1.3rem;
 }
 
+.top-p-1 {
+    padding: 1rem 1rem 0rem 1rem;
+}
+
+#you {
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-right-color: gray;
+}
+
 /* scrollbar */
   /* width */
   ::-webkit-scrollbar {
@@ -103,10 +127,10 @@ img {
   /* Handle */
   ::-webkit-scrollbar-thumb {
     background: #6c757d;
-    border-radius: 100px;
+    border-radius: 20px;
   }
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #1DA1F2
+    background: #c844ff
   }

@@ -26,6 +26,7 @@ body {
     margin: 1rem;
     border-radius: 20px;
     padding: 0.7rem;
+    width: auto;
 }
 
 #nav{
@@ -36,6 +37,7 @@ body {
 .nav-link {
     color: white;
     padding: 1rem;
+    border-radius: 20px;
 }
 
 .white-img {
@@ -52,6 +54,7 @@ body {
     border-style: solid;
     position: sticky;
     top: 0;
+    background-color: black;
 }
 
 #search-engine {
@@ -59,6 +62,8 @@ body {
     margin: 2rem 0;
     border-radius: 20px;
     height: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 #search-icon {
@@ -87,16 +92,14 @@ img {
     margin: 0 0.5rem 0 0;
 }
 
+.post {
+    padding: 2rem 1rem
+}
+
 .mask {
     background-color: #5e5e5e3d;
     border-radius: 20px;
-    height: 95%;
-    margin: 0 2% 0 2%;
-}
-
-.post {
-    padding: 1rem;
-    margin: 3rem;
+    width: 90%;
 }
 
 .h4 {
@@ -113,6 +116,11 @@ img {
     border-right-color: gray;
 }
 
+.nav-link:focus, .nav-link:hover {
+    color: #ffffff;
+    background-color: #c844ff2e;
+    font-weight: bold;
+}
 /* scrollbar */
   /* width */
   ::-webkit-scrollbar {

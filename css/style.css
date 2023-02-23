@@ -50,7 +50,7 @@ body {
 }
 
 #avatar {
-    width: 6rem;
+    width: max(2rem,5vw);
 }
 
 #top-left {

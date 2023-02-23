@@ -1,5 +1,6 @@
 body {
     position: relative;
+    background-color: black;
     font-family: roboto;
 }
 
@@ -31,6 +32,10 @@ body {
 .nav-link {
     color: white;
     padding: 1rem;
+}
+
+.white-img {
+    filter: brightness(0) invert(1);
 }
 
 #top-mid {
@@ -72,6 +77,18 @@ img {
 
 .mr-1 {
     margin: 0 0.5rem 0 0;
+}
+
+.mask {
+    background-color: #5e5e5e3d;
+    border-radius: 20px;
+    height: 95%;
+    margin: 0 2% 0 2%;
+}
+
+.post {
+    padding: 1rem;
+    margin: 3rem;
 }
 
 /* scrollbar */

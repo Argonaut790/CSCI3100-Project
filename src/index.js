@@ -1,10 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
 
-import Lhs from './components/lhs'
-import Middle from './components/middle'
-import Rhs from './components/rhs'
+import Lhs from "./components/Lhs";
+import Middle from "./components/Middle";
+import Rhs from "./components/Rhs";
 
 const reactContentRoot = document.getElementById("root");
 const reactContentLHS = document.getElementById("lhs");
@@ -22,4 +22,3 @@ rightPart.render(<Rhs />);
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-

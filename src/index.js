@@ -6,14 +6,9 @@ import Lhs from "./components/Lhs";
 import Middle from "./components/Middle";
 import Rhs from "./components/Rhs";
 
-const reactContentRoot = document.getElementById("root");
-const reactContentLHS = document.getElementById("lhs");
-const reactContentMiddle = document.getElementById("content");
-const reactContentRHS = document.getElementById("rhs");
-
-const leftPart = ReactDOM.createRoot(reactContentLHS);
-const middlePart = ReactDOM.createRoot(reactContentMiddle);
-const rightPart = ReactDOM.createRoot(reactContentRHS);
+const leftPart = ReactDOM.createRoot(document.getElementById("lhs"));
+const middlePart = ReactDOM.createRoot(document.getElementById("content"));
+const rightPart = ReactDOM.createRoot(document.getElementById("rhs"));
 
 leftPart.render(<Lhs />);
 middlePart.render(<Middle />);

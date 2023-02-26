@@ -56,6 +56,7 @@ body {
   position: sticky;
   top: 0;
   background-color: black;
+  z-index: 1;
 }
 
 #search-engine {
@@ -87,20 +88,59 @@ body {
 
 img {
   width: 2rem;
+  image-rendering: smooth;
 }
 
 .mr-1 {
   margin: 0 0.5rem 0 0;
 }
 
+#post-list {
+  width: 100%;
+  margin: 0;
+}
+
 .post {
-  padding: 2rem 1rem;
+  margin: 4%;
+}
+
+.post-user-info {
+  height: 2.8rem;
+}
+
+.post-user-avatar {
+  margin: 0 0.5rem 0 0;
+  height: 100%;
+  width: auto;
+}
+
+.post-user-id {
+  flex-direction: column;
+  align-items: unset !important;
+}
+
+.post-image-div {
+  width: 100%;
+  border-style: solid;
+  border-color: gray;
+  border-width: 2px;
+  margin: 1rem 0;
+}
+
+.post-image {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: center;
 }
 
 .mask {
   background-color: #5e5e5e3d;
   border-radius: 20px;
   width: 90%;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  margin: 1.5rem 0;
 }
 
 .h4 {
@@ -171,6 +211,7 @@ img {
   }
   #mid-center {
     margin: 0 0 10vh 0;
+    overflow: hidden;
   }
   #search-engine-div {
     display: none;

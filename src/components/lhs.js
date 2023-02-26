@@ -16,10 +16,10 @@ const images = ImportAll(
 
 const TopLeft = () => {
   return (
-    <div class="row h3 head d-flex align-items-center" id="top-left">
+    <div className="row h3 head d-flex align-items-center" id="top-left">
       <img
         src={images["twittericon.png"]}
-        class="mr-1 white-img"
+        className="mr-1 white-img"
         id="icon"
         alt="icon"
       />
@@ -30,25 +30,25 @@ const TopLeft = () => {
 
 const Navbar = () => {
   return (
-    <div class="row d-flex" id="nav">
-      <nav class="h4 nav flex-column">
-        <a class="nav-link" href="#">
-          <img src={images["home.png"]} class="mr-1 white-img" />
-          Home
+    <div className="row d-flex" id="nav">
+      <nav className="h4 nav flex-column">
+        <a className="nav-link" href="#">
+          <img src={images["home.png"]} className="mr-1 white-img" />
+          <span>Home</span>
         </a>
-        <a class="nav-link" href="#">
-          <img src={images["explore.png"]} class="mr-1 white-img" />
-          Explore
+        <a className="nav-link" href="#">
+          <img src={images["explore.png"]} className="mr-1 white-img" />
+          <span>Explore</span>
         </a>
-        <a class="nav-link" href="#">
-          <img src={images["chat.png"]} class="mr-1 white-img" />
-          Chat
+        <a className="nav-link" href="#">
+          <img src={images["chat.png"]} className="mr-1 white-img" />
+          <span>Chat</span>
         </a>
-        <a class="nav-link" href="#">
-          <img src={images["user.png"]} class="mr-1 white-img" />
-          Profile
+        <a className="nav-link" href="#">
+          <img src={images["user.png"]} className="mr-1 white-img" />
+          <span>Profile</span>
         </a>
-        <a class="nav-link h5 text-center" id="tweet" href="#">
+        <a className="nav-link h5 text-center" id="tweet" href="#">
           Tweet
         </a>
       </nav>
@@ -58,10 +58,10 @@ const Navbar = () => {
 
 const User = () => {
   return (
-    <div class="row h4 d-flex align-items-md-center" id="user">
+    <div className="row h4 d-flex align-items-md-center" id="user">
       <img
         src={images["avatar.png"]}
-        class="rounded float-start white-img"
+        className="rounded float-start white-img"
         id="avatar"
         alt="avatar"
       />

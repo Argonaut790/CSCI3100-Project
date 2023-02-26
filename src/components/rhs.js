@@ -15,16 +15,16 @@ const images = ImportAll(
 const Searchbar = () => {
   return (
     <div>
-      <div class="form-floating" id="search-engine-div">
+      <div className="form-floating" id="search-engine-div">
         <input
-          class="form-control text-light"
+          className="form-control text-light"
           id="search-engine"
           placeholder="Search Tags"
         />
-        <label for="search-engine" class="d-flex align-items-md-center">
+        <label htmlFor="search-engine" className="d-flex align-items-md-center">
           <img
             src={images["search.png"]}
-            class="white-img"
+            className="white-img"
             id="search-icon"
             alt=" "
           />

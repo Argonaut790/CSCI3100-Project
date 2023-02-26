@@ -60,8 +60,8 @@ const User = () => {
   return (
     <div className="row h4 d-flex align-items-md-center" id="user">
       <img
-        src={images["avatar.png"]}
-        className="rounded float-start white-img"
+        src={images["user_avatar.jpg"]}
+        className="float-start"
         id="avatar"
         alt="avatar"
       />

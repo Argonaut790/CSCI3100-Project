@@ -20,12 +20,12 @@ const UserID = () => {
   return (
     <div className="post-user-info">
       <img
-        src={images["avatar.png"]}
-        className="rounded float-start white-img post-user-avatar"
+        src={images["user_avatar.jpg"]}
+        className="float-start post-user-avatar"
         alt="user-avatar"
       />
       <div className="d-flex align-items-md-center h-100 m-0 post-user-id">
-        <div>UserName</div>
+        <div class="fw-bold">UserName</div>
         <div>#UserID</div>
       </div>
     </div>

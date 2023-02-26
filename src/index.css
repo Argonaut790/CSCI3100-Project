@@ -144,3 +144,65 @@ img {
 ::-webkit-scrollbar-thumb:hover {
   background: #c844ff;
 }
+
+@media (max-width: 767px) {
+  #nav {
+    height: 0 !important;
+  }
+  #nav .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    justify-content: space-around;
+    flex-direction: row !important;
+    background-color: black;
+    border-top-style: solid;
+    border-top-color: #c844ff;
+    border-top-width: 1px;
+  }
+
+  #explore {
+    height: 0 !important;
+  }
+
+  #content {
+    border-style: none;
+  }
+  #mid-center {
+    margin: 0 0 10vh 0;
+  }
+  #search-engine-div {
+    display: none;
+  }
+
+  #nav .a {
+    display: inline-block;
+    margin-right: 1rem;
+  }
+
+  #nav img {
+    display: block;
+    margin: 0;
+  }
+
+  #nav span {
+    display: none;
+  }
+
+  #tweet {
+    display: none !important;
+  }
+
+  #user {
+    display: none !important;
+  }
+
+  #top-left {
+    display: none !important;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}

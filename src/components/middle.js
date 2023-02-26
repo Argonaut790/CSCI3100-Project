@@ -10,15 +10,15 @@ const Middle = () => {
 
 const TopMid = () => {
   return (
-    <div class="container-fluid top-p-1" id="top-mid">
-      <div class="row">
-        <div class="h3 head d-flex">Home</div>
+    <div className="container-fluid top-p-1" id="top-mid">
+      <div className="row">
+        <div className="h3 head d-flex">Home</div>
       </div>
-      <div class="row">
-        <div class="col h4 head text-center" id="you">
+      <div className="row">
+        <div className="col h4 head text-center" id="you">
           You
         </div>
-        <div class="col h4 head text-center" id="">
+        <div className="col h4 head text-center" id="">
           Following
         </div>
       </div>
@@ -28,10 +28,10 @@ const TopMid = () => {
 
 const Content = () => {
   return (
-    <div class="container-fluid top-p-1">
-      <div class="row d-flex justify-content-center post">
-        <div class="mask">
-          <div class="h1 text-break">
+    <div className="container-fluid top-p-1" id="mid-center">
+      <div className="row d-flex justify-content-center post">
+        <div className="mask">
+          <div className="h1 text-break">
             ............................................................................................................................
             ............................................................................................................................
             ............................................................................................................................

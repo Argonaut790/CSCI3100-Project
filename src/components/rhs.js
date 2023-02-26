@@ -1,3 +1,4 @@
+import ImportAll from "./ImportAll";
 //function needs to be Capital Letter in the first
 const Rhs = () => {
   return (
@@ -6,6 +7,10 @@ const Rhs = () => {
     </>
   );
 };
+
+const images = ImportAll(
+  require.context("../images", false, /\.(png|jpe?g|svg)$/)
+);
 
 const Searchbar = () => {
   return (
@@ -18,7 +23,7 @@ const Searchbar = () => {
         />
         <label for="search-engine" class="d-flex align-items-md-center">
           <img
-            src="%PUBLIC_URL%/images/search.png"
+            src={images["search.png"]}
             class="white-img"
             id="search-icon"
             alt=" "

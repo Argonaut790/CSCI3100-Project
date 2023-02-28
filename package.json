@@ -1,0 +1,23 @@
+{
+  "name": "csci3100-project",
+  "version": "1.0.0",
+  "description": "Project Title : Rettiwt",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"cd backend && nodemon server.js\" \"cd frontend && npm start\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Argonaut790/CSCI3100-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Argonaut790/CSCI3100-Project/issues"
+  },
+  "homepage": "https://github.com/Argonaut790/CSCI3100-Project#readme",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

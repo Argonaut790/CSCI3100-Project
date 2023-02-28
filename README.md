@@ -32,6 +32,10 @@ In the project directory, you can run:
 
 Run in both 'backend' and 'frontend' folder to install required node_modules before running the app
 
+### `npm run dev`
+
+Run in root folder, it will run both `nodemon server.js` and `npm start` for developer (for development only)
+
 ### `nodemon server.js` / `node server.js`
 
 Run in 'backend' folder to start the backend server

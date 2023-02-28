@@ -32,23 +32,23 @@ const Navbar = () => {
   return (
     <div className="row d-flex" id="nav">
       <nav className="h4 nav flex-column">
-        <a className="nav-link" href="#">
+        <a className="nav-link mask" href="#">
           <img src={images["home.png"]} className="mr-1 white-img" />
           <span>Home</span>
         </a>
-        <a className="nav-link" href="#">
+        <a className="nav-link mask" href="#">
           <img src={images["explore.png"]} className="mr-1 white-img" />
           <span>Explore</span>
         </a>
-        <a className="nav-link" href="#">
+        <a className="nav-link mask" href="#">
           <img src={images["chat.png"]} className="mr-1 white-img" />
           <span>Chat</span>
         </a>
-        <a className="nav-link" href="#">
+        <a className="nav-link mask" href="#">
           <img src={images["user.png"]} className="mr-1 white-img" />
           <span>Profile</span>
         </a>
-        <a className="nav-link h5 text-center" id="tweet" href="#">
+        <a className="nav-link h5 text-center mask" id="tweet" href="#">
           Tweet
         </a>
       </nav>

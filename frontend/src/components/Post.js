@@ -6,7 +6,7 @@ const images = ImportAll(
 
 const Post = () => {
   return (
-    <div className="mask p-0">
+    <div className="mask-post p-0">
       <div className="text-break post">
         <UserID />
         <PostImage />
@@ -36,7 +36,7 @@ const PostImage = () => {
   return (
     <div className="post-image-div">
       <img
-        src={images["postIMG.png"]}
+        src={images["postIMG.jpg"]}
         className="post-image"
         alt="post-image"
       />

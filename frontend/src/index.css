@@ -66,7 +66,7 @@ body {
 }
 
 #search-engine {
-  background-color: black;
+  background-color: #000000cc;
   margin: 2rem 0;
   border-radius: 20px;
   height: 3rem;
@@ -142,17 +142,17 @@ img {
 
 .post-image-div {
   width: 100%;
-  border-style: solid;
-  border-color: gray;
-  border-width: 2px;
   margin: 1rem 0;
+  display: flex;
+  justify-content: center;
 }
 
 .post-image {
-  width: 100%;
+  width: 95%;
   aspect-ratio: 1/1;
   object-fit: cover;
   object-position: center;
+  border-radius: 6px;
 }
 
 .mask {
@@ -163,7 +163,7 @@ img {
 }
 
 .mask-post {
-  background-color: #5e5e5e3d;
+  background-color: #0000009e;
   border-radius: 20px;
   width: 90%;
   aspect-ratio: 3/4;

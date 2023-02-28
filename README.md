@@ -2,21 +2,21 @@
 
 Project Title : Rettiwt
 
-Group ID :  E3
+Group ID : E3
 
-Group Members :  
+Group Members :
 
-TSE Hui Tung, 1155158864 
+TSE Hui Tung, 1155158864
 
-CHEUNG Kwong Tai, 1155142517 
+CHEUNG Kwong Tai, 1155142517
 
-NG Man Tik, 1155158302 
+NG Man Tik, 1155158302
 
-TAI Long Kwan, 1155152117 
+TAI Long Kwan, 1155152117
 
-LAI Chuen Fung, 1155144433 
+LAI Chuen Fung, 1155144433
 
-Department : Department of Computer Science and Engineering 
+Department : Department of Computer Science and Engineering
 
 University : The Chinese University of Hong Kong
 
@@ -28,9 +28,23 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `npm install`
+
+Run in both 'backend' and 'frontend' folder to install required node_modules before running the app
+
+### `npm run dev`
+
+Run in root folder, it will run both `nodemon server.js` and `npm start` for developer (for development only)
+
+### `nodemon server.js` / `node server.js`
+
+Run in 'backend' folder to start the backend server
+"connected to database" will be logged in the console if the backend starts successfully
+nodemon is recommended to use in development, it tracks every file change and restart the backend server for you
+
 ### `npm start`
 
-Runs the app in the development mode.\
+Run in 'frontend' foler to run the react app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\

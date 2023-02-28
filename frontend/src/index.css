@@ -4,11 +4,16 @@ body {
   font-family: roboto;
 }
 
+#root {
+  height: 100vh;
+  position: fixed;
+  overflow-y: scroll;
+}
+
 #content {
-  border-style: solid;
-  border-width: 0px 1px;
-  border-color: gray;
   padding: 0;
+  background-color: #000000cc;
+  box-shadow: 0 0rem 1rem rgba(0, 0, 0, 1);
 }
 
 #lhs {
@@ -94,6 +99,7 @@ body {
   border-radius: 40px;
   padding: 0;
   margin-right: 1rem;
+  box-shadow: 0.2rem 0.2rem 0.7rem rgb(0 0 0 / 55%);
 }
 
 img {
@@ -108,6 +114,7 @@ img {
 #post-list {
   width: 100%;
   margin: 0;
+  overflow-y: hidden;
 }
 
 .post {
@@ -149,6 +156,13 @@ img {
 }
 
 .mask {
+  background-color: #5e5e5e3d;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0.2rem 0.2rem 0.7rem rgb(0 0 0 / 55%);
+}
+
+.mask-post {
   background-color: #5e5e5e3d;
   border-radius: 20px;
   width: 90%;
@@ -222,6 +236,7 @@ img {
 
   #content {
     border-style: none;
+    background-color: #0000004d;
   }
   #mid-center {
     margin: 0 0 10vh 0;
@@ -260,4 +275,17 @@ img {
   ::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* curve */
+.spacer {
+  aspect-ratio: 900/600;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: cover;
+}
+
+.layer1 {
+  background-image: url("./images/stacked-waves-haikei.svg");
 }

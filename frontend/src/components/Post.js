@@ -6,7 +6,7 @@ const images = ImportAll(
 
 const Post = () => {
   return (
-    <div className="mask p-0">
+    <div className="mask-post p-0">
       <div className="text-break post">
         <UserID />
         <PostImage />

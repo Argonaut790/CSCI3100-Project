@@ -1,7 +1,7 @@
 import ImportAll from "./ImportAll";
 
 const images = ImportAll(
-  require.context("../images", false, /\.(png|jpe?g|svg|JPE?G)$/)
+  require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
 const Post = () => {
@@ -36,7 +36,7 @@ const PostImage = () => {
   return (
     <div className="post-image-div">
       <img
-        src={images["postIMG.JPEG"]}
+        src={images["postIMG.jpg"]}
         className="post-image"
         alt="post-image"
       />

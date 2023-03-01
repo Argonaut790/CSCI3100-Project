@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import ImportAll from "./ImportAll";
 //function needs to be Capital Letter in the first
 const Lhs = () => {
@@ -29,26 +30,32 @@ const TopLeft = () => {
 };
 
 const Navbar = () => {
+  useEffect(() => {
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.classList.add("visible");
+    });
+  }, []);
+  
   return (
     <div className="row d-flex" id="nav">
       <nav className="h4 nav flex-column">
-        <a className="nav-link mask" href="#">
+        <a className="nav-link mask delay-0" href="#">
           <img src={images["home.png"]} className="mr-1 white-img" />
           <span>Home</span>
         </a>
-        <a className="nav-link mask" href="#">
+        <a className="nav-link mask delay-1" href="#">
           <img src={images["explore.png"]} className="mr-1 white-img" />
           <span>Explore</span>
         </a>
-        <a className="nav-link mask" href="#">
+        <a className="nav-link mask delay-2" href="#">
           <img src={images["chat.png"]} className="mr-1 white-img" />
           <span>Chat</span>
         </a>
-        <a className="nav-link mask" href="#">
+        <a className="nav-link mask delay-3" href="#">
           <img src={images["user.png"]} className="mr-1 white-img" />
           <span>Profile</span>
         </a>
-        <a className="nav-link h5 text-center mask" id="tweet" href="#">
+        <a className="nav-link h5 text-center mask delay-4" id="tweet" href="#">
           Tweet
         </a>
       </nav>

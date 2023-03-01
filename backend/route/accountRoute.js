@@ -1,30 +1,120 @@
+require("dotenv").config();
 const express = require("express");
-const Account = require("../model/account");
+const Account = require("./model/accounts");
 const router = express.Router();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const getConfirmationCode = require("./confirmationCode");
+const sendConfirmationEmail = require("./emailVerify");
+
+// Login
+router.post("/login", async (req, res) => {
+  const account = new Account({
+    username: req.body.username,
+    password: req.body.password,
+    email: req.body.email,
+  });
+
+  const user = await Account.find({ username: req.body.username });
+  const count = await Account.find({
+    username: req.body.username,
+    email: req.body.email,
+  }).count({ sent_at: null });
+
+  if (count != 1) {
+    res.status(400).send("wrong username / email");
+  } else {
+    user.forEach(async (e) => {
+      if (
+        (await bcrypt.compare(req.body.password, e.password)) &&
+        e.account == true
+      ) {
+        if (e.confirmed == false) {
+          res
+            .status(401)
+            .send("Your account is not verified, Please check your email.");
+        } else {
+          const accessToken = generateAccessToken(e.email);
+          const refreshToken = jwt.sign(e.email, process.env.REFRESH_TOEKN);
+          refreshTokens.push(refreshToken);
+          res
+            .status(200)
+            .json({ accessToken: accessToken, refreshToken: refreshToken });
+        }
+      } else if (e.account == false) {
+        res
+          .status(401)
+          .send(
+            "Your account is deactivated. Please contact the site administrator in admin@rettiwt.com"
+          );
+      } else {
+        res.status(404).send();
+      }
+    });
+  }
+});
 
 // Sign up
 router.post("/", async (req, res) => {
   const user = await Account.find({ email: req.body.email }).count({
     sent_at: null,
   });
+  if (user) {
+    return res.status(400).json("email exists");
+  }
+
+  // Encrypt user password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+  // Generate confirmation code
+  const token = getConfirmationCode();
 
   const account = new Account({
     username: req.body.username,
-    password: req.body.password,
+    password: hashedPassword,
     email: req.body.email,
-    confirmationCode: "",
+    confirmationCode: token,
   });
 
   try {
-    if (user === 0) {
-      const saveduser = await account.save();
-      res.status(200).json(saveduser);
-    } else {
-      res.status(404).send("existed");
-    }
+    const saveduser = await account.save();
+    sendConfirmationEmail(req.body.username, req.body.email, token);
+    res.status(200).json(saveduser);
   } catch (err) {
     res.json({ message: err });
   }
 });
+
+// Confirm account
+router.patch("/auth/:confirmationCode", async (req, res) => {
+  const user = await Account.find({
+    confirmationCode: req.params.confirmationCode,
+  });
+  if (!user) {
+    return res.status(404).send("not existed");
+  }
+  const updatedAccount = await Account.updateOne(
+    { confirmationCode: req.params.confirmationCode },
+    { $set: { confirmed: true } }
+  );
+  res.status(200).json(updatedAccount);
+});
+
+// Get all the users
+router.get("/", async (req, res) => {
+  try {
+    const list = await Account.find();
+    res.json(list);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
+
+function generateAccessToken(email) {
+  return jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "1 day",
+  });
+}
 
 module.exports = router;

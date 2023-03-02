@@ -101,6 +101,30 @@ router.patch("/auth/:confirmationCode", async (req, res) => {
   res.status(200).json(updatedAccount);
 });
 
+// Update password of a user
+router.patch("/:email", async (req, res) => {
+  try {
+    const user = await Account.find({
+      username: req.body.username,
+      email: req.params.email,
+    }).count({ sent_at: null });
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    if (user > 0) {
+      const updatedAccount = await Account.updateMany(
+        { email: req.params.email },
+        { $set: { password: hashedPassword } }
+      );
+
+      res.status(200).json(updatedAccount);
+    } else {
+      res.status(404).send("not existed");
+    }
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
 // Get all the users
 router.get("/", async (req, res) => {
   try {
@@ -111,6 +135,37 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get a user profile
+router.get("/:email", async (req, res) => {
+  try {
+    const user = await Account.find({
+      email: req.params.email,
+    });
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+let refreshTokens = [];
+
+router.post("/token", (req, res) => {
+  const refreshToken = req.body.token;
+  if (refreshToken == null) return res.sendStatus(401);
+  if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
+  jwt.verify(refreshToken, process.env.REFRESH_TOEKN, (err, user) => {
+    if (err) return res.sendStatus(403);
+    const accessToken = generateAccessToken({ username: user });
+    res.json({ accessToken: accessToken });
+  });
+});
+
+router.delete("/login", async (req, res) => {
+  refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
+  res.sendStatus(204);
+});
+
+// Generate JWT
 function generateAccessToken(email) {
   return jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "1 day",

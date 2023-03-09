@@ -1,4 +1,5 @@
 import ImportAll from "./ImportAll";
+import Test from "./Test";
 //function needs to be Capital Letter in the first
 const Rhs = () => {
   return (
@@ -32,28 +33,6 @@ const Searchbar = () => {
           Search Twitter
         </label>
       </div>
-    </div>
-  );
-};
-
-const Test = () => {
-  return (
-    <div>
-      <form>
-        <label>
-          Email:
-          <input type="email" name="email" required />
-        </label>
-        <label>
-          Username:
-          <input type="text" name="username" required />
-        </label>
-        <label>
-          Password:
-          <input type="password" name="password" required />
-        </label>
-        <button type="submit">Create Account</button>
-      </form>
     </div>
   );
 };

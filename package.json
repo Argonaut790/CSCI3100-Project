@@ -19,5 +19,8 @@
   "homepage": "https://github.com/Argonaut790/CSCI3100-Project#readme",
   "devDependencies": {
     "concurrently": "^7.6.0"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.21"
   }
 }

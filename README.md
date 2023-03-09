@@ -30,7 +30,7 @@ In the project directory, you can run:
 
 ### `npm install`
 
-Run in both 'backend' and 'frontend' folder to install required node_modules before running the app
+Run in './', './backend' and './frontend' folder to install required node_modules before running the app
 
 ### `npm run dev`
 

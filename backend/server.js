@@ -23,26 +23,9 @@ const accountRoute = require("./accountRoute");
 app.use("/account", accountRoute);
 
 //test data passing to database
-require("./model/test")
-
-const testModel = mongoose.model("UserInfo");
-console.log(testModel);
-
-app.post("/test", async(req,res)=> {
-    const {username, email, password} = req.body;
-    const data = {username, email, password};
-    console.log(`data = ${username}`);
-    try {
-        //create Object in db
-        await testModel.insertMany([data]);
-        res.send({status: "Object created successfully"});
-        console.log("Data inserted successfully");
-    }catch (error) {
-        res.send({status: "Test failed successfully"});
-        console.log(error)
-    }
-})
+const testRoute = require("./testRoute");
+app.use("/test", testRoute);
 
 app.listen(PORT, () => {
-    console.log(`Server is running on ${PORT}`);
+  console.log(`Server is running on ${PORT}`);
 });

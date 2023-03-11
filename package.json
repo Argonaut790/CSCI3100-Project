@@ -22,5 +22,9 @@
   },
   "dependencies": {
     "nodemon": "^2.0.21"
-  }
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
 }

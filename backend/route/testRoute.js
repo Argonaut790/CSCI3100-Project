@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-require("./model/test");
+require("../model/test");
 
-const TestModel = mongoose.model("UserInfo");
+const TestModel = mongoose.model("testinfos");
 
 router.post("/", async (req, res) => {
   const { username, email, password } = req.body;

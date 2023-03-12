@@ -13,7 +13,7 @@ const testSchema = new Schema({
   password: {
     type: String,
     default: false,
-  }
+  },
 });
 
-module.exports = mongoose.model("UserInfo", testSchema);
+module.exports = mongoose.model("testinfos", testSchema);

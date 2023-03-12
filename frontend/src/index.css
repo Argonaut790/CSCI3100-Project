@@ -331,3 +331,16 @@ img {
     background-position: 100px 0;
   }
 }
+
+/* Tweet page */
+
+#upload-image-section {
+  height: 60%;
+}
+
+.tweet-mask {
+  background-color: #5e5e5e3d;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 0.7rem rgb(0 0 0 / 55%);
+}

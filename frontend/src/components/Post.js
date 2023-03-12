@@ -35,11 +35,7 @@ const UserID = () => {
 const PostImage = () => {
   return (
     <div className="post-image-div">
-      <img
-        src={images["postIMG.jpg"]}
-        className="post-image"
-        alt="post-image"
-      />
+      <img src={images["postIMG.jpg"]} className="post-image" alt="Post view" />
     </div>
   );
 };

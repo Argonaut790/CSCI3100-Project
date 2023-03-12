@@ -1,7 +1,7 @@
 import ImportAll from "./ImportAll";
 import Test from "./Test";
 //function needs to be Capital Letter in the first
-const Rhs = () => {
+const Search = () => {
   return (
     <>
       <Searchbar />
@@ -37,4 +37,4 @@ const Searchbar = () => {
   );
 };
 
-export default Rhs;
+export default Search;

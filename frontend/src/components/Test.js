@@ -22,7 +22,7 @@ export default class Test extends Component {
         email,
         password,
       });
-      console.log("POST SUCCESSFULLY");
+      console.log("Test SUCCESSFULLY");
 
       // clear input fields
       this.setState({ username: "", email: "", password: "" });

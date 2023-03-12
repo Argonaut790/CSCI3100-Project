@@ -1,8 +1,7 @@
-import ImportAll from "./ImportAll";
 import Post from "./Post";
 //function needs to be Capital Letter in the first
 
-const Middle = () => {
+const HomeContent = () => {
   return (
     <>
       <TopMid />
@@ -10,10 +9,6 @@ const Middle = () => {
     </>
   );
 };
-
-const images = ImportAll(
-  require.context("../images", false, /\.(png|jpe?g|svg)$/)
-);
 
 const TopMid = () => {
   return (
@@ -41,4 +36,4 @@ const Content = () => {
   );
 };
 
-export default Middle;
+export default HomeContent;

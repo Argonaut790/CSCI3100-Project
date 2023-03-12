@@ -27,8 +27,8 @@ const testRoute = require("./route/testRoute");
 app.use("/test", testRoute);
 
 //upload post
-const postRoute = require("./route/postRoute");
-app.use("/post", postRoute);
+const tweetRoute = require("./route/tweetRoute");
+app.use("/tweet", tweetRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

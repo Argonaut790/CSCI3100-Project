@@ -335,12 +335,37 @@ img {
 /* Tweet page */
 
 #upload-image-section {
-  height: 60%;
+  height: auto;
+  margin: 5rem 0 2rem 0;
+  aspect-ratio: 1/1;
 }
 
 .tweet-mask {
   background-color: #5e5e5e3d;
   border-radius: 20px;
   overflow: hidden;
+  box-shadow: 0 0 0.7rem rgb(0 0 0 / 55%);
+}
+
+#input-section {
+  background-color: #5e5e5e3d;
+  margin: 0 0 1rem 0;
+  border: none;
+  border-radius: 20px;
+  height: 5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-shadow: 0 0 0.7rem rgb(0 0 0 / 55%);
+  color: gray !important;
+}
+
+#post-submit {
+  background-color: #c844ff;
+  border-radius: 20px;
+  padding: 0.7rem;
+  width: 40%;
+  margin-bottom: 5rem;
+  height: 4rem;
+  border: none;
   box-shadow: 0 0 0.7rem rgb(0 0 0 / 55%);
 }

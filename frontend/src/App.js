@@ -62,11 +62,11 @@ function App() {
   // };
 
   return (
-    <div class="mask-background">
-      <div class="container px-4">
-        <div class="row gx-5 h-100">
-          <div class="col-md-3 vh-100" id="nav">
-            <div class="container-fluid" id="lhs">
+    <div className="mask-background">
+      <div className="container px-4">
+        <div className="row gx-5 h-100">
+          <div className="col-md-3 vh-100" id="nav">
+            <div className="container-fluid" id="lhs">
               <TopLeft />
               <div className="row d-flex" id="nav">
                 <nav className="h4 nav flex-column">

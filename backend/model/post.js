@@ -6,13 +6,9 @@ const postSchema = new Schema({
     type: String,
     required: true,
   },
-  postId: {
-    type: String,
-    required: true,
-  },
-  headline: {
-    type: String,
-    required: true,
+  image: {
+    data: Buffer,
+    contentType: String,
   },
   desc: {
     type: String,
@@ -24,6 +20,10 @@ const postSchema = new Schema({
   timestamp: {
     type: String,
     default: Date.now(),
+  },
+  public: {
+    type: Boolean,
+    required: true,
   },
 });
 

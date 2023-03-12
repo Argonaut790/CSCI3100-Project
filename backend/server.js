@@ -19,12 +19,16 @@ const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
 db.once("open", () => console.log("connected to database"));
 
-const accountRoute = require("./accountRoute");
+const accountRoute = require("./route/accountRoute");
 app.use("/account", accountRoute);
 
 //test data passing to database
-const testRoute = require("./testRoute");
+const testRoute = require("./route/testRoute");
 app.use("/test", testRoute);
+
+//upload post
+const postRoute = require("./route/postRoute");
+app.use("/post", postRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

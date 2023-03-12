@@ -1,5 +1,5 @@
 const express = require("express");
-const Account = require("./model/account");
+const Account = require("../model/account");
 const router = express.Router();
 
 // Sign up

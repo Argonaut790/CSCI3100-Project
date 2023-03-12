@@ -1,14 +1,16 @@
 import { Component } from "react";
 import axios from "axios";
 
-export default class Test extends Component {
+const multer = require("multer");
+const upload = multer();
+
+export default class UploadPost extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
+      headline: "",
       email: "",
       password: "",
-      data: [],
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }

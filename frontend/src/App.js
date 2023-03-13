@@ -3,6 +3,8 @@ import { Routes, Route, Link, useLocation } from "react-router-dom";
 
 import ImportAll from "./components/ImportAll";
 import Home from "./components/Home";
+import Chat from "./components/Chat";
+import Profile from "./components/Profile";
 import Tweet from "./components/Tweet";
 
 const images = ImportAll(
@@ -41,12 +43,53 @@ function App() {
   const [user, setUser] = useState();
   let location = useLocation();
 
-  useEffect(() => {
-    //slide in effect
-    document.querySelectorAll(".nav-link").forEach((link) => {
-      link.classList.add("visible");
-    });
+  const NavItem = (props) => {
+    const { text, id, imgsrc, delay } = props;
 
+    useEffect(() => {
+      //slide in effect
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.classList.add("visible");
+      });
+    }, []);
+
+    return (
+      <li>
+        {user ? (
+          <Link
+            to={"/profile"}
+            className="nav-link mask delay-3"
+            style={{ cursor: "pointer" }}
+            id="profile"
+          >
+            <img
+              src={images["user.png"]}
+              className="mr-1 white-img"
+              alt="profile icon"
+            />
+            Profile
+          </Link>
+        ) : (
+          //false here suppose to be null, just testing here
+          <Link
+            to={`/${id}`}
+            className={`nav-link mask delay-${delay}`}
+            style={{ cursor: "pointer" }}
+            id={`${id}`}
+          >
+            <img
+              src={images[`${imgsrc}.png`]}
+              className="mr-1 white-img"
+              alt={`${id} icon`}
+            />
+            {text}
+          </Link>
+        )}
+      </li>
+    );
+  };
+
+  useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
@@ -70,38 +113,14 @@ function App() {
               <TopLeft />
               <div className="row d-flex" id="nav">
                 <nav className="h4 nav flex-column">
-                  <a className="nav-link mask delay-0" href="/">
-                    <img
-                      src={images["home.png"]}
-                      className="mr-1 white-img"
-                      alt="home icon"
-                    />
-                    <span>Home</span>
-                  </a>
-                  <a className="nav-link mask delay-1" href="/">
-                    <img
-                      src={images["explore.png"]}
-                      className="mr-1 white-img"
-                      alt="explore icon"
-                    />
-                    <span>Explore</span>
-                  </a>
-                  <a className="nav-link mask delay-2" href="/">
-                    <img
-                      src={images["chat.png"]}
-                      className="mr-1 white-img"
-                      alt="chat icon"
-                    />
-                    <span>Chat</span>
-                  </a>
-                  <a className="nav-link mask delay-3" href="/">
-                    <img
-                      src={images["user.png"]}
-                      className="mr-1 white-img"
-                      alt="user icon"
-                    />
-                    <span>Profile</span>
-                  </a>
+                  <NavItem text="Home" id="home" imgsrc="home" delay="1" />
+                  <NavItem text="Chat" id="chat" imgsrc="chat" delay="2" />
+                  <NavItem
+                    text="Profile"
+                    id="profile"
+                    imgsrc="user"
+                    delay="3"
+                  />
                   <li>
                     {user ? (
                       <Link
@@ -131,10 +150,13 @@ function App() {
           </div>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}
             /> */}
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/tweet" element={<Tweet />} />
           </Routes>
         </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 
 import ImportAll from "./components/ImportAll";
 import Home from "./components/Home";
@@ -129,14 +129,14 @@ function App() {
               <User />
             </div>
           </div>
-          <Switch>
-            <Route exact path={["/", "/Homepage"]} component={Home} />
+          <Routes>
+            <Route path="/" element={<Home />} />
             {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}
             /> */}
-            <Route path="/tweet" component={Tweet} />
-          </Switch>
+            <Route path="/tweet" element={<Tweet />} />
+          </Routes>
         </div>
       </div>
     </div>

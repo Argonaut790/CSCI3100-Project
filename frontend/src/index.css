@@ -1,7 +1,7 @@
 body {
   position: relative;
   background-color: black;
-  font-family: roboto;
+  font-family: monospace;
 }
 
 #root {

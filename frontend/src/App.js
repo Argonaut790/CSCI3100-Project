@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 
 import ImportAll from "./components/ImportAll";
@@ -43,39 +43,38 @@ function App() {
   const [user, setUser] = useState();
   let location = useLocation();
 
-  const NavItem = (props) => {
-    const { text, id, imgsrc, delay } = props;
+  const NavItem = ({ text, id, imgsrc, delay }) => {
+    const navLinkRef = useRef(null);
 
     useEffect(() => {
-      //slide in effect
-      document.querySelectorAll(".nav-link").forEach((link) => {
-        link.classList.add("visible");
-      });
+      // slide in effect
+      navLinkRef.current.classList.add("visible");
     }, []);
 
     return (
       <li>
         {user ? (
           <Link
-            to={"/profile"}
-            className="nav-link mask delay-3"
-            style={{ cursor: "pointer" }}
-            id="profile"
-          >
-            <img
-              src={images["user.png"]}
-              className="mr-1 white-img"
-              alt="profile icon"
-            />
-            Profile
-          </Link>
-        ) : (
-          //false here suppose to be null, just testing here
-          <Link
             to={`/${id}`}
             className={`nav-link mask delay-${delay}`}
             style={{ cursor: "pointer" }}
             id={`${id}`}
+            ref={navLinkRef}
+          >
+            <img
+              src={images[`${imgsrc}.png`]}
+              className="mr-1 white-img"
+              alt={`${id} icon`}
+            />
+            {text}
+          </Link>
+        ) : (
+          <Link
+            to={`/${id}`}
+            className={`nav-link text-center mask delay-${delay}`}
+            style={{ cursor: "pointer" }}
+            id={`${id}`}
+            ref={navLinkRef}
           >
             <img
               src={images[`${imgsrc}.png`]}
@@ -121,28 +120,7 @@ function App() {
                     imgsrc="user"
                     delay="3"
                   />
-                  <li>
-                    {user ? (
-                      <Link
-                        to={"/tweet"}
-                        className="nav-link h5 text-center mask delay-4"
-                        style={{ cursor: "pointer" }}
-                        id="tweet"
-                      >
-                        Tweet
-                      </Link>
-                    ) : (
-                      //false here suppose to be null, just testing here
-                      <Link
-                        to={"/tweet"}
-                        className="nav-link h5 text-center mask delay-4"
-                        style={{ cursor: "pointer" }}
-                        id="tweet"
-                      >
-                        Tweet
-                      </Link>
-                    )}
-                  </li>
+                  <NavItem text="Tweet" id="tweet" imgsrc="tweet" delay="4" />
                 </nav>
               </div>
               <User />

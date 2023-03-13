@@ -8,7 +8,7 @@ const Home = () => {
       <div className="col-md-6" id="content">
         <HomeContent />
       </div>
-      <div className="col-md vh-100" id="explore">
+      <div className="col-md-3 vh-100" id="explore">
         <div className="container-fluid p-0" id="rhs">
           <Search />
         </div>

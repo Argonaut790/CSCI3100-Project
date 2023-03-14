@@ -78,6 +78,7 @@ body {
 
 #top-left {
   margin: 3rem 0;
+  flex-wrap: nowrap;
 }
 
 #top-mid {
@@ -334,11 +335,19 @@ img {
 
 /* Tweet page */
 
-#upload-image-section {
-  height: auto;
-  margin: 5rem 0 2rem 0;
-  aspect-ratio: 1/1;
+#tweet-section {
+  width: auto;
+  aspect-ratio: 3/4;
 }
+
+#upload-image-section {
+  text-align: center;
+  border-radius: 6px;
+}
+
+/* #upload-image-section .span {
+  padding: 2rem;
+} */
 
 .tweet-mask {
   background-color: #5e5e5e3d;
@@ -368,4 +377,14 @@ img {
   height: 4rem;
   border: none;
   box-shadow: 0 0 0.7rem rgb(0 0 0 / 55%);
+}
+
+#tweet-describtion {
+  padding: 1rem 2rem 0;
+  height: 15%;
+}
+
+#upload {
+  width: 12rem;
+  padding: 1rem;
 }

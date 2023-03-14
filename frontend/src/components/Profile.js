@@ -1,11 +1,20 @@
 // import { Component } from "react";
 // import axios from "axios";
 
+import ProfileContent from "./ProfileContent";
+import Search from "./Search";
+
+//function needs to be Capital Letter in the first
 const Profile = () => {
   return (
     <>
-      <div className="col-md" id="content">
-        <div className="container-fluid p-0 h-100">Profile</div>
+      <div className="col-md-6" id="content">
+        <ProfileContent />
+      </div>
+      <div className="col-md-3 vh-100" id="explore">
+        <div className="container-fluid p-0" id="rhs">
+          <Search />
+        </div>
       </div>
     </>
   );

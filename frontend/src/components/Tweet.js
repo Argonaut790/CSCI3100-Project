@@ -1,6 +1,12 @@
 import { Component } from "react";
 import axios from "axios";
 
+import ImportAll from "./ImportAll";
+
+const images = ImportAll(
+  require.context("../images", false, /\.(png|jpe?g|svg)$/)
+);
+
 class Tweet extends Component {
   constructor(props) {
     super(props);
@@ -47,16 +53,33 @@ class Tweet extends Component {
             <form
               onSubmit={this.handleSubmit}
               action="POST"
-              className="row d-flex flex-column justify-content-center align-items-center m-0"
+              className="row vh-100 d-flex flex-column justify-content-center align-items-center m-0"
             >
-              <a
-                href="/tweet"
-                className="col-md-8 p-0 d-flex justify-content-center align-items-center h-100 h2 tweet-mask"
-                id="upload-image-section"
+              <div
+                className="col-md-8 p-0 d-flex justify-content-center align-items-center tweet-mask"
+                id="tweet-section"
               >
-                Click here to upload an image
-              </a>
-              <div className="col-md-8 p-0">
+                <div className="container-fluid m-0 p-3 h-100 d-flex flex-column justify-content-center align-items-center m-0">
+                  <a
+                    href="/tweet"
+                    className="row m-0 d-flex flex-column justify-content-center align-items-center tweet-mask h3 post-image"
+                    id="upload-image-section"
+                  >
+                    <img
+                      src={images["upload.png"]}
+                      className="white-img"
+                      id="upload"
+                      alt="upload icon"
+                    />
+                    <div>Click here to Upload an image</div>
+                  </a>
+                  <div className="row m-0 h4" id="tweet-describtion">
+                    Description
+                  </div>
+                </div>
+              </div>
+
+              {/* <div className="col-md-8 p-0">
                 <div className="form-floating">
                   <input
                     type="text"
@@ -88,7 +111,7 @@ class Tweet extends Component {
                 id="post-submit"
               >
                 Tweet
-              </button>
+              </button> */}
             </form>
           </div>
         </div>

@@ -13,7 +13,10 @@ const images = ImportAll(
 
 const TopLeft = () => {
   return (
-    <div className="row h3 head d-flex align-items-center" id="top-left">
+    <div
+      className="row h3 head d-flex align-items-center justify-content-center"
+      id="top-left"
+    >
       <img
         src={images["twittericon.png"]}
         className="mr-1 white-img"
@@ -105,6 +108,11 @@ function App() {
 
   return (
     <div className="mask-background">
+      {/* Routes */}
+
+      {/* {user ? ({admin ? (<Admin/) : (<User/>)}) : (<Login/>)} */}
+
+      {/* user interface */}
       <div className="container px-4">
         <div className="row gx-5 h-100">
           <div className="col-md-3 vh-100" id="nav">
@@ -139,6 +147,9 @@ function App() {
           </Routes>
         </div>
       </div>
+      {/* admin interface */}
+
+      {/* login interface */}
     </div>
   );
 }

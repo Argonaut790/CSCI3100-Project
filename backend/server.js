@@ -13,12 +13,16 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 // connect to the database
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true });
+mongoose.connect(process.env.DB_CONNECTION, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 const db = mongoose.connection;
 // check if the connection to the database is seccess or not
 db.on("error", (error) => console.error(error));
-db.once("open", () => console.log("connected to database"));
+db.once("open", () => console.log("Connected to database"));
 
+//Acount System
 const accountRoute = require("./route/accountRoute");
 app.use("/account", accountRoute);
 

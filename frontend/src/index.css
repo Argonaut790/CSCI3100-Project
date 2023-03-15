@@ -162,6 +162,7 @@ img {
 
 .post-user-info {
   height: 2.8rem;
+  padding: 0 2rem;
 }
 
 .post-user-avatar {
@@ -370,10 +371,6 @@ img {
 
 /* Tweet page */
 
-#tweet-section {
-  aspect-ratio: 3/4;
-}
-
 #upload-image-section {
   text-align: center;
   cursor: pointer;
@@ -406,6 +403,10 @@ img {
   color: gray !important;
 }
 
+#tweet-section {
+  padding: 0.5rem 0 !important;
+}
+
 #post-submit {
   background-color: #c844ff;
   border-radius: 20px;
@@ -417,7 +418,7 @@ img {
   box-shadow: 0 0 0.7rem rgb(0 0 0 / 55%);
 }
 
-#tweet-describtion {
+#post-describtion {
   padding: 1rem 2rem 0;
   height: 15%;
 }
@@ -425,4 +426,16 @@ img {
 #upload {
   width: 12rem;
   padding: 1rem;
+}
+
+#preview {
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 6px;
+  padding: 0;
+}
+
+#image-upload {
+  display: none;
 }

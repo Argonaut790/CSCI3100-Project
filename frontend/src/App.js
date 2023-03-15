@@ -14,7 +14,7 @@ const images = ImportAll(
 const TopLeft = () => {
   return (
     <div
-      className="row h3 head d-flex align-items-center justify-content-center"
+      className="row h3 head d-flex flex-row align-items-center justify-content-center"
       id="top-left"
     >
       <img
@@ -23,21 +23,28 @@ const TopLeft = () => {
         id="icon"
         alt="icon"
       />
-      Rettiwt
+      <div id="rettiwt">Rettiwt</div>
     </div>
   );
 };
 
 const User = () => {
   return (
-    <div className="row h4 d-flex align-items-md-center" id="user">
-      <img
-        src={images["user_avatar.jpg"]}
-        className="float-start"
-        id="avatar"
-        alt="avatar"
-      />
-      Username #ID
+    <div className="row h4 m-0 d-flex flex-row align-items-md-center" id="user">
+      <div className="col-md-5 h-100 d-flex align-items-center justify-content-center">
+        <img
+          src={images["user_avatar.jpg"]}
+          className="float-start img-fluid"
+          id="avatar"
+          alt="avatar"
+        />
+      </div>
+      <div className="col-md-7 h-100 d-flex align-items-center">
+        <div className="row d-flex flex-column" id="user-info">
+          <div className="col-md-12 p-0">Username</div>
+          <div className="col-md-12 p-0">#ID</div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -59,7 +66,7 @@ function App() {
         {user ? (
           <Link
             to={`/${id}`}
-            className={`nav-link mask delay-${delay}`}
+            className={`nav-link text-center mask delay-${delay}`}
             style={{ cursor: "pointer" }}
             id={`${id}`}
             ref={navLinkRef}
@@ -69,7 +76,7 @@ function App() {
               className="mr-1 white-img"
               alt={`${id} icon`}
             />
-            {text}
+            <span className="d-none d-md-inline">{text}</span>
           </Link>
         ) : (
           <Link
@@ -84,7 +91,7 @@ function App() {
               className="mr-1 white-img"
               alt={`${id} icon`}
             />
-            {text}
+            <span className="d-none d-md-inline">{text}</span>
           </Link>
         )}
       </li>
@@ -118,8 +125,8 @@ function App() {
           <div className="col-md-3 vh-100" id="nav">
             <div className="container-fluid" id="lhs">
               <TopLeft />
-              <div className="row d-flex" id="nav">
-                <nav className="h4 nav flex-column">
+              <div className="row d-flex m-0" id="nav">
+                <nav className="h4 nav flex-column p-0">
                   <NavItem text="Home" id="home" imgsrc="home" delay="1" />
                   <NavItem text="Chat" id="chat" imgsrc="chat" delay="2" />
                   <NavItem

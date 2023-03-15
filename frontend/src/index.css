@@ -152,6 +152,10 @@ img {
   overflow-y: hidden;
 }
 
+#post {
+  padding: 1rem !important;
+}
+
 .post {
   margin: 4%;
 }
@@ -333,6 +337,10 @@ img {
     display: none !important;
   }
 
+  #tweet-section {
+    background-color: #000000cc;
+  }
+
   ::-webkit-scrollbar {
     display: none;
   }
@@ -368,7 +376,11 @@ img {
 
 #upload-image-section {
   text-align: center;
-  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 /* #upload-image-section .span {

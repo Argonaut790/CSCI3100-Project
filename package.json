@@ -21,7 +21,8 @@
     "concurrently": "^7.6.0"
   },
   "dependencies": {
-    "nodemon": "^2.0.21"
+    "nodemon": "^2.0.21",
+    "react-scripts": "^5.0.1"
   },
   "workspaces": [
     "frontend",

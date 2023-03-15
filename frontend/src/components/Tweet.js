@@ -118,6 +118,7 @@ class Tweet extends Component {
                     <label
                       htmlFor="image-upload"
                       className="row m-0 d-flex flex-column justify-content-center align-items-center tweet-mask h3 post-image"
+                      id="upload-image-section"
                     >
                       <img
                         src={images["upload.png"]}
@@ -128,6 +129,7 @@ class Tweet extends Component {
                       <div>Click here to Upload an image</div>
                       <input
                         type="file"
+                        className="cursor-pointer"
                         id="image-upload"
                         name="image"
                         accept="image/*"

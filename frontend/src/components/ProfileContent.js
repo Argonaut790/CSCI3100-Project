@@ -1,4 +1,4 @@
-import Post from "./Post";
+import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
 
 const ProfileContent = () => {
@@ -23,15 +23,7 @@ const TopMid = () => {
 const Content = () => {
   return (
     <div className="container-fluid p-0" id="mid-center">
-      <div className="row d-flex justify-content-center" id="post-list">
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-      </div>
+      <FetchPost />
     </div>
   );
 };

@@ -11,7 +11,7 @@ const images = ImportAll(
 
 const UserID = () => {
   return (
-    <div className="post-user-info">
+    <div className="post-user-info p-0">
       <img
         src={images["user_avatar.jpg"]}
         className="float-start post-user-avatar"
@@ -169,8 +169,9 @@ class Tweet extends Component {
               action="POST"
               className="row vh-100 d-flex justify-content-center align-items-center m-0"
               enctype="multipart/form-data"
+              id="tweet-form"
             >
-              <div className="col-md-8" id="tweet-section">
+              <div className="col-md-9" id="tweet-section">
                 <div
                   className="text-break tweet-mask h-100 d-flex justify-content-center align-items-center"
                   id="tweet-div"
@@ -214,7 +215,7 @@ class Tweet extends Component {
                         )}
                       </label>
                     </div>
-                    <div id="post-describtion">
+                    <div className="p-0" id="post-describtion">
                       <h5>UserName</h5>
                       <p>Describtion</p>
                       <input

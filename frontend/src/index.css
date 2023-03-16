@@ -381,7 +381,6 @@ img {
 
 #tweet-section {
   aspect-ratio: 3/4;
-  width: auto;
   padding: 2rem;
 }
 
@@ -429,6 +428,10 @@ img {
   padding: 0.5rem 0 !important;
 }
 
+#tweet-form {
+  padding: 3rem 0;
+}
+
 #post-submit {
   background-color: #c844ff;
   border-radius: 20px;
@@ -440,7 +443,6 @@ img {
 }
 
 #post-describtion {
-  padding: 1rem 2rem 0;
   height: 15%;
 }
 

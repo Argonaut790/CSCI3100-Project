@@ -20,7 +20,6 @@ const SignUp = () => {
     const user = {
       username: username,
       email: email,
-      password: "",
       isGoogleSign: true,
     };
 

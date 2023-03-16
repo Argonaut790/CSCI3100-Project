@@ -56,33 +56,48 @@ router.post("/login", async (req, res) => {
 
 // Sign up
 router.post("/", async (req, res) => {
-  const user = await Account.find({ email: req.body.email }).count({
-    sent_at: null,
-  });
-  if (user) {
-    return res.status(400).json("email exists");
-  }
+  if (req.body.isGoogleSign === true) {
+    const account = new Account({
+      username: req.body.username,
+      email: req.body.email,
+      isGoogleSign: req.body.isGoogleSign,
+    });
+    try {
+      const saveduser = await account.save();
+      res.status(200).json(saveduser);
+    } catch (err) {
+      res.json({ message: err });
+    }
+  } else {
+    const user = await Account.find({ email: req.body.email }).count({
+      sent_at: null,
+    });
+    if (user) {
+      return res.status(400).json("email exists");
+    }
 
-  // Encrypt user password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    // Encrypt user password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-  // Generate confirmation code
-  const token = getConfirmationCode();
+    // Generate confirmation code
+    const token = getConfirmationCode();
 
-  const account = new Account({
-    username: req.body.username,
-    password: hashedPassword,
-    email: req.body.email,
-    confirmationCode: token,
-  });
+    const account = new Account({
+      username: req.body.username,
+      password: hashedPassword,
+      email: req.body.email,
+      isGoogleSign: req.body.isGoogleSign,
+      confirmationCode: token,
+    });
 
-  try {
-    const saveduser = await account.save();
-    sendConfirmationEmail(req.body.username, req.body.email, token);
-    res.status(200).json(saveduser);
-  } catch (err) {
-    res.json({ message: err });
+    try {
+      const saveduser = await account.save();
+      sendConfirmationEmail(req.body.username, req.body.email, token);
+      res.status(200).json(saveduser);
+    } catch (err) {
+      res.json({ message: err });
+    }
   }
 });
 

@@ -66,9 +66,9 @@ class FetchPost extends Component {
       <div className="container-fluid p-0" id="mid-center">
         <div className="row d-flex justify-content-center" id="post-list">
           {posts.map((post, index) => (
-            <div className="mask-post p-0" id="post">
+            <div className="mask-post p-0" id="post" key={index}>
               <UserID />
-              <div key={index} className="post-image-div">
+              <div className="post-image-div">
                 <img
                   src={post.imageURL}
                   className="post-image"

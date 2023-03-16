@@ -64,7 +64,7 @@ router.post("/", upload.single("image"), async (req, res) => {
 // we will response aloo posts data to frontend
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find().sort({ timestamp: -1 });
     res.json(posts);
   } catch (error) {
     res.status(500).json({ message: error.message });

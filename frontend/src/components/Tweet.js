@@ -104,14 +104,73 @@ class Tweet extends Component {
     return (
       <>
         <div className="col-md" id="content">
-          <div className="container-fluid p-0 h-100">
+          <div className="container-fluid p-0 h-100 overflow-y-scroll">
             <form
               onSubmit={this.handleSubmit}
               action="POST"
               className="row vh-100 d-flex justify-content-center align-items-center m-0"
               enctype="multipart/form-data"
             >
-              <div className="col-md-8 p-0 tweet-mask" id="tweet-section">
+              <div className="col-md-8" id="tweet-section">
+                <div
+                  className="text-break tweet-mask h-100 d-flex justify-content-center align-items-center"
+                  id="tweet-div"
+                >
+                  <div className="w-100">
+                    <UserID />
+                    <div
+                      className="container-fluid p-0 m-0 d-flex flex-column justify-content-center align-items-center m-0"
+                      id="upload-container"
+                    >
+                      <label
+                        htmlFor="image-upload"
+                        className="row w-100 m-0 d-flex flex-column justify-content-center align-items-center tweet-mask h3 post-image"
+                        id="upload-image-section"
+                      >
+                        <img
+                          src={images["upload.png"]}
+                          className="white-img"
+                          id="upload"
+                          alt="upload icon"
+                        />
+                        <div>Click here to Upload an image</div>
+                        <input
+                          type="file"
+                          className="cursor-pointer"
+                          id="image-upload"
+                          name="image"
+                          accept="image/*"
+                          onChange={this.handleInputChange}
+                          // style={{ display: "none" }}
+                        />
+                      </label>
+                    </div>
+                    <div id="post-describtion">
+                      <h5>UserName</h5>
+                      <p>Describtion</p>
+                      <input
+                        type="text"
+                        name="desc"
+                        placeholder="Description"
+                        value={this.state.desc}
+                        onChange={(e) =>
+                          this.setState({ desc: e.target.value })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="p-y-2 d-flex justify-content-center align-items-center">
+                  <button
+                    type="submit"
+                    className="col-md-8 p-0 m-0 d-flex justify-content-center align-items-center text-light h3"
+                    id="post-submit"
+                  >
+                    Tweet
+                  </button>
+                </div>
+              </div>
+              {/* <div className="col-md p-0 tweet-mask" id="tweet-section">
                 <div className="text-break post">
                   <UserID />
                   <div className="container-fluid m-0 p-3 h-100 d-flex flex-column justify-content-center align-items-center m-0">
@@ -149,16 +208,15 @@ class Tweet extends Component {
                       onChange={(e) => this.setState({ desc: e.target.value })}
                     />
                   </div>
+                  <button
+                    type="submit"
+                    className="col-md-8 p-0 d-flex justify-content-center align-items-center text-light h3"
+                    id="post-submit"
+                  >
+                    Tweet
+                  </button>
                 </div>
-              </div>
-
-              <button
-                type="submit"
-                className="col-md-8 p-0 d-flex justify-content-center align-items-center text-light h3"
-                id="post-submit"
-              >
-                Tweet
-              </button>
+              </div> */}
             </form>
           </div>
         </div>

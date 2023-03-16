@@ -37,6 +37,14 @@ body {
   z-index: 1;
 }
 
+.p-y-2 {
+  padding: 2rem 0 !important;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll !important;
+}
+
 .nav-link {
   color: white;
   padding: 1rem;
@@ -372,11 +380,21 @@ img {
 
 #tweet-section {
   aspect-ratio: 3/4;
+  width: auto;
+  padding: 2rem;
+}
+
+#tweet-div {
+  padding: 2rem;
 }
 
 #upload-image-section {
   text-align: center;
   cursor: pointer;
+}
+
+#upload-container {
+  padding: 2rem 0 !important;
 }
 
 .cursor-pointer {
@@ -411,7 +429,6 @@ img {
   border-radius: 20px;
   padding: 0.7rem;
   width: 40%;
-  margin-bottom: 5rem;
   height: 4rem;
   border: none;
   box-shadow: 0 0 0.7rem rgb(0 0 0 / 55%);

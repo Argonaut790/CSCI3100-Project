@@ -186,22 +186,32 @@ class Tweet extends Component {
                         className="row w-100 m-0 d-flex flex-column justify-content-center align-items-center tweet-mask h3 post-image"
                         id="upload-image-section"
                       >
-                        <img
-                          src={images["upload.png"]}
-                          className="white-img"
-                          id="upload"
-                          alt="upload icon"
-                        />
-                        <div>Click here to Upload an image</div>
-                        <input
-                          type="file"
-                          className="cursor-pointer"
-                          id="image-upload"
-                          name="image"
-                          accept="image/*"
-                          onChange={this.handleInputChange}
-                          // style={{ display: "none" }}
-                        />
+                        {this.state.previewURL ? (
+                          <img
+                            src={this.state.previewURL}
+                            // className="white-img"
+                            id="preview"
+                            alt="preview"
+                          />
+                        ) : (
+                          <>
+                            <img
+                              src={images["upload.png"]}
+                              className="white-img"
+                              id="upload"
+                              alt="upload icon"
+                            />
+                            <div>Click here to Upload an image</div>
+                            <input
+                              type="file"
+                              className="cursor-pointer"
+                              id="image-upload"
+                              name="image"
+                              accept="image/*"
+                              onChange={this.handleInputChange}
+                            />
+                          </>
+                        )}
                       </label>
                     </div>
                     <div id="post-describtion">
@@ -230,6 +240,43 @@ class Tweet extends Component {
                 </div>
               </div>
               {/* <div className="col-md p-0 tweet-mask" id="tweet-section">
+                <div className="text-break post">
+                  <UserID />
+                  <div className="container-fluid m-0 p-3 h-100 d-flex flex-column justify-content-center align-items-center m-0">
+                    <label
+                      htmlFor="image-upload"
+                      className="row m-0 d-flex flex-column justify-content-center align-items-center tweet-mask h3 post-image"
+                      id="upload-image-section"
+                    >
+                      {this.state.previewURL ? (
+                        <img
+                          src={this.state.previewURL}
+                          // className="white-img"
+                          id="preview"
+                          alt="preview"
+                        />
+                      ) : (
+                        <>
+                          <img
+                            src={images["upload.png"]}
+                            className="white-img"
+                            id="upload"
+                            alt="upload icon"
+                          />
+                          <div>Click here to Upload an image</div>
+                          <input
+                            type="file"
+                            className="cursor-pointer"
+                            id="image-upload"
+                            name="image"
+                            accept="image/*"
+                            onChange={this.handleInputChange}
+                          />
+                        </>
+                      )}
+                    </label>
+                  </div>
+              <div className="col-md-8 tweet-mask" id="tweet-section">
                 <div className="text-break post">
                   <UserID />
                   <div className="container-fluid m-0 p-3 h-100 d-flex flex-column justify-content-center align-items-center m-0">

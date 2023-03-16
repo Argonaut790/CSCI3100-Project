@@ -1,11 +1,11 @@
 require("dotenv").config();
 const express = require("express");
-const Account = require("./model/accounts");
+const Account = require("../model/accounts");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const getConfirmationCode = require("./confirmationCode");
-const sendConfirmationEmail = require("./emailVerify");
+const getConfirmationCode = require("../confimationCode");
+const sendConfirmationEmail = require("../emailVerify");
 
 // Login
 router.post("/login", async (req, res) => {

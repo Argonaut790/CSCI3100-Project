@@ -26,6 +26,10 @@ const AccountSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  isGoogleSign: {
+    type: Boolean,
+    default: false,
+  },
   timestamp: {
     type: String,
     default: Date.now(),

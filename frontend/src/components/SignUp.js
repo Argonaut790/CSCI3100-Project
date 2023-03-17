@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import SignUpForm from "./SignUpForm";
+import SignUpModal from "./SignUpModal";
 
 const SignUp = () => {
   const clientId =
     "221274346471-hn17eih5bjq1p6kprlcal0g9cv644sqm.apps.googleusercontent.com";
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const onGoogleSignInSuccess = (response) => {
     //TODO: Create special handling for google signin
@@ -27,19 +27,12 @@ const SignUp = () => {
       .post("http://localhost:5500/account", user)
       .then((res) => {
         if (res.status === 200) {
-          console.log("Signed Up successfully");
-          document.getElementById("list").innerText =
-            "User was registered successfully! Please check your email";
+          console.log("Signed Up successfully"); // For dev
         }
       })
       .catch((err) => {
-        if (err.response.status === 404) {
-          document.getElementById("list").innerText =
-            "This email has been registered.";
-        } else {
-          document.getElementById("list").innerText =
-            "Unkown error, please try again.";
-        }
+        document.getElementById("errorMessage").innerText =
+          "Unkown error, please try again or use another method to sign up.";
       });
 
     localStorage.setItem(
@@ -62,22 +55,16 @@ const SignUp = () => {
   return (
     <div id="signUp" className="signUpContainer" key="signUp">
       <h2>New to Rettiwt?</h2>
-      <Link
-        to={`/signup`}
-        className={`signUpEmailLink`}
-        style={{ cursor: "pointer" }}
-      >
-        Sign Up with Email
-      </Link>
+
+      <button onClick={() => setShowModal(true)}>Sign Up with Email</button>
       <GoogleOAuthProvider clientId={clientId}>
         <GoogleLogin
           onSuccess={onGoogleSignInSuccess}
           onError={onGoogleSignInFailure}
         />
       </GoogleOAuthProvider>
-      <Routes>
-        <Route path="/signup" element={<SignUpForm />} />
-      </Routes>
+      <span id="errorMessage"></span>
+      {showModal ? <SignUpModal setShowModal={setShowModal} /> : null}
     </div>
   );
 };

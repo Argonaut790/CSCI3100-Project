@@ -56,6 +56,7 @@ router.post("/login", async (req, res) => {
 
 // Sign up
 router.post("/", async (req, res) => {
+  //TODO: server-side validation
   if (req.body.isGoogleSign === true) {
     const account = new Account({
       username: req.body.username,

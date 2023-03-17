@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Chat from "./components/Chat";
 import Profile from "./components/Profile";
 import Tweet from "./components/Tweet";
+import AccountConfirm from "./components/Verification";
 
 const images = ImportAll(
   require.context("./images", false, /\.(png|jpe?g|svg)$/)
@@ -151,6 +152,10 @@ function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/tweet" element={<Tweet />} />
+            <Route
+              path="/confirm/:confirmationCode"
+              element={<AccountConfirm />}
+            />
           </Routes>
         </div>
       </div>

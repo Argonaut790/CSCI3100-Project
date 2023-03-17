@@ -1,8 +1,9 @@
 const express = require("express");
 const Account = require("../model/account");
 const router = express.Router();
+const multer = require("multer");
+const upload = multer();
 
-// Sign up
 router.post("/", async (req, res) => {
   const user = await Account.find({ email: req.body.email }).count({
     sent_at: null,

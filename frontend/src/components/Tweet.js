@@ -18,7 +18,7 @@ const UserID = () => {
         alt="user-avatar"
       />
       <div className="d-flex align-items-md-center h-100 m-0 post-user-id">
-        <div class="fw-bold">UserName</div>
+        <div className="fw-bold">UserName</div>
         <div>#UserID</div>
       </div>
     </div>

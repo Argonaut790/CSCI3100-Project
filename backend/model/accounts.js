@@ -8,7 +8,7 @@ const AccountSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
   },
   email: {
     type: String,
@@ -20,9 +20,22 @@ const AccountSchema = new Schema({
   },
   confirmationCode: {
     type: String,
+    required: false,
     unique: true,
   },
+  isActivated: {
+    type: Boolean,
+    default: true,
+  },
   isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  isGoogleSign: {
+    type: Boolean,
+    default: false,
+  },
+  isPrivate: {
     type: Boolean,
     default: false,
   },

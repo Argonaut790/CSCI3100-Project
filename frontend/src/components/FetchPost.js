@@ -16,7 +16,7 @@ const UserID = () => {
         alt="user-avatar"
       />
       <div className="d-flex align-items-md-center h-100 m-0 post-user-id">
-        <div class="fw-bold">UserName</div>
+        <div className="fw-bold">UserName</div>
         <div>#UserID</div>
       </div>
     </div>
@@ -28,6 +28,7 @@ class FetchPost extends Component {
     super();
     this.state = {
       posts: [],
+      isLoading: false,
     };
   }
 
@@ -37,6 +38,7 @@ class FetchPost extends Component {
       const posts = response.data;
 
       const postPromises = posts.map(async (post) => {
+        this.setState({ isLoading: true });
         const imageResponse = await axios.get(
           `http://localhost:5500/tweet/image/${post.image.filename}`,
           {
@@ -57,6 +59,8 @@ class FetchPost extends Component {
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
+
+    this.setState({ isLoading: false });
   }
 
   render() {
@@ -65,6 +69,11 @@ class FetchPost extends Component {
     return (
       <div className="container-fluid p-0" id="mid-center">
         <div className="row d-flex justify-content-center" id="post-list">
+          {this.state.isLoading && (
+            <div className="loader-container">
+              <div className="spinner"></div>
+            </div>
+          )}
           {posts.map((post, index) => (
             <div className="mask-post p-0" id="post" key={index}>
               <UserID />

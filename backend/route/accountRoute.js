@@ -10,38 +10,42 @@ const sendConfirmationEmail = require("../emailVerify");
 // Login
 router.post("/login", async (req, res) => {
   const account = new Account({
-    username: req.body.username,
     password: req.body.password,
     email: req.body.email,
   });
 
-  const user = await Account.find({ username: req.body.username });
+  const user = await Account.find({ email: req.body.email });
   const count = await Account.find({
-    username: req.body.username,
     email: req.body.email,
   }).count({ sent_at: null });
 
   if (count != 1) {
-    res.status(400).send("wrong username / email");
+    res.status(400).send("Wrong email / password");
   } else {
     user.forEach(async (e) => {
       if (
         (await bcrypt.compare(req.body.password, e.password)) &&
-        e.account == true
+        e.isActivated === true
       ) {
-        if (e.confirmed == false) {
+        if (e.confirmed === false) {
           res
             .status(401)
-            .send("Your account is not verified, Please check your email.");
+            .send(
+              "Your account is not verified, Please check your email / spambox."
+            );
         } else {
           const accessToken = generateAccessToken(e.email);
           const refreshToken = jwt.sign(e.email, process.env.REFRESH_TOEKN);
           refreshTokens.push(refreshToken);
           res
             .status(200)
-            .json({ accessToken: accessToken, refreshToken: refreshToken });
+            .json({
+              username: e.username,
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+            });
         }
-      } else if (e.account == false) {
+      } else if (e.isActivated === false) {
         res
           .status(401)
           .send(
@@ -56,6 +60,7 @@ router.post("/login", async (req, res) => {
 
 // Sign up
 router.post("/", async (req, res) => {
+  console.log(res.body);
   //TODO: server-side validation
   if (req.body.isGoogleSign === true) {
     const account = new Account({

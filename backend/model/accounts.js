@@ -23,11 +23,19 @@ const AccountSchema = new Schema({
     required: false,
     unique: true,
   },
+  isActivated: {
+    type: Boolean,
+    default: true,
+  },
   isAdmin: {
     type: Boolean,
     default: false,
   },
   isGoogleSign: {
+    type: Boolean,
+    default: false,
+  },
+  isPrivate: {
     type: Boolean,
     default: false,
   },

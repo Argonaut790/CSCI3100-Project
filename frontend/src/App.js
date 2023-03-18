@@ -143,6 +143,17 @@ function App() {
                   {user && (
                     <NavItem text="Tweet" id="tweet" imgsrc="tweet" delay="4" />
                   )}
+                  {/* TODO: logout */}
+                  {user && (
+                    <Link
+                      to={"/home"}
+                      onClick={handleLogout}
+                      className="nav-link"
+                      style={{ cursor: "pointer" }}
+                    >
+                      Logout
+                    </Link>
+                  )}
                 </nav>
               </div>
               {user && <User />}

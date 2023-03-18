@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Chat from "./components/Chat";
 import Profile from "./components/Profile";
 import Tweet from "./components/Tweet";
+import AccountConfirm from "./components/Verification";
 
 const images = ImportAll(
   require.context("./images", false, /\.(png|jpe?g|svg)$/)
@@ -108,10 +109,10 @@ function App() {
     }
   }, [location]);
 
-  // const handleLogout = () => {
-  //   setUser(null);
-  //   localStorage.removeItem("user");
-  // };
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
 
   return (
     <div className="mask-background">
@@ -128,17 +129,34 @@ function App() {
               <div className="row d-flex m-0" id="nav">
                 <nav className="h4 nav flex-column p-0">
                   <NavItem text="Home" id="home" imgsrc="home" delay="1" />
-                  <NavItem text="Chat" id="chat" imgsrc="chat" delay="2" />
-                  <NavItem
-                    text="Profile"
-                    id="profile"
-                    imgsrc="user"
-                    delay="3"
-                  />
-                  <NavItem text="Tweet" id="tweet" imgsrc="tweet" delay="4" />
+                  {user && (
+                    <NavItem text="Chat" id="chat" imgsrc="chat" delay="2" />
+                  )}
+                  {user && (
+                    <NavItem
+                      text="Profile"
+                      id="profile"
+                      imgsrc="user"
+                      delay="3"
+                    />
+                  )}
+                  {user && (
+                    <NavItem text="Tweet" id="tweet" imgsrc="tweet" delay="4" />
+                  )}
+                  {/* TODO: logout */}
+                  {user && (
+                    <Link
+                      to={"/home"}
+                      onClick={handleLogout}
+                      className="nav-link"
+                      style={{ cursor: "pointer" }}
+                    >
+                      Logout
+                    </Link>
+                  )}
                 </nav>
               </div>
-              <User />
+              {user && <User />}
             </div>
           </div>
           <Routes>
@@ -151,6 +169,7 @@ function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/tweet" element={<Tweet />} />
+            <Route path="/confirm" element={<AccountConfirm />} />
           </Routes>
         </div>
       </div>

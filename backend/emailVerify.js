@@ -16,6 +16,7 @@ const transport = nodemailer.createTransport({
 
 // TODO: Replace the localhost URL to production URL
 const sendConfirmationEmail = (name, email, confirmationCode) => {
+  confirmationCode = encodeURIComponent(confirmationCode);
   transport
     .sendMail({
       from: user,
@@ -24,7 +25,7 @@ const sendConfirmationEmail = (name, email, confirmationCode) => {
       html: `<h1>Rettiwt Signup Email Confirmation</h1>
           <h2>Hello ${name}</h2>
           <p>Thank you for registering Rettiwt. Please confirm your email by clicking on the following link</p>
-          <a href=http://localhost:3000/confirm/${confirmationCode}> Click here</a>
+          <a href=http://localhost:3000/confirm?confirmationCode=${confirmationCode}> Click here</a>
           </div>`,
     })
     .catch((err) => console.log(err));

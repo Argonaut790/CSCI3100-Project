@@ -3,13 +3,15 @@ import jwt_decode from "jwt-decode";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import SignUpModal from "./SignUpModal";
+import LoginModal from "./LoginModal";
 
 const SignUp = () => {
   const clientId =
     "221274346471-hn17eih5bjq1p6kprlcal0g9cv644sqm.apps.googleusercontent.com";
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const onGoogleSignInSuccess = (response) => {
     //TODO: Create special handling for google signin
@@ -56,15 +58,23 @@ const SignUp = () => {
     <div id="signUp" className="signUpContainer" key="signUp">
       <h2>New to Rettiwt?</h2>
 
-      <button onClick={() => setShowModal(true)}>Sign Up with Email</button>
+      <button onClick={() => setShowSignUpModal(true)}>
+        Sign Up with Email
+      </button>
       <GoogleOAuthProvider clientId={clientId}>
         <GoogleLogin
           onSuccess={onGoogleSignInSuccess}
           onError={onGoogleSignInFailure}
         />
       </GoogleOAuthProvider>
+      <button onClick={() => setShowLoginModal(true)}>
+        Already signed up?
+      </button>
       <span id="errorMessage"></span>
-      {showModal ? <SignUpModal setShowModal={setShowModal} /> : null}
+      {showSignUpModal ? (
+        <SignUpModal setShowModal={setShowSignUpModal} />
+      ) : null}
+      {showLoginModal ? <LoginModal setShowModal={setShowLoginModal} /> : null}
     </div>
   );
 };

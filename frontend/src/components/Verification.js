@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 const verifyUser = (code) => {
@@ -10,19 +10,13 @@ const verifyUser = (code) => {
     });
 };
 
-const AccountConfirm = (props) => {
-  console.log(props);
-  //   if (props.match.path === "/confirm/:confirmationCode") {
-  //     verifyUser(props.match.params.confirmationCode);
-  //   }
+const AccountConfirm = () => {
+  const [searchParams] = useSearchParams();
+  verifyUser(searchParams.get("confirmationCode"));
 
   return (
     <div className="container">
-      <header>
-        <h3>
-          <strong>Account confirmed!</strong>
-        </h3>
-      </header>
+      <h3>Account confirmed!</h3>
       <Link to={"/home"}>Back to main page</Link>
     </div>
   );

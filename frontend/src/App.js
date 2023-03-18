@@ -152,10 +152,7 @@ function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/tweet" element={<Tweet />} />
-            <Route
-              path="/confirm/:confirmationCode"
-              element={<AccountConfirm />}
-            />
+            <Route path="/confirm" element={<AccountConfirm />} />
           </Routes>
         </div>
       </div>

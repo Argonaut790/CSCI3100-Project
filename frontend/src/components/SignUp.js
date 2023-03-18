@@ -68,7 +68,7 @@ const SignUp = () => {
         />
       </GoogleOAuthProvider>
       <button onClick={() => setShowLoginModal(true)}>
-        Already signed up?
+        Already have an account?
       </button>
       <span id="errorMessage"></span>
       {showSignUpModal ? (

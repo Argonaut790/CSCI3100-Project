@@ -31,7 +31,17 @@ const TopLeft = () => {
 
 function App() {
   const [user, setUser] = useState();
+  const [loggedIn, setLoggedIn] = useState(false);
   let location = useLocation();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, []);
 
   if (user) {
     console.log("User Exists");
@@ -120,13 +130,16 @@ function App() {
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
       setUser(foundUser);
+      setLoggedIn(true);
     } else {
       setUser(null);
+      setLoggedIn(false);
     }
   }, [location]);
 
   const handleLogout = () => {
     setUser(null);
+    setLoggedIn(false);
     localStorage.removeItem("user");
   };
 
@@ -134,9 +147,9 @@ function App() {
     return (
       <nav className="h4 nav flex-column p-0">
         <NavItem user={user} text="Home" id="home" imgsrc="home" delay="1" />
-        {user && (
+        {/* {user && (
           <NavItem user={user} text="Chat" id="chat" imgsrc="chat" delay="2" />
-        )}
+        )} */}
         {user && (
           <NavItem
             user={user}
@@ -187,16 +200,16 @@ function App() {
             </div>
           </div>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Home loggedIn={loggedIn} />} />
+            <Route path="/home" element={<Home loggedIn={loggedIn} />} />
             {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}
             /> */}
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/tweet" element={<Tweet />} />
-            <Route path="/confirm" element={<AccountConfirm />} />
+            {user && <Route path="/chat" element={<Chat />} />}
+            {user && <Route path="/profile" element={<Profile />} />}
+            {user && <Route path="/tweet" element={<Tweet />} />}
+            {user && <Route path="/confirm" element={<AccountConfirm />} />}
           </Routes>
         </div>
       </div>

@@ -1,11 +1,12 @@
 import ImportAll from "./ImportAll";
 import SignUp from "./SignUp";
 //function needs to be Capital Letter in the first
-const Search = () => {
+const Search = ({ loggedIn: { loggedIn } }) => {
+  console.log(loggedIn);
   return (
     <>
       <Searchbar />
-      <SignUp />
+      {!loggedIn && <SignUp />}
     </>
   );
 };

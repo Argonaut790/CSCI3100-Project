@@ -1,10 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const LoginModal = ({ setShowModal }) => {
+const LoginModal = ({ setShowModal, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const navigate = useNavigate();
 
   const login = () => {
     console.log(checkAdmin(email));
@@ -17,17 +20,18 @@ const LoginModal = ({ setShowModal }) => {
       .then((res) => {
         if (res.status === 200) {
           console.log("Signed in successfully");
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              username: res.data.username,
-              email: email,
-              isAdmin: isAdmin,
-              isGoogleSign: false,
-            })
-          );
-          console.log(localStorage);
-          //   this.props.history.push("/postlogon");
+          document.getElementById("result").innerText =
+            "Logged in successfully!";
+          const userData = {
+            username: res.data.username,
+            email: email,
+            isAdmin: isAdmin,
+            isGoogleSign: false,
+          };
+
+          localStorage.setItem("user", JSON.stringify(userData));
+          console.log("email : " + email);
+          navigate("/");
         }
       })
       .catch((err) => {

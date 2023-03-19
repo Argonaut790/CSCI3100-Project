@@ -1,5 +1,4 @@
 import ImportAll from "./ImportAll";
-import Test from "./Test";
 import SignUp from "./SignUp";
 //function needs to be Capital Letter in the first
 const Search = () => {

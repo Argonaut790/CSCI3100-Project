@@ -29,30 +29,46 @@ const TopLeft = () => {
   );
 };
 
-const User = () => {
-  return (
-    <div className="row h4 m-0 d-flex flex-row align-items-md-center" id="user">
-      <div className="col-md-5 h-100 d-flex align-items-center justify-content-center">
-        <img
-          src={images["user_avatar.jpg"]}
-          className="float-start img-fluid"
-          id="avatar"
-          alt="avatar"
-        />
-      </div>
-      <div className="col-md-7 h-100 d-flex align-items-center">
-        <div className="row d-flex flex-column" id="user-info">
-          <div className="col-md-12 p-0">Username</div>
-          <div className="col-md-12 p-0">#ID</div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 function App() {
   const [user, setUser] = useState();
   let location = useLocation();
+
+  if (user) {
+    console.log("User Exists");
+  } else {
+    console.log("User Doesn't Exist");
+  }
+  console.log("User Object : " + user);
+  const { username, email, isAdmin, isGoogleSign } = user || {};
+  console.log("username : " + username);
+  console.log("email : " + email);
+  console.log("Admin : " + isAdmin);
+  console.log("Google : " + isGoogleSign);
+
+  const User = () => {
+    return (
+      <div
+        className="row h4 m-0 d-flex flex-row align-items-md-center"
+        id="user"
+      >
+        <div className="col-md-5 h-100 d-flex align-items-center justify-content-center">
+          <img
+            src={images["user_avatar.jpg"]}
+            className="float-start img-fluid"
+            id="avatar"
+            alt="avatar"
+          />
+        </div>
+        <div className="col-md-7 h-100 d-flex align-items-center">
+          <div className="row d-flex flex-column" id="user-info">
+            <div className="col-md-12 p-0">{user.username}</div>
+            <div className="col-md-12 p-0">#ID</div>
+            <button onClick={handleLogout}>Log Out</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const NavItem = ({ text, id, imgsrc, delay }) => {
     const navLinkRef = useRef(null);
@@ -114,12 +130,50 @@ function App() {
     localStorage.removeItem("user");
   };
 
+  const NavLinks = ({ user }) => {
+    return (
+      <nav className="h4 nav flex-column p-0">
+        <NavItem user={user} text="Home" id="home" imgsrc="home" delay="1" />
+        {user && (
+          <NavItem user={user} text="Chat" id="chat" imgsrc="chat" delay="2" />
+        )}
+        {user && (
+          <NavItem
+            user={user}
+            text="Profile"
+            id="profile"
+            imgsrc="user"
+            delay="3"
+          />
+        )}
+        {user && (
+          <NavItem
+            user={user}
+            text="Tweet"
+            id="tweet"
+            imgsrc="tweet"
+            delay="4"
+          />
+        )}
+        {user && (
+          <Link
+            to={"/home"}
+            onClick={handleLogout}
+            className="nav-link"
+            style={{ cursor: "pointer" }}
+          >
+            Logout
+          </Link>
+        )}
+      </nav>
+    );
+  };
+
   return (
     <div className="mask-background">
       {/* Routes */}
-
+      {console.log(user)}
       {/* {user ? ({admin ? (<Admin/) : (<User/>)}) : (<Login/>)} */}
-
       {/* user interface */}
       <div className="container px-4">
         <div className="row gx-5 h-100">
@@ -127,34 +181,7 @@ function App() {
             <div className="container-fluid" id="lhs">
               <TopLeft />
               <div className="row d-flex m-0" id="nav">
-                <nav className="h4 nav flex-column p-0">
-                  <NavItem text="Home" id="home" imgsrc="home" delay="1" />
-                  {user && (
-                    <NavItem text="Chat" id="chat" imgsrc="chat" delay="2" />
-                  )}
-                  {user && (
-                    <NavItem
-                      text="Profile"
-                      id="profile"
-                      imgsrc="user"
-                      delay="3"
-                    />
-                  )}
-                  {user && (
-                    <NavItem text="Tweet" id="tweet" imgsrc="tweet" delay="4" />
-                  )}
-                  {/* TODO: logout */}
-                  {user && (
-                    <Link
-                      to={"/home"}
-                      onClick={handleLogout}
-                      className="nav-link"
-                      style={{ cursor: "pointer" }}
-                    >
-                      Logout
-                    </Link>
-                  )}
-                </nav>
+                <NavLinks user={user} />
               </div>
               {user && <User />}
             </div>
@@ -174,7 +201,6 @@ function App() {
         </div>
       </div>
       {/* admin interface */}
-
       {/* login interface */}
     </div>
   );

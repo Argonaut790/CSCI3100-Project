@@ -463,7 +463,7 @@ img {
   display: none;
 }
 
-.loader-container {
+/* .loader-container {
   display: flex;
   justify-content: center;
   position: absolute;
@@ -471,7 +471,7 @@ img {
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-}
+} */
 
 .spinner {
   width: 65px;

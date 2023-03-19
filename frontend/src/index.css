@@ -464,19 +464,22 @@ img {
 }
 
 .loader-container {
+  display: flex;
+  justify-content: center;
   position: absolute;
+  left: 50%;
   top: 50%;
-  left: 45%;
+  transform: translate(-50%, -50%);
   z-index: 1;
 }
 
 .spinner {
-  width: 64px;
-  height: 64px;
+  width: 65px;
+  aspect-ratio: 1/1;
   border: 8px solid;
-  border-color: #3d5af1 transparent #3d5af1 transparent;
+  border-color: #c844ff transparent #c844ff transparent;
   border-radius: 50%;
-  animation: spin-anim 1.2s linear infinite;
+  animation: spin-anim 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
 }
 
 @keyframes spin-anim {

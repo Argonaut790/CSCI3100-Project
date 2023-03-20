@@ -90,7 +90,7 @@ const LoginModal = ({ setShowModal, onLogin }) => {
   return (
     <div className="modalContainer">
       <button onClick={() => setShowModal(false)}>X</button>
-      <form onSubmit={onSubmit}>
+      <form className="d-flex flex-column" onSubmit={onSubmit}>
         <input
           type="email"
           name="email"

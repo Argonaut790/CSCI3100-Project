@@ -7,6 +7,7 @@ import Chat from "./components/Chat";
 import Profile from "./components/Profile";
 import Tweet from "./components/Tweet";
 import AccountConfirm from "./components/Verification";
+import SignUp from "./components/SignUp";
 
 const images = ImportAll(
   require.context("./images", false, /\.(png|jpe?g|svg)$/)
@@ -73,12 +74,15 @@ function App() {
           <div className="row d-flex flex-column" id="user-info">
             <div className="col-md-12 p-0">{user.username}</div>
             <div className="col-md-12 p-0">#ID</div>
-            <button onClick={handleLogout}>Log Out</button>
+            <button type="button" class="btn btn-dark" onClick={handleLogout}>
+              Log Out
+            </button>
           </div>
         </div>
       </div>
     );
   };
+  // button type="button" class="btn btn-outline-dark"
 
   const NavItem = ({ text, id, imgsrc, delay }) => {
     const navLinkRef = useRef(null);
@@ -188,6 +192,20 @@ function App() {
       {console.log(user)}
       {/* {user ? ({admin ? (<Admin/) : (<User/>)}) : (<Login/>)} */}
       {/* user interface */}
+      {!loggedIn && (
+        <div
+          className="mask-background d-flex justify-content-center align-items-center"
+          id="sign-up-mask"
+        >
+          <div
+            className="d-flex justify-content-center align-items-center"
+            id="sign-up-div"
+          >
+            <SignUp loggedIn={loggedIn} />
+          </div>
+        </div>
+      )}
+
       <div className="container px-4">
         <div className="row gx-5 h-100">
           <div className="col-md-3 vh-100" id="nav">
@@ -200,8 +218,8 @@ function App() {
             </div>
           </div>
           <Routes>
-            <Route path="/" element={<Home loggedIn={loggedIn} />} />
-            <Route path="/home" element={<Home loggedIn={loggedIn} />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}

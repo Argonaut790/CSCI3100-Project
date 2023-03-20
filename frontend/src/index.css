@@ -8,6 +8,22 @@ body {
   height: 100vh;
 }
 
+#sign-up-mask {
+  width: 100vw;
+  z-index: 2;
+  position: absolute;
+  background-color: #00000070;
+}
+
+#sign-up-div {
+  background-image: url("./images/blob-scene-haikei.svg");
+  background-size: cover;
+  padding: 3rem;
+  border-radius: 20px;
+  aspect-ratio: 3/4;
+  z-index: 3;
+}
+
 #content {
   padding: 0;
   background-color: #000000cc;
@@ -117,6 +133,15 @@ body {
 #search-icon {
   width: 1.3rem;
   margin: 0 0.4rem;
+}
+
+/* followeing */
+#following-div {
+  background: #00000096;
+  padding: 1rem;
+  border-radius: 20px;
+  box-shadow: 0.2rem 0.2rem 0.7rem rgb(0 0 0 / 55%);
+  border: 1px solid;
 }
 
 #user {

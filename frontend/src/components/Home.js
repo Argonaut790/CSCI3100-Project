@@ -2,7 +2,7 @@ import HomeContent from "./HomeContent";
 import Search from "./Search";
 
 //function needs to be Capital Letter in the first
-const Home = (loggedIn) => {
+const Home = () => {
   return (
     <>
       <div className="col-md-6" id="content">
@@ -10,7 +10,7 @@ const Home = (loggedIn) => {
       </div>
       <div className="col-md-3 vh-100" id="explore">
         <div className="container-fluid p-0" id="rhs">
-          <Search loggedIn={loggedIn} />
+          <Search />
         </div>
       </div>
     </>

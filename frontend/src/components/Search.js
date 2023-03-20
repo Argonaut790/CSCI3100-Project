@@ -1,12 +1,20 @@
 import ImportAll from "./ImportAll";
-import SignUp from "./SignUp";
+
 //function needs to be Capital Letter in the first
-const Search = ({ loggedIn: { loggedIn } }) => {
-  console.log(loggedIn);
+const Search = () => {
   return (
     <>
       <Searchbar />
-      {!loggedIn && <SignUp />}
+      <div className="container-fluid" id="following-div">
+        <div className="row d-flex flex-column">
+          <div className="col-md h2">Following</div>
+          <br />
+          <div className="col-md">Follower 1</div>
+          <div className="col-md">Follower 2</div>
+          <div className="col-md">Follower 3</div>
+          <div className="col-md">Follower 4</div>
+        </div>
+      </div>
     </>
   );
 };

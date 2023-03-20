@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 const SignUpModal = ({ setShowModal }) => {
@@ -71,7 +71,7 @@ const SignUpModal = ({ setShowModal }) => {
   return (
     <div className="modalContainer">
       <button onClick={() => setShowModal(false)}>X</button>
-      <form onSubmit={onSubmit}>
+      <form className="d-flex flex-column" onSubmit={onSubmit}>
         <input
           type="email"
           name="email"
@@ -84,7 +84,7 @@ const SignUpModal = ({ setShowModal }) => {
         <input
           type="text"
           name="username"
-          id="user"
+          id="sign-up-user"
           className="user-input"
           placeholder="username"
           value={username}

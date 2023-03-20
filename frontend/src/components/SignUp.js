@@ -55,10 +55,14 @@ const SignUp = () => {
   };
 
   return (
-    <div id="signUp" className="signUpContainer" key="signUp">
+    <div id="signUp" className="signUpContainer d-grid gap-2 p-3" key="signUp">
       <h2>New to Rettiwt?</h2>
 
-      <button onClick={() => setShowSignUpModal(true)}>
+      <button
+        type="button"
+        class="btn btn-light"
+        onClick={() => setShowSignUpModal(true)}
+      >
         Sign Up with Email
       </button>
       <GoogleOAuthProvider clientId={clientId}>
@@ -67,7 +71,11 @@ const SignUp = () => {
           onError={onGoogleSignInFailure}
         />
       </GoogleOAuthProvider>
-      <button onClick={() => setShowLoginModal(true)}>
+      <button
+        type="button"
+        class="btn btn-light"
+        onClick={() => setShowLoginModal(true)}
+      >
         Already have an account?
       </button>
       <span id="errorMessage"></span>

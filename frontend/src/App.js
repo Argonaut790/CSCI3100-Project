@@ -218,14 +218,19 @@ function App() {
             </div>
           </div>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Home loggedIn={loggedIn} />} />
+            <Route path="/home" element={<Home loggedIn={loggedIn} />} />
             {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}
             /> */}
             {user && <Route path="/chat" element={<Chat />} />}
-            {user && <Route path="/profile" element={<Profile />} />}
+            {user && (
+              <Route
+                path="/profile"
+                element={<Profile loggedIn={loggedIn} />}
+              />
+            )}
             {user && <Route path="/tweet" element={<Tweet />} />}
             {user && <Route path="/confirm" element={<AccountConfirm />} />}
           </Routes>

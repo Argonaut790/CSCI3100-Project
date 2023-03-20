@@ -5,7 +5,7 @@ import ProfileContent from "./ProfileContent";
 import Search from "./Search";
 
 //function needs to be Capital Letter in the first
-const Profile = () => {
+const Profile = (loggedIn) => {
   return (
     <>
       <div className="col-md-6" id="content">
@@ -13,7 +13,7 @@ const Profile = () => {
       </div>
       <div className="col-md-3 vh-100" id="explore">
         <div className="container-fluid p-0" id="rhs">
-          <Search />
+          <Search loggedIn={loggedIn} />
         </div>
       </div>
     </>

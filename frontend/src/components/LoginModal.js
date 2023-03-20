@@ -89,7 +89,11 @@ const LoginModal = ({ setShowModal, onLogin }) => {
 
   return (
     <div className="modalContainer">
-      <button onClick={() => setShowModal(false)}>X</button>
+      <button
+        type="button"
+        className="btn-close"
+        onClick={() => setShowModal(false)}
+      ></button>
       <form className="d-flex flex-column" onSubmit={onSubmit}>
         <input
           type="email"

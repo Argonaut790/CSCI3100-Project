@@ -37,6 +37,14 @@ body {
   z-index: 1;
 }
 
+.p-y-2 {
+  padding: 2rem 0 !important;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll !important;
+}
+
 .nav-link {
   color: white;
   padding: 1rem;
@@ -162,6 +170,7 @@ img {
 
 .post-user-info {
   height: 2.8rem;
+  padding: 0 2rem;
 }
 
 .post-user-avatar {
@@ -372,11 +381,20 @@ img {
 
 #tweet-section {
   aspect-ratio: 3/4;
+  padding: 2rem;
+}
+
+#tweet-div {
+  padding: 2rem;
 }
 
 #upload-image-section {
   text-align: center;
   cursor: pointer;
+}
+
+#upload-container {
+  padding: 2rem 0 !important;
 }
 
 .cursor-pointer {
@@ -406,19 +424,25 @@ img {
   color: gray !important;
 }
 
+#tweet-section {
+  padding: 0.5rem 0 !important;
+}
+
+#tweet-form {
+  padding: 3rem 0;
+}
+
 #post-submit {
   background-color: #c844ff;
   border-radius: 20px;
   padding: 0.7rem;
   width: 40%;
-  margin-bottom: 5rem;
   height: 4rem;
   border: none;
   box-shadow: 0 0 0.7rem rgb(0 0 0 / 55%);
 }
 
-#tweet-describtion {
-  padding: 1rem 2rem 0;
+#post-describtion {
   height: 15%;
 }
 
@@ -427,20 +451,35 @@ img {
   padding: 1rem;
 }
 
-.loader-container {
-  position: absolute;
-  top: 50%;
-  left: 45%;
-  z-index: 1;
+#preview {
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 6px;
+  padding: 0;
 }
 
+#image-upload {
+  display: none;
+}
+
+/* .loader-container {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+} */
+
 .spinner {
-  width: 64px;
-  height: 64px;
+  width: 65px;
+  aspect-ratio: 1/1;
   border: 8px solid;
-  border-color: #3d5af1 transparent #3d5af1 transparent;
+  border-color: #c844ff transparent #c844ff transparent;
   border-radius: 50%;
-  animation: spin-anim 1.2s linear infinite;
+  animation: spin-anim 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
 }
 
 @keyframes spin-anim {

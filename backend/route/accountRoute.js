@@ -37,13 +37,11 @@ router.post("/login", async (req, res) => {
           const accessToken = generateAccessToken(e.email);
           const refreshToken = jwt.sign(e.email, process.env.REFRESH_TOEKN);
           refreshTokens.push(refreshToken);
-          res
-            .status(200)
-            .json({
-              username: e.username,
-              accessToken: accessToken,
-              refreshToken: refreshToken,
-            });
+          res.status(200).json({
+            username: e.username,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          });
         }
       } else if (e.isActivated === false) {
         res
@@ -58,7 +56,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Sign up
 router.post("/", async (req, res) => {
   console.log(res.body);
   //TODO: server-side validation

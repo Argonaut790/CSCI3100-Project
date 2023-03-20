@@ -10,8 +10,8 @@ const postSchema = new Schema({
     type: String,
   },
   timestamp: {
-    type: String,
-    default: Date.now(),
+    type: Date,
+    default: Date.now,
   },
 });
 

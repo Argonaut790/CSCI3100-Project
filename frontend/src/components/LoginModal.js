@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const LoginModal = ({ setShowModal, onLogin }) => {
+const LoginModal = ({ setShowModal }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
@@ -41,7 +41,7 @@ const LoginModal = ({ setShowModal, onLogin }) => {
         } else {
           console.log("Error: ", err.response.status);
           document.getElementById("result").innerText =
-            "Wrong email / password";
+            "Invalid email / password";
         }
       });
   };
@@ -72,45 +72,82 @@ const LoginModal = ({ setShowModal, onLogin }) => {
   };
 
   const onSubmit = (e) => {
+    let isEmailInvalid = false;
+    let isPasswordInvalid = false;
+
     //TODO: client-side validation
     e.preventDefault();
     document.getElementById("result").innerText = "";
     if (email === "") {
-      document.getElementById("result").innerText = "Please enter your email\n";
+      isEmailInvalid = true;
+    } else {
+      isEmailInvalid = false;
     }
     if (password === "") {
-      document.getElementById("result").innerText +=
-        "Please enter your password\n";
+      isPasswordInvalid = true;
     }
+
+    if (isPasswordInvalid || isEmailInvalid) {
+      document.getElementById("result").innerText +=
+        "- Please enter your " +
+        (isEmailInvalid ? "email" : "") +
+        (isPasswordInvalid ? " password" : "");
+    }
+
     if (email !== "" && password !== "") {
       login();
     }
+
+    // Add "is-invalid" class to input fields that match the syntax
+    document.getElementById("floatingEmail").className = isEmailInvalid
+      ? "form-control floating is-invalid"
+      : "form-control floating";
+    document.getElementById("floatingPassword").className = isPasswordInvalid
+      ? "form-control floating is-invalid"
+      : "form-control floating";
   };
 
   return (
     <div className="modalContainer">
-      <button onClick={() => setShowModal(false)}>X</button>
-      <form className="d-flex flex-column" onSubmit={onSubmit}>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          className="email-input"
-          placeholder="email"
-          value={email}
-          onChange={onChangeEmail}
-        />
-        <input
-          type="password"
-          name="password"
-          id="password"
-          className="user-input"
-          placeholder="password"
-          value={password}
-          onChange={onChangePassword}
-        />
-        <div className="buttonContainer">
-          <input type="submit" value="Login" className="btn btn-primary" />
+      <button
+        type="button"
+        className="btn-close"
+        onClick={() => setShowModal(false)}
+      ></button>
+
+      <form onSubmit={onSubmit}>
+        <div class="form-floating ">
+          <input
+            type="email"
+            name="email"
+            className="form-control floating"
+            id="floatingEmail"
+            placeholder="email"
+            value={email}
+            onChange={onChangeEmail}
+          />
+          <label for="floatingInput">Email address</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            name="password"
+            className="form-control floating"
+            id="floatingPassword"
+            placeholder="password"
+            value={password}
+            onChange={onChangePassword}
+          />
+          <label for="floatingPassword">Password</label>
+        </div>
+
+        <div className="buttonContainer d-grid">
+          <input
+            type="submit"
+            value="Login"
+            className="btn btn-outline-warning"
+          />
         </div>
       </form>
       <span id="result"></span>

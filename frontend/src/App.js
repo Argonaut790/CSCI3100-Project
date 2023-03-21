@@ -33,7 +33,19 @@ const TopLeft = () => {
 function App() {
   const [user, setUser] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
+  const [tweetHandled, setTweetHandled] = useState(false);
+
   let location = useLocation();
+
+  const handleTweet = () => {
+    if (tweetHandled) {
+      setTweetHandled(false);
+    } else {
+      setTweetHandled(true);
+    }
+    console.log("TweetHandled : " + tweetHandled);
+    console.log("LoggedIn : " + loggedIn);
+  };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -98,37 +110,48 @@ function App() {
 
     return (
       <li>
-        {user ? (
-          <Link
-            to={`/${id}`}
-            className={`nav-link text-center mask delay-${delay}`}
-            style={{ cursor: "pointer" }}
-            id={`${id}`}
-            ref={navLinkRef}
-          >
-            <img
-              src={images[`${imgsrc}.png`]}
-              className="mr-1 white-img"
-              alt={`${id} icon`}
-            />
-            <span className="d-none d-md-inline">{text}</span>
-          </Link>
-        ) : (
-          <Link
-            to={`/${id}`}
-            className={`nav-link text-center mask delay-${delay}`}
-            style={{ cursor: "pointer" }}
-            id={`${id}`}
-            ref={navLinkRef}
-          >
-            <img
-              src={images[`${imgsrc}.png`]}
-              className="mr-1 white-img"
-              alt={`${id} icon`}
-            />
-            <span className="d-none d-md-inline">{text}</span>
-          </Link>
-        )}
+        <Link
+          to={`/${id}`}
+          className={`nav-link text-center mask btn delay-${delay}`}
+          style={{ cursor: "pointer" }}
+          id={`${id}`}
+          ref={navLinkRef}
+        >
+          <img
+            src={images[`${imgsrc}.png`]}
+            className="mr-1 white-img"
+            alt={`${id} icon`}
+          />
+          <span className="d-none d-md-inline">{text}</span>
+        </Link>
+      </li>
+    );
+  };
+
+  const TweetButton = ({ handleTweet }) => {
+    const navLinkRef = useRef(null);
+
+    useEffect(() => {
+      // slide in effect
+      navLinkRef.current.classList.add("visible");
+    }, []);
+
+    return (
+      <li>
+        <div
+          className={"nav-link text-center mask delay-4 btn"}
+          style={{ cursor: "pointer" }}
+          id="tweet"
+          ref={navLinkRef}
+          onClick={handleTweet}
+        >
+          <img
+            src={images["tweet.png"]}
+            className="mr-1 white-img"
+            alt="tweet icon"
+          />
+          <span className="d-none d-md-inline">Tweet</span>
+        </div>
       </li>
     );
   };
@@ -151,7 +174,7 @@ function App() {
     localStorage.removeItem("user");
   };
 
-  const NavLinks = ({ user }) => {
+  const NavLinks = ({ user, handleTweet }) => {
     return (
       <nav className="h4 nav flex-column p-0">
         <NavItem user={user} text="Home" id="home" imgsrc="home" delay="1" />
@@ -167,15 +190,7 @@ function App() {
             delay="3"
           />
         )}
-        {user && (
-          <NavItem
-            user={user}
-            text="Tweet"
-            id="tweet"
-            imgsrc="tweet"
-            delay="4"
-          />
-        )}
+        {user && <TweetButton handleTweet={handleTweet} />}
         {user && (
           <Link
             to={"/home"}
@@ -202,35 +217,40 @@ function App() {
           id="sign-up-mask"
         >
           <div
-            className="d-flex justify-content-center align-items-center"
+            className="col-lg-3 d-flex justify-content-center align-items-center"
             id="sign-up-div"
           >
             <SignUp loggedIn={loggedIn} />
           </div>
         </div>
       )}
-
+      {loggedIn && tweetHandled && <Tweet handleTweet={handleTweet} />}
       <div className="container px-4">
         <div className="row gx-5 h-100">
           <div className="col-md-3 vh-100" id="nav">
             <div className="container-fluid" id="lhs">
               <TopLeft />
               <div className="row d-flex m-0" id="nav">
-                <NavLinks user={user} />
+                <NavLinks user={user} handleTweet={handleTweet} />
               </div>
               {user && <User />}
             </div>
           </div>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Home loggedIn={loggedIn} />} />
+            <Route path="/home" element={<Home loggedIn={loggedIn} />} />
             {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}
             /> */}
             {user && <Route path="/chat" element={<Chat />} />}
-            {user && <Route path="/profile" element={<Profile />} />}
-            {user && <Route path="/tweet" element={<Tweet />} />}
+            {user && (
+              <Route
+                path="/profile"
+                element={<Profile loggedIn={loggedIn} />}
+              />
+            )}
+            {/* {user && <Route path="/tweet" element={<Tweet />} />} */}
             <Route path="/confirm" element={<AccountConfirm />} />
           </Routes>
         </div>

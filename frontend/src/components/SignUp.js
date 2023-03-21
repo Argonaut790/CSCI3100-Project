@@ -49,6 +49,16 @@ const SignUp = () => {
     //TODO: redirect to postlogon page
   };
 
+  const handleSignUp = () => {
+    setShowSignUpModal(true);
+    setShowLoginModal(false);
+  };
+
+  const handleLogIn = () => {
+    setShowSignUpModal(false);
+    setShowLoginModal(true);
+  };
+
   const onGoogleSignInFailure = (response) => {
     console.log("Google sign in failed.");
     console.log(response);
@@ -58,11 +68,7 @@ const SignUp = () => {
     <div id="signUp" className="signUpContainer d-grid gap-2 p-3" key="signUp">
       <h2>New to Rettiwt?</h2>
 
-      <button
-        type="button"
-        className="btn btn-light"
-        onClick={() => setShowSignUpModal(true)}
-      >
+      <button type="button" className="btn btn-light" onClick={handleSignUp}>
         Sign Up with Email
       </button>
       <GoogleOAuthProvider clientId={clientId}>
@@ -71,11 +77,7 @@ const SignUp = () => {
           onError={onGoogleSignInFailure}
         />
       </GoogleOAuthProvider>
-      <button
-        type="button"
-        className="btn btn-light"
-        onClick={() => setShowLoginModal(true)}
-      >
+      <button type="button" className="btn btn-light" onClick={handleLogIn}>
         Already have an account?
       </button>
       <span id="errorMessage"></span>

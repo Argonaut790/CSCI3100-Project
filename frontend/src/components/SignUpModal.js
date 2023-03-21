@@ -58,34 +58,60 @@ const SignUpModal = ({ setShowModal }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    let isEmailInvalid = false;
+    let isUsernameInvalid = false;
+    let isPasswordInvalid = false;
+    let isConfirmPasswordInvalid = false;
+
     document.getElementById("result").innerText = "";
     // Client-side validation
     const passwordRegEx = new RegExp(
       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
     );
     if (email === "") {
-      document.getElementById("result").innerText = "Please enter your email\n";
+      isEmailInvalid = true;
+    } else {
+      isEmailInvalid = false;
     }
     if (username === "") {
-      document.getElementById("result").innerText +=
-        "Please enter your username\n";
+      isUsernameInvalid = true;
+    } else {
+      isUsernameInvalid = false;
     }
     if (password === "") {
-      document.getElementById("result").innerText +=
-        "Please enter your password\n";
+      isPasswordInvalid = true;
     }
     if (confirmPassword === "") {
-      document.getElementById("result").innerText +=
-        "Please confirm your password\n";
+      isConfirmPasswordInvalid = true;
     }
     if (password !== confirmPassword) {
       document.getElementById("result").innerText +=
-        "Your confirm password does not match\n";
+        "- Your confirm password does not match\n";
+      isPasswordInvalid = true;
+      isConfirmPasswordInvalid = true;
     }
     if (!password.match(passwordRegEx)) {
       document.getElementById("result").innerText +=
-        "Password must contains at least 1 upper case, 1 lower case, 1 number with the minimum length of 8 \n";
+        "- Password must contains at least 1 upper case, 1 lower case, 1 number with the minimum length of 8 \n";
+      isPasswordInvalid = true;
+      isConfirmPasswordInvalid = true;
     }
+
+    if (
+      isPasswordInvalid ||
+      isConfirmPasswordInvalid ||
+      isEmailInvalid ||
+      isUsernameInvalid
+    ) {
+      document.getElementById("result").innerText +=
+        "- Please enter your " +
+        (isEmailInvalid ? "email" : "") +
+        (isUsernameInvalid ? " username" : "") +
+        (isPasswordInvalid ? " password" : "") +
+        (isConfirmPasswordInvalid ? " and confirm your password " : "");
+    }
+
     if (
       email !== "" &&
       username !== "" &&
@@ -96,6 +122,21 @@ const SignUpModal = ({ setShowModal }) => {
     ) {
       createAccount();
     }
+
+    // Add "is-invalid" class to input fields that match the syntax
+    document.getElementById("floatingEmail").className = isEmailInvalid
+      ? "form-control floating is-invalid"
+      : "form-control floating";
+    document.getElementById("floatingUsername").className = isUsernameInvalid
+      ? "form-control floating is-invalid"
+      : "form-control floating";
+    document.getElementById("floatingPassword").className = isPasswordInvalid
+      ? "form-control floating is-invalid"
+      : "form-control floating";
+    document.getElementById("floatingConfirmPassword").className =
+      isConfirmPasswordInvalid
+        ? "form-control floating is-invalid"
+        : "form-control floating";
   };
 
   return (
@@ -105,52 +146,69 @@ const SignUpModal = ({ setShowModal }) => {
         className="btn-close"
         onClick={() => setShowModal(false)}
       ></button>
+
       <form className="d-flex flex-column" onSubmit={onSubmit}>
-        <span>
-          - at least length of 8, 1 upper case, 1 lower case, 1 number for
+        <div className="h6">
+          - At least length of 8, 1 upper case, 1 lower case, 1 number for
           password
-        </span>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          className="email-input"
-          placeholder="email"
-          value={email}
-          onChange={onChangeEmail}
-        />
-        <input
-          type="text"
-          name="username"
-          id="sign-up-user"
-          className="user-input"
-          placeholder="username"
-          value={username}
-          onChange={onChangeUsername}
-        />
-        <input
-          type="password"
-          name="password"
-          id="password"
-          className="user-input"
-          placeholder="password"
-          value={password}
-          onChange={onChangePassword}
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          id="confirmPassword"
-          className="user-input"
-          placeholder="Confirm your password"
-          value={confirmPassword}
-          onChange={onChangeConfirmPassword}
-        />
-        <div className="buttonContainer">
+        </div>
+        <div class="form-floating ">
+          <input
+            type="email"
+            name="email"
+            className="form-control floating"
+            id="floatingEmail"
+            placeholder="email"
+            value={email}
+            onChange={onChangeEmail}
+          />
+          <label for="floatingInput">Email address</label>
+        </div>
+
+        <div class="form-floating">
+          <input
+            type="text"
+            name="username"
+            className="form-control floating"
+            id="floatingUsername"
+            placeholder="username"
+            value={username}
+            onChange={onChangeUsername}
+          />
+          <label for="floatingInput">Username</label>
+        </div>
+
+        <div class="form-floating">
+          <input
+            type="password"
+            name="password"
+            className="form-control floating"
+            id="floatingPassword"
+            placeholder="password"
+            value={password}
+            onChange={onChangePassword}
+          />
+          <label for="floatingPassword">Password</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            name="confirmPassword"
+            className="form-control floating"
+            id="floatingConfirmPassword"
+            placeholder="Confirm your password"
+            value={confirmPassword}
+            onChange={onChangeConfirmPassword}
+          />
+          <label for="floatingPassword">Confirm Password</label>
+        </div>
+
+        <div className="buttonContainer d-grid">
           <input
             type="submit"
             value="Create Account"
-            className="btn btn-primary"
+            className="btn btn-outline-warning"
           />
         </div>
       </form>

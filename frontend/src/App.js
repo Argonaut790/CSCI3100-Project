@@ -217,7 +217,7 @@ function App() {
           id="sign-up-mask"
         >
           <div
-            className="d-flex justify-content-center align-items-center"
+            className="col-lg-3 d-flex justify-content-center align-items-center"
             id="sign-up-div"
           >
             <SignUp loggedIn={loggedIn} />

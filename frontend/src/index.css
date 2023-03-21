@@ -9,9 +9,10 @@ body {
 }
 
 .btn-close {
-  background-color: #c844ff;
+  background-color: #ffc107;
 }
 
+/* Sign Up */
 #sign-up-mask {
   width: 100vw;
   z-index: 2;
@@ -26,6 +27,11 @@ body {
   border-radius: 20px;
   aspect-ratio: 3/4;
   z-index: 3;
+}
+
+.form-control:focus {
+  background-color: transparent;
+  color: white;
 }
 
 #content {
@@ -245,7 +251,7 @@ img {
 .mask {
   background-color: #5e5e5e3d;
   border-radius: 20px;
-  overflow: hidden;
+  overflow-y: hidden;
   box-shadow: 0.2rem 0.2rem 0.7rem rgb(0 0 0 / 55%);
 }
 
@@ -260,13 +266,17 @@ img {
   border-radius: 20px;
   width: 90%;
   aspect-ratio: 3/4;
-  overflow: hidden;
+  overflow-y: hidden;
   margin: 1.5rem 0;
   box-shadow: 0rem 0rem 1rem rgb(0 0 0 / 40%);
 }
 
 .h4 {
   font-size: 1.3rem;
+}
+
+.h5 {
+  font-size: 1rem;
 }
 
 .top-p-1 {
@@ -357,7 +367,7 @@ img {
   }
   #mid-center {
     margin: 0 0 10vh 0;
-    overflow: hidden;
+    overflow-y: hidden;
   }
   #search-engine-div {
     display: none;
@@ -459,6 +469,14 @@ img {
   color: white;
 }
 
+.floating {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid white;
+  border-radius: 0;
+  color: white;
+}
+
 /* #upload-image-section .span {
   padding: 2rem;
 } */
@@ -466,7 +484,7 @@ img {
 .tweet-mask {
   background-color: #2b2b2b;
   border-radius: 20px;
-  overflow: hidden;
+  overflow-y: hidden;
   box-shadow: 0 0 0.7rem rgb(0 0 0 / 55%);
 }
 

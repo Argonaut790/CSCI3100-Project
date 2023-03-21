@@ -60,7 +60,7 @@ const SignUp = () => {
 
       <button
         type="button"
-        class="btn btn-light"
+        className="btn btn-light"
         onClick={() => setShowSignUpModal(true)}
       >
         Sign Up with Email
@@ -73,7 +73,7 @@ const SignUp = () => {
       </GoogleOAuthProvider>
       <button
         type="button"
-        class="btn btn-light"
+        className="btn btn-light"
         onClick={() => setShowLoginModal(true)}
       >
         Already have an account?

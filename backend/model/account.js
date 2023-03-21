@@ -19,7 +19,7 @@ const AccountSchema = new Schema({
     type: String,
     required: true,
   },
-  confirmed: {
+  isConfirmed: {
     type: Boolean,
     default: false,
   },

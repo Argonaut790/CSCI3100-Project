@@ -5,6 +5,7 @@ const SignUpModal = ({ setShowModal }) => {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const createAccount = () => {
     const user = {
@@ -26,7 +27,10 @@ const SignUpModal = ({ setShowModal }) => {
       .catch((err) => {
         if (err.response.status === 404) {
           document.getElementById("result").innerText =
-            "This email has been registered.";
+            "This email has been registered. Please click 'Forgot Password' if you cannot login.";
+        } else if (err.response.status === 401) {
+          document.getElementById("result").innerText =
+            "Invalid email / password.";
         } else {
           document.getElementById("result").innerText =
             "Unkown error, please try again.";
@@ -36,6 +40,7 @@ const SignUpModal = ({ setShowModal }) => {
     setUserName("");
     setEmail("");
     setPassword("");
+    setConfirmPassword("");
   };
 
   const onChangeUsername = (e) => {
@@ -47,11 +52,17 @@ const SignUpModal = ({ setShowModal }) => {
   const onChangePassword = (e) => {
     setPassword(e.target.value);
   };
+  const onChangeConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
 
   const onSubmit = (e) => {
-    //TODO: client-side validation
     e.preventDefault();
     document.getElementById("result").innerText = "";
+    // Client-side validation
+    const passwordRegEx = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
+    );
     if (email === "") {
       document.getElementById("result").innerText = "Please enter your email\n";
     }
@@ -63,7 +74,26 @@ const SignUpModal = ({ setShowModal }) => {
       document.getElementById("result").innerText +=
         "Please enter your password\n";
     }
-    if (email !== "" && username !== "" && password !== "") {
+    if (confirmPassword === "") {
+      document.getElementById("result").innerText +=
+        "Please confirm your password\n";
+    }
+    if (password !== confirmPassword) {
+      document.getElementById("result").innerText +=
+        "Your confirm password does not match\n";
+    }
+    if (!password.match(passwordRegEx)) {
+      document.getElementById("result").innerText +=
+        "Password must contains at least 1 upper case, 1 lower case, 1 number with the minimum length of 8 \n";
+    }
+    if (
+      email !== "" &&
+      username !== "" &&
+      password !== "" &&
+      confirmPassword !== "" &&
+      password === confirmPassword &&
+      password.match(passwordRegEx)
+    ) {
       createAccount();
     }
   };
@@ -76,6 +106,10 @@ const SignUpModal = ({ setShowModal }) => {
         onClick={() => setShowModal(false)}
       ></button>
       <form className="d-flex flex-column" onSubmit={onSubmit}>
+        <span>
+          - at least length of 8, 1 upper case, 1 lower case, 1 number for
+          password
+        </span>
         <input
           type="email"
           name="email"
@@ -102,6 +136,15 @@ const SignUpModal = ({ setShowModal }) => {
           placeholder="password"
           value={password}
           onChange={onChangePassword}
+        />
+        <input
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          className="user-input"
+          placeholder="Confirm your password"
+          value={confirmPassword}
+          onChange={onChangeConfirmPassword}
         />
         <div className="buttonContainer">
           <input

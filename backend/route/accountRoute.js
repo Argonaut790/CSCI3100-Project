@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const Account = require("../model/accounts");
+const Account = require("../model/account");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -27,7 +27,7 @@ router.post("/login", async (req, res) => {
         (await bcrypt.compare(req.body.password, e.password)) &&
         e.isActivated === true
       ) {
-        if (e.confirmed === false) {
+        if (e.isConfirmed === false) {
           res
             .status(401)
             .send(
@@ -56,8 +56,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Sign up
 router.post("/", async (req, res) => {
-  console.log(res.body);
   //TODO: server-side validation
   if (req.body.isGoogleSign === true) {
     const account = new Account({
@@ -77,6 +77,21 @@ router.post("/", async (req, res) => {
     });
     if (user) {
       return res.status(400).json("email exists");
+    }
+
+    // Server-side validation
+    const emailRegEx =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const passwordRegEx = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
+    );
+    if (!req.body.email.match(emailRegEx)) {
+      console.log(1);
+      return res.status(401).json("Invalid email");
+    }
+    if (!req.body.password.match(passwordRegEx)) {
+      console.log(2);
+      return res.status(401).json("Invalid password");
     }
 
     // Encrypt user password
@@ -109,12 +124,13 @@ router.patch("/auth/:confirmationCode", async (req, res) => {
   const user = await Account.find({
     confirmationCode: req.params.confirmationCode,
   });
+  console.log(req.params.confirmationCode);
   if (!user) {
     return res.status(404).send("not existed");
   }
   const updatedAccount = await Account.updateOne(
     { confirmationCode: req.params.confirmationCode },
-    { $set: { confirmed: true } }
+    { $set: { isConfirmed: true } }
   );
   res.status(200).json(updatedAccount);
 });

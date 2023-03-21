@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
+const { v4: uuidv4 } = require("uuid");
 const Schema = mongoose.Schema;
 
 const AccountSchema = new Schema({
+  userId: {
+    type: String,
+    default: () => uuidv4().substr(0, 6),
+  },
   username: {
     type: String,
     required: true,
@@ -14,7 +19,7 @@ const AccountSchema = new Schema({
     type: String,
     required: true,
   },
-  confirmed: {
+  isConfirmed: {
     type: Boolean,
     default: false,
   },

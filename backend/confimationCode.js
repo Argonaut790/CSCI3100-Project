@@ -1,6 +1,6 @@
 const randString = () => {
   const characters =
-    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%";
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let token = "";
   let len = Math.random() * (128 - 64) + 64;
   for (let i = 0; i < len; i++) {

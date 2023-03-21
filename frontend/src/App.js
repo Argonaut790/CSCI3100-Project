@@ -6,7 +6,7 @@ import Home from "./components/Home";
 import Chat from "./components/Chat";
 import Profile from "./components/Profile";
 import Tweet from "./components/Tweet";
-import AccountConfirm from "./components/Verification";
+import AccountConfirm from "./components/AccountConfirm";
 import SignUp from "./components/SignUp";
 
 const images = ImportAll(
@@ -86,7 +86,11 @@ function App() {
           <div className="row d-flex flex-column" id="user-info">
             <div className="col-md-12 p-0">{user.username}</div>
             <div className="col-md-12 p-0">#ID</div>
-            <button type="button" class="btn btn-dark" onClick={handleLogout}>
+            <button
+              type="button"
+              className="btn btn-dark"
+              onClick={handleLogout}
+            >
               Log Out
             </button>
           </div>
@@ -247,7 +251,7 @@ function App() {
               />
             )}
             {/* {user && <Route path="/tweet" element={<Tweet />} />} */}
-            {user && <Route path="/confirm" element={<AccountConfirm />} />}
+            <Route path="/confirm" element={<AccountConfirm />} />
           </Routes>
         </div>
       </div>

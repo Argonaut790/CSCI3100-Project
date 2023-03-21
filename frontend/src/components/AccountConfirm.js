@@ -10,12 +10,13 @@ const verifyUser = (code) => {
     });
 };
 
+//TODO: render confirm page
 const AccountConfirm = () => {
   const [searchParams] = useSearchParams();
   verifyUser(searchParams.get("confirmationCode"));
 
   return (
-    <div className="container">
+    <div className="accountConfirmContainer">
       <h3>Account confirmed!</h3>
       <Link to={"/home"}>Back to main page</Link>
     </div>

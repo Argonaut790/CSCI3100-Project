@@ -451,6 +451,14 @@ img {
   padding: 1rem;
 }
 
+#floatingTextarea2 {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid white;
+  border-radius: 0;
+  color: white;
+}
+
 /* #upload-image-section .span {
   padding: 2rem;
 } */

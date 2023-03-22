@@ -1,6 +1,7 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, createRef } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 
+import ScrollContext from "./components/ScrollContext";
 import ImportAll from "./components/ImportAll";
 import Home from "./components/Home";
 import Chat from "./components/Chat";
@@ -34,6 +35,8 @@ function App() {
   const [user, setUser] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
   const [tweetHandled, setTweetHandled] = useState(false);
+
+  const maskBackgroundRef = createRef();
 
   let location = useLocation();
 
@@ -206,57 +209,59 @@ function App() {
   };
 
   return (
-    <div className="mask-background">
-      {/* Routes */}
-      {console.log(user)}
-      {/* {user ? ({admin ? (<Admin/) : (<User/>)}) : (<Login/>)} */}
-      {/* user interface */}
-      {!loggedIn && (
-        <div
-          className="mask-background d-flex justify-content-center align-items-center"
-          id="sign-up-mask"
-        >
+    <div className="mask-background" ref={maskBackgroundRef}>
+      <ScrollContext.Provider value={maskBackgroundRef}>
+        {/* Routes */}
+        {console.log(user)}
+        {/* {user ? ({admin ? (<Admin/) : (<User/>)}) : (<Login/>)} */}
+        {/* user interface */}
+        {!loggedIn && (
           <div
-            className="col-lg-3 d-flex justify-content-center align-items-center"
-            id="sign-up-div"
+            className="mask-background d-flex justify-content-center align-items-center"
+            id="sign-up-mask"
           >
-            <SignUp loggedIn={loggedIn} />
-          </div>
-        </div>
-      )}
-      {loggedIn && tweetHandled && <Tweet handleTweet={handleTweet} />}
-      <div className="container px-4">
-        <div className="row gx-5 h-100">
-          <div className="col-md-3 vh-100" id="nav">
-            <div className="container-fluid" id="lhs">
-              <TopLeft />
-              <div className="row d-flex m-0" id="nav">
-                <NavLinks user={user} handleTweet={handleTweet} />
-              </div>
-              {user && <User />}
+            <div
+              className="col-lg-3 d-flex justify-content-center align-items-center"
+              id="sign-up-div"
+            >
+              <SignUp loggedIn={loggedIn} />
             </div>
           </div>
-          <Routes>
-            <Route path="/" element={<Home loggedIn={loggedIn} />} />
-            <Route path="/home" element={<Home loggedIn={loggedIn} />} />
-            {/* <Route
+        )}
+        {loggedIn && tweetHandled && <Tweet handleTweet={handleTweet} />}
+        <div className="container px-4">
+          <div className="row gx-5 h-100">
+            <div className="col-md-3 vh-100" id="nav">
+              <div className="container-fluid" id="lhs">
+                <TopLeft />
+                <div className="row d-flex m-0" id="nav">
+                  <NavLinks user={user} handleTweet={handleTweet} />
+                </div>
+                {user && <User />}
+              </div>
+            </div>
+            <Routes>
+              <Route path="/" element={<Home loggedIn={loggedIn} />} />
+              <Route path="/home" element={<Home loggedIn={loggedIn} />} />
+              {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}
             /> */}
-            {user && <Route path="/chat" element={<Chat />} />}
-            {user && (
-              <Route
-                path="/profile"
-                element={<Profile loggedIn={loggedIn} />}
-              />
-            )}
-            {/* {user && <Route path="/tweet" element={<Tweet />} />} */}
-            <Route path="/confirm" element={<AccountConfirm />} />
-          </Routes>
+              {user && <Route path="/chat" element={<Chat />} />}
+              {user && (
+                <Route
+                  path="/profile"
+                  element={<Profile loggedIn={loggedIn} />}
+                />
+              )}
+              {/* {user && <Route path="/tweet" element={<Tweet />} />} */}
+              <Route path="/confirm" element={<AccountConfirm />} />
+            </Routes>
+          </div>
         </div>
-      </div>
-      {/* admin interface */}
-      {/* login interface */}
+        {/* admin interface */}
+        {/* login interface */}
+      </ScrollContext.Provider>
     </div>
   );
 }

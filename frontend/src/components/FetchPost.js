@@ -1,6 +1,6 @@
 import { Component } from "react";
 import axios from "axios";
-
+// import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
 
 const images = ImportAll(
@@ -29,60 +29,151 @@ class FetchPost extends Component {
     this.state = {
       posts: [],
       isLoading: false,
+      page: 0,
+      hasMore: true,
     };
+    // this.postListRef = createRef();
   }
 
   async componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+    this.fetchPosts();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  fetchPosts = async () => {
+    const { page } = this.state;
     try {
-      const response = await axios.get("http://localhost:5500/tweet");
+      this.setState({ isLoading: true });
+      const response = await axios.get(
+        `http://localhost:5500/tweet?limit=10&page=${page}`
+      );
       const posts = response.data;
 
-      for (const post of posts) {
-        this.setState({ isLoading: true });
-        const imageResponse = await axios.get(
-          `http://localhost:5500/tweet/image/${post.image.filename}`,
-          {
-            responseType: "blob",
-          }
-        );
+      if (posts.length === 0) {
+        this.setState({ hasMore: false });
+      } else {
+        for (const post of posts) {
+          const imageResponse = await axios.get(
+            `http://localhost:5500/tweet/image/${post.image.filename}`,
+            {
+              responseType: "blob",
+            }
+          );
 
-        const imageURL = URL.createObjectURL(imageResponse.data);
+          const imageURL = URL.createObjectURL(imageResponse.data);
 
-        this.setState((prevState) => ({
-          posts: [...prevState.posts, { ...post, imageURL }],
-        }));
+          this.setState((prevState) => ({
+            posts: [...prevState.posts, { ...post, imageURL }],
+          }));
+        }
+        this.setState((prevState) => ({ page: prevState.page + 1 }));
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
 
     this.setState({ isLoading: false });
-  }
+  };
+
+  // handleScroll = () => {
+  //   const { isLoading, hasMore } = this.state;
+  //   if (isLoading || !hasMore || !this.postListRef.current) return;
+
+  //   const { scrollTop, scrollHeight, clientHeight } = this.postListRef.current;
+
+  //   console.log("scrollTop:", scrollTop);
+  //   console.log("scrollHeight:", scrollHeight);
+  //   console.log("clientHeight:", clientHeight);
+
+  //   if (scrollTop + clientHeight >= scrollHeight) {
+  //     console.log("Fetching more posts...");
+  //     this.fetchPosts();
+  //   }
+  // };
 
   render() {
-    const { posts } = this.state;
+    const { posts, isLoading } = this.state;
 
     return (
       <div className="container-fluid p-0" id="mid-center">
-        <div className="row d-flex justify-content-center" id="post-list">
+        <div
+          className="row d-flex justify-content-center"
+          id="post-list"
+          // ref={this.postListRef}
+        >
           {posts.map((post, index) => (
             <div className="mask-post p-0" id="post" key={index}>
               <UserID />
-              <div className="post-image-div">
+              <div
+                className="post-image-div d-flex justify-content-center align-items-center"
+                style={{ aspectRatio: "1/1" }}
+              >
+                <div
+                  className="spinner"
+                  style={{ aspectRatio: "1/1", width: "65px", height: "65px" }}
+                  ref={(el) => (this[`spinner${index}`] = el)}
+                ></div>
                 <img
-                  src={post.imageURL}
+                  src={post.imageUrl}
                   className="post-image"
                   alt={post.desc}
+                  style={{ display: "none" }}
+                  ref={(el) => (this[`image${index}`] = el)}
+                  // onload success
+                  onLoad={() => {
+                    this[`spinner${index}`].style.display = "none";
+                    this[`image${index}`].style.display = "block";
+                  }}
                 />
               </div>
-              <div id="post-describtion">
-                <h5>UserName</h5>
-                <p>{post.desc}</p>
+              <div
+                id="post-describtion "
+                className="d-flex flex-column overflow-hidden"
+              >
+                <div className="h5 d-flex flex-row justify-content-between">
+                  <div>UserName</div>
+                  <div>post timestamp</div>
+                </div>
+                <p>#UserID {post.desc}</p>
+              </div>
+              <div
+                className="pt-2 d-flex flex-row border-top justify-content-evenly"
+                id="post-function"
+              >
+                <div className=" px-5 ">
+                  <img
+                    className="white-img"
+                    src={images["heart.svg"]}
+                    alt="heart"
+                  />
+                </div>
+                <div className="px-5 border-start border-end">
+                  <img
+                    className="white-img"
+                    src={images["comment-alt.svg"]}
+                    alt="comment"
+                  />
+                </div>
+
+                <div className="px-5">
+                  <img
+                    className="white-img"
+                    src={images["arrows-retweet.svg"]}
+                    alt="retweet"
+                  />
+                </div>
               </div>
             </div>
           ))}
-          {this.state.isLoading && (
-            <div className="mask-post p-0 d-flex justify-content-center align-items-center">
+          {isLoading && (
+            <div
+              className="mask-post p-0 d-flex justify-content-center align-items-center"
+              style={{ aspectRatio: "3/4" }}
+            >
               <div className="spinner"></div>
             </div>
           )}
@@ -91,5 +182,7 @@ class FetchPost extends Component {
     );
   }
 }
+
+// FetchPost.contextType = ScrollContext;
 
 export default FetchPost;

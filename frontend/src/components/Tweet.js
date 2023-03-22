@@ -189,7 +189,7 @@ class Tweet extends Component {
             encType="multipart/form-data"
             id="tweet-form"
           >
-            <div className="col-lg-5" id="tweet-section">
+            <div className="col-lg-4" id="tweet-section">
               <div
                 className="text-break tweet-mask d-flex justify-content-center align-items-center"
                 id="tweet-div"

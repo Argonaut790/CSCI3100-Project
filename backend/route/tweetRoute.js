@@ -23,7 +23,7 @@ router.post("/", upload.single("image"), async (req, res) => {
 
   // Compress and resize the image using sharp
   const resizedImageBuffer = await sharp(image.buffer)
-    .resize({ width: 1920 }) // Set the desired width
+    .resize({ width: 1280 }) // Set the desired width
     .jpeg({ quality: 80 }) // Set the desired quality (0-100)
     .toBuffer();
 
@@ -72,8 +72,23 @@ router.post("/", upload.single("image"), async (req, res) => {
 // we will response aloo posts data to frontend
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find().sort({ timestamp: -1 });
-    res.json(posts);
+    const limit = parseInt(req.query.limit) || 10; //using the URL /tweet?limit=10&page=${page} to pass the limit and page variable
+    const page = parseInt(req.query.page) || 0; //10 post each page
+    const skip = limit * page; //bias, skipping how many posts
+
+    //get all posts
+    const posts = await Post.find()
+      .sort({ timestamp: -1 })
+      .skip(skip) //base on which page to show only the following posts
+      .limit(limit);
+
+    //passing image url to fetch the whole chunks not 1 by 1
+    const postsWithImageUrls = posts.map((post) => {
+      const imageUrl = `http://${req.headers.host}/tweet/image/${post.image.filename}`;
+      return { ...post._doc, imageUrl };
+    });
+
+    res.json(postsWithImageUrls);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

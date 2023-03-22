@@ -25,6 +25,10 @@ const AccountSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  isPrivate: {
+    type: Boolean,
+    default: false,
+  },
   confirmationCode: {
     type: String,
     unique: true,

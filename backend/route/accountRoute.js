@@ -9,11 +9,6 @@ const sendConfirmationEmail = require("../emailVerify");
 
 // Login
 router.post("/login", async (req, res) => {
-  const account = new Account({
-    password: req.body.password,
-    email: req.body.email,
-  });
-
   const user = await Account.find({ email: req.body.email });
   const count = await Account.find({
     email: req.body.email,
@@ -23,16 +18,23 @@ router.post("/login", async (req, res) => {
     res.status(400).send("Wrong email / password");
   } else {
     user.forEach(async (e) => {
-      if (
-        (await bcrypt.compare(req.body.password, e.password)) &&
-        e.isActivated === true
-      ) {
+      // Check if password correct
+      if (await bcrypt.compare(req.body.password, e.password)) {
+        // Check if account confirmed
         if (e.isConfirmed === false) {
           res
             .status(401)
             .send(
               "Your account is not verified, Please check your email / spambox."
             );
+          // Check if account activated
+        } else if (e.isActivated === false) {
+          res
+            .status(401)
+            .send(
+              "Your account is deactivated. Please contact the site administrator in admin@rettiwt.com"
+            );
+          // Login successfully
         } else {
           const accessToken = generateAccessToken(e.email);
           const refreshToken = jwt.sign(e.email, process.env.REFRESH_TOEKN);
@@ -43,12 +45,6 @@ router.post("/login", async (req, res) => {
             refreshToken: refreshToken,
           });
         }
-      } else if (e.isActivated === false) {
-        res
-          .status(401)
-          .send(
-            "Your account is deactivated. Please contact the site administrator in admin@rettiwt.com"
-          );
       } else {
         res.status(404).send();
       }
@@ -59,6 +55,14 @@ router.post("/login", async (req, res) => {
 // Sign up
 router.post("/", async (req, res) => {
   if (req.body.isGoogleSign == true) {
+    const registeredUser = await Account.find({
+      email: req.body.email,
+      isGoogleSign: false,
+    });
+    if (registeredUser) {
+      // Already registered in email signup
+      return res.status(400).json("email registered");
+    }
     const account = new Account({
       username: req.body.username,
       email: req.body.email,
@@ -72,11 +76,25 @@ router.post("/", async (req, res) => {
       res.json({ message: err });
     }
   } else {
-    const user = await Account.find({ email: req.body.email }).count({
+    const registeredUser = await Account.find({
+      email: req.body.email,
+    }).count({
       sent_at: null,
     });
-    if (user) {
-      return res.status(400).json("email exists");
+    if (registeredUser) {
+      const registeredGoogleUser = await Account.find({
+        email: req.body.email,
+        isGoogleSign: true,
+      }).count({
+        sent_at: null,
+      });
+      if (registeredGoogleUser) {
+        // Already registered in Google signup
+        return res.status(400).json("email registered using google signin");
+      } else {
+        // Already registered in email signup
+        return res.status(400).json("email registered");
+      }
     }
 
     // Server-side validation

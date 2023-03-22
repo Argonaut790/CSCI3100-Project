@@ -188,10 +188,10 @@ router.get("/", async (req, res) => {
 });
 
 // Get a user profile
-router.get("/:email", async (req, res) => {
+router.get("/profile/:userId", async (req, res) => {
   try {
     const user = await Account.find({
-      email: req.params.email,
+      userId: req.params.userId,
     });
     res.status(200).json({ user });
   } catch (err) {

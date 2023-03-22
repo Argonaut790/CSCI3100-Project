@@ -1,7 +1,7 @@
 import { Component } from "react";
 import axios from "axios";
-import Cropper from "cropperjs";
-import "cropperjs/dist/cropper.min.css";
+// import Cropper from "cropperjs";
+// import "cropperjs/dist/cropper.min.css";
 
 import ImportAll from "./ImportAll";
 
@@ -17,7 +17,7 @@ class Tweet extends Component {
       image: null,
       desc: "",
       previewURL: null,
-      cropper: null,
+      // cropper: null,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -25,26 +25,32 @@ class Tweet extends Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      this.state.previewURL !== prevState.previewURL &&
-      this.state.previewURL
-    ) {
-      const imageElement = document.getElementById("preview");
+  onDescriptionChange = (e) => {
+    this.setState({ desc: e.target.value });
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
+  };
 
-      if (this.state.cropper) {
-        this.state.cropper.destroy();
-      }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (
+  //     this.state.previewURL !== prevState.previewURL &&
+  //     this.state.previewURL
+  //   ) {
+  //     const imageElement = document.getElementById("preview");
 
-      const cropper = new Cropper(imageElement, {
-        aspectRatio: 1,
-        viewMode: 1,
-        autoCropArea: 1,
-      });
+  //     if (this.state.cropper) {
+  //       this.state.cropper.destroy();
+  //     }
 
-      this.setState({ cropper });
-    }
-  }
+  //     const cropper = new Cropper(imageElement, {
+  //       aspectRatio: 1,
+  //       viewMode: 1,
+  //       autoCropArea: 1,
+  //     });
+
+  //     this.setState({ cropper });
+  //   }
+  // }
 
   handleInputChange(event) {
     const target = event.target;
@@ -59,72 +65,106 @@ class Tweet extends Component {
     // Create a preview URL when an image is selected
     if (target.type === "file" && value) {
       const previewURL = URL.createObjectURL(value);
-      this.setState({ previewURL }, () => {
-        // Initialize Cropper when an image is selected
-        const imageElement = document.getElementById("preview");
-        if (this.state.cropper) {
-          this.state.cropper.destroy();
-        }
+      this.setState({ previewURL });
+      // this.setState({ previewURL }, () => {
+      //   // Initialize Cropper when an image is selected
+      //   const imageElement = document.getElementById("preview");
+      //   if (this.state.cropper) {
+      //     this.state.cropper.destroy();
+      //   }
 
-        imageElement.onload = () => {
-          const cropper = new Cropper(imageElement, {
-            aspectRatio: 1,
-            viewMode: 1,
-            autoCropArea: 1,
-          });
+      //   imageElement.onload = () => {
+      //     const cropper = new Cropper(imageElement, {
+      //       aspectRatio: 1,
+      //       viewMode: 1,
+      //       autoCropArea: 1,
+      //     });
 
-          this.setState({ cropper });
-        };
-      });
+      //     this.setState({ cropper });
+      //   };
+      // });
     }
   }
+
+  // async handleSubmit(e) {
+  //   e.preventDefault();
+
+  //   // Check if the cropper instance is not null
+  //   if (this.state.cropper) {
+  //     console.log("Cropper Passed Successfully");
+  //     console.log(this.state.cropper);
+  //     // Get the cropped image as a Blob
+  //     this.state.cropper.getCroppedCanvas().toBlob(async (blob) => {
+  //       const { desc } = this.state;
+
+  //       // Create a FormData object and append the image file to it
+  //       const formData = new FormData();
+  //       formData.append("image", blob);
+
+  //       // Add the description and tags fields to the formData object
+  //       formData.append("desc", desc);
+
+  //       console.log(formData);
+  //       console.log(formData.get("image"));
+  //       console.log(formData.get("desc"));
+
+  //       try {
+  //         await axios.post("http://localhost:5500/tweet", formData, {
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //           },
+  //         });
+
+  //         console.log("Tweet submitted:", {
+  //           desc: this.state.desc,
+  //         });
+
+  //         console.log("POST SUCCESSFULLY");
+
+  //         // clear input fields and destroy the cropper instance
+  //         this.setState({ image: null, desc: "", previewURL: null });
+  //         this.state.cropper.destroy();
+  //         this.setState({ cropper: null });
+  //       } catch (e) {
+  //         console.log(e);
+  //         console.log("Can't Upload Image!");
+  //       }
+  //     });
+  //   } else {
+  //     console.log("Cropper instance is null, cannot get cropped image.");
+  //   }
+  // }
 
   async handleSubmit(e) {
     e.preventDefault();
 
-    // Check if the cropper instance is not null
-    if (this.state.cropper) {
-      console.log("Cropper Passed Successfully");
-      console.log(this.state.cropper);
-      // Get the cropped image as a Blob
-      this.state.cropper.getCroppedCanvas().toBlob(async (blob) => {
-        const { desc } = this.state;
+    const { desc, image } = this.state;
 
-        // Create a FormData object and append the image file to it
-        const formData = new FormData();
-        formData.append("image", blob);
+    // Create a FormData object and append the image file to it
+    const formData = new FormData();
+    formData.append("image", image);
 
-        // Add the description and tags fields to the formData object
-        formData.append("desc", desc);
+    // Add the description field to the formData object
+    formData.append("desc", desc);
 
-        console.log(formData);
-        console.log(formData.get("image"));
-        console.log(formData.get("desc"));
-
-        try {
-          await axios.post("http://localhost:5500/tweet", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-
-          console.log("Tweet submitted:", {
-            desc: this.state.desc,
-          });
-
-          console.log("POST SUCCESSFULLY");
-
-          // clear input fields and destroy the cropper instance
-          this.setState({ image: null, desc: "", previewURL: null });
-          this.state.cropper.destroy();
-          this.setState({ cropper: null });
-        } catch (e) {
-          console.log(e);
-          console.log("Can't Upload Image!");
-        }
+    try {
+      await axios.post("http://localhost:5500/tweet", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-    } else {
-      console.log("Cropper instance is null, cannot get cropped image.");
+
+      console.log("Tweet submitted:", {
+        desc: this.state.desc,
+      });
+
+      console.log("POST SUCCESSFULLY");
+
+      // clear input fields
+      this.setState({ image: null, desc: "", previewURL: null });
+    } catch (e) {
+      console.log(e);
+      console.log("Can't Upload Image!");
     }
   }
 
@@ -145,12 +185,11 @@ class Tweet extends Component {
         >
           <form
             onSubmit={this.handleSubmit}
-            action="POST"
             className="row vh-100 d-flex justify-content-center align-items-center m-0"
-            enctype="multipart/form-data"
+            encType="multipart/form-data"
             id="tweet-form"
           >
-            <div className="col-lg-5" id="tweet-section">
+            <div className="col-lg-4" id="tweet-section">
               <div
                 className="text-break tweet-mask d-flex justify-content-center align-items-center"
                 id="tweet-div"
@@ -174,6 +213,7 @@ class Tweet extends Component {
                       className="btn btn-close"
                       id="upload-close-btn"
                       onClick={this.handleClose}
+                      style={{ backgroundColor: "#c844ff" }}
                     ></div>
                   </div>
                   {/* Upload part */}
@@ -215,28 +255,26 @@ class Tweet extends Component {
                     </label>
                   </div>
                   <div className="p-0" id="post-describtion">
-                    <h5>UserName</h5>
-                    <p>Describtion</p>
-                    <div class="form-floating">
+                    <div className="h4 m-0" style={{ padding: "0 0.75rem" }}>
+                      UserName
+                    </div>
+                    <div class="form-floating h4">
                       <textarea
                         class="form-control"
                         placeholder="Description"
                         id="floatingTextarea2"
-                        // style="height: 100px"
+                        style={{
+                          height: "auto",
+                          fontSize: "unset",
+                          overflow: "hidden",
+                          resize: "none",
+                        }}
                         value={this.state.desc}
-                        onChange={(e) =>
-                          this.setState({ desc: e.target.value })
-                        }
+                        onChange={this.onDescriptionChange}
+                        ref={(ref) => (this.textarea = ref)}
                       ></textarea>
                       <label for="floatingTextarea2">Description</label>
                     </div>
-                    {/* <input
-                      type="text"
-                      name="desc"
-                      placeholder="Description"
-                      value={this.state.desc}
-                      onChange={(e) => this.setState({ desc: e.target.value })}
-                    /> */}
                   </div>
                 </div>
               </div>

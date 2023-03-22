@@ -4,6 +4,7 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import SignUpModal from "./SignUpModal";
 import LoginModal from "./LoginModal";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const clientId =
@@ -12,7 +13,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-
+  const navigate = useNavigate();
   const onGoogleSignInSuccess = (response) => {
     //TODO: Create special handling for google signin
     const userObject = jwt_decode(response.credential);
@@ -24,7 +25,7 @@ const SignUp = () => {
       email: email,
       isGoogleSign: true,
     };
-
+    //TODO: deny if email existed
     axios
       .post("http://localhost:5500/account", user)
       .then((res) => {
@@ -46,7 +47,7 @@ const SignUp = () => {
         isGoogleSign: true,
       })
     );
-    //TODO: redirect to postlogon page
+    navigate("/");
   };
 
   const handleSignUp = () => {

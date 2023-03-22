@@ -150,6 +150,7 @@ const LoginModal = ({ setShowModal }) => {
           />
         </div>
       </form>
+      <button>Forgot password?</button>
       <span id="result"></span>
     </div>
   );

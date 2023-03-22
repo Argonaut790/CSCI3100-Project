@@ -548,6 +548,7 @@ img {
   z-index: 1;
 } */
 
+/* Spinner */
 .spinner {
   width: 65px;
   aspect-ratio: 1/1;
@@ -564,4 +565,25 @@ img {
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* profile  */
+#profile-mask {
+  background-color: #000000cc;
+}
+
+#profile-avatar {
+  width: 70%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: center;
+  box-shadow: 0 0 0.8rem rgb(255 255 255 / 53%);
+}
+
+.w-40 {
+  width: 40%;
+}
+
+.w-60 {
+  width: 60%;
 }

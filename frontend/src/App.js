@@ -4,7 +4,7 @@ import { Routes, Route, Link, useLocation } from "react-router-dom";
 import ScrollContext from "./components/ScrollContext";
 import ImportAll from "./components/ImportAll";
 import Home from "./components/Home";
-import Chat from "./components/Chat";
+// import Chat from "./components/Chat";
 import Profile from "./components/Profile";
 import Tweet from "./components/Tweet";
 import AccountConfirm from "./components/AccountConfirm";
@@ -35,7 +35,7 @@ function App() {
   const [user, setUser] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
   const [tweetHandled, setTweetHandled] = useState(false);
-
+  const [postStatus, setPostStatus] = useState(null);
   const maskBackgroundRef = createRef();
 
   let location = useLocation();
@@ -49,6 +49,15 @@ function App() {
     console.log("TweetHandled : " + tweetHandled);
     console.log("LoggedIn : " + loggedIn);
   };
+
+  const handlePostStatus = (status) => {
+    setPostStatus(status);
+    console.log("Post Status : " + postStatus);
+  };
+
+  useEffect(() => {
+    console.log("postStatus updated:", postStatus);
+  }, [postStatus]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -228,7 +237,45 @@ function App() {
             </div>
           </div>
         )}
-        {loggedIn && tweetHandled && <Tweet handleTweet={handleTweet} />}
+        {loggedIn && tweetHandled && (
+          <Tweet
+            handleTweet={handleTweet}
+            handlePostStatus={handlePostStatus}
+          />
+        )}
+        {/* Tweet upload status */}
+        {postStatus && (
+          <div
+            className="position-fixed bottom-0 end-0 p-3"
+            style={{ zIndex: "11" }}
+          >
+            <div
+              id="liveToast"
+              className="toast show tweet-mask"
+              role="alert"
+              aria-live="assertive"
+              aria-atomic="true"
+            >
+              <div className="toast-header" style={{ color: "black" }}>
+                {/* <img src="..." className="rounded me-2" alt="..." /> */}
+                <strong className="me-auto">Rettiwt</strong>
+                {/* <small>11 mins ago</small> */}
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="toast"
+                  aria-label="Close"
+                ></button>
+              </div>
+              {postStatus === 200 && (
+                <div className="toast-body">Retweet Successfully! </div>
+              )}
+              {postStatus === 400 && (
+                <div className="toast-body">Retweet Failed Successfully! </div>
+              )}
+            </div>
+          </div>
+        )}
         <div className="container px-4">
           <div className="row gx-5 h-100">
             <div className="col-md-3 vh-100" id="nav">
@@ -247,7 +294,7 @@ function App() {
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}
             /> */}
-              {user && <Route path="/chat" element={<Chat />} />}
+              {/* {user && <Route path="/chat" element={<Chat />} />} */}
               {user && (
                 <Route
                   path="/profile"

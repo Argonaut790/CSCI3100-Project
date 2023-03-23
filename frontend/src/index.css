@@ -206,7 +206,7 @@ img {
 }
 
 #post {
-  padding: 1rem !important;
+  padding: 1.5rem !important;
 }
 
 .post {
@@ -214,7 +214,7 @@ img {
 }
 
 .post-user-info {
-  height: 2.8rem;
+  height: 3.8rem;
   /* padding: 0 2rem; */
 }
 
@@ -241,7 +241,7 @@ img {
 }
 
 .post-image {
-  width: 95%;
+  width: 100%;
   aspect-ratio: 1/1;
   object-fit: cover;
   object-position: center;
@@ -564,6 +564,26 @@ img {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* fade out animation */
+.toast.show.tweet-mask {
+  animation-name: fadeInHoldFadeOut;
+  animation-duration: 5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInHoldFadeOut {
+  0% {
+    opacity: 0;
+  }
+  10%,
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 

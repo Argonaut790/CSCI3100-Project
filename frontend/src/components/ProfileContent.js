@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
 
@@ -27,10 +29,28 @@ const TopMid = () => {
 };
 
 const Content = () => {
+  const [deleteButton, setdeleteButton] = useState(null);
+
+  useEffect(() => {
+    const deleteButtonDiv = (
+      <div className="btn">
+        <img
+          src={images["trash.svg"]}
+          className="white-img"
+          alt="delete-button"
+          id="delete-button"
+        />
+      </div>
+    );
+    setdeleteButton(deleteButtonDiv);
+  }, []);
+
   return (
     <div className="container-fluid p-0" id="mid-center">
       <PersonalInfo />
-      <FetchPost />
+      <DeleteButtonContext.Provider value={deleteButton}>
+        <FetchPost />
+      </DeleteButtonContext.Provider>
     </div>
   );
 };

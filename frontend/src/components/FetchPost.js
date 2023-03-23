@@ -1,24 +1,32 @@
-import { Component } from "react";
+import { Component, useContext } from "react";
 import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
+import DeleteButtonContext from "./DeleteButtonContext";
 
 const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
 const UserID = () => {
+  const deleteButton = useContext(DeleteButtonContext);
+
   return (
-    <div className="post-user-info">
-      <img
-        src={images["user_avatar.jpg"]}
-        className="float-start post-user-avatar"
-        alt="user-avatar"
-      />
-      <div className="d-flex align-items-md-center h-100 m-0 post-user-id">
-        <div className="fw-bold">UserName</div>
-        <div>#UserID</div>
+    <div className="post-user-info d-flex flex-row justify-content-between">
+      <div>
+        <div>
+          <img
+            src={images["user_avatar.jpg"]}
+            className="float-start post-user-avatar"
+            alt="user-avatar"
+          />
+        </div>
+        <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+          <div className="fw-bold">UserName</div>
+          <div>#UserID</div>
+        </div>
       </div>
+      {deleteButton && <div>{deleteButton}</div>}
     </div>
   );
 };
@@ -144,14 +152,14 @@ class FetchPost extends Component {
                 className="pt-2 d-flex flex-row border-top justify-content-evenly"
                 id="post-function"
               >
-                <div className=" px-5 ">
+                <div className=" px-5 w-30 d-flex justify-content-center">
                   <img
                     className="white-img"
                     src={images["heart.svg"]}
                     alt="heart"
                   />
                 </div>
-                <div className="px-5 border-start border-end">
+                <div className="px-5 border-start border-end w-30 d-flex justify-content-center">
                   <img
                     className="white-img"
                     src={images["comment-alt.svg"]}
@@ -159,7 +167,7 @@ class FetchPost extends Component {
                   />
                 </div>
 
-                <div className="px-5">
+                <div className="px-5 w-30 d-flex justify-content-center">
                   <img
                     className="white-img"
                     src={images["arrows-retweet.svg"]}

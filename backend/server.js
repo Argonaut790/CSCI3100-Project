@@ -28,7 +28,7 @@ app.use("/account", accountRoute);
 
 //Follower System
 const followerRoute = require("./route/followerRoute");
-app.use("/follower", followerRoute);
+app.use("/follow", followerRoute);
 
 //test data passing to database
 const testRoute = require("./route/testRoute");

@@ -42,6 +42,7 @@ const SignUp = () => {
               userId: res.data.userId,
               username: userObject.name,
               email: userObject.email,
+              isPrivate: res.data.isPrivate,
               isAdmin: false,
               isGoogleSign: true,
             })

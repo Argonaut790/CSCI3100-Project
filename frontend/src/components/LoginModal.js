@@ -24,6 +24,7 @@ const LoginModal = ({ setShowModal }) => {
             userId: res.data.userId,
             username: res.data.username,
             email: email,
+            isPrivate: res.data.isPrivate,
             isAdmin: res.data.isAdmin,
             isGoogleSign: false,
           };

@@ -17,6 +17,9 @@ const AccountSchema = new Schema({
   password: {
     type: String,
   },
+  bio: {
+    type: String,
+  },
   email: {
     type: String,
     required: true,

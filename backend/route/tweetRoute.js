@@ -141,4 +141,17 @@ router.get("/stat/:userId", async (req, res) => {
   }
 });
 
+// Delete post by Id
+router.delete("/:postId", async (req, res) => {
+  await Post.deleteOne({
+    postId: req.body.postId,
+  })
+    .then(() => {
+      res.json("deleted successfully");
+    })
+    .catch((err) => {
+      res.status(401).json(err);
+    });
+});
+
 module.exports = router;

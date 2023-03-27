@@ -190,13 +190,13 @@ router.patch("/deactivate/:userId", async (req, res) => {
   }
 });
 
-// Get user profile by Id
-router.get("/profile/:userId", async (req, res) => {
+// Get user bio by Id
+router.get("/bio/:userId", async (req, res) => {
   try {
-    const user = await Account.find({
+    const user = await Account.findOne({
       userId: req.params.userId,
     });
-    res.status(200).json({ user });
+    res.status(200).json({ bio: user.bio });
   } catch (err) {
     res.status(401).json({ message: err });
   }

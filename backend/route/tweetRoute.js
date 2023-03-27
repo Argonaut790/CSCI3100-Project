@@ -13,6 +13,7 @@ const upload = multer({ storage });
 //Setup GridFS
 const conn = mongoose.connection;
 
+// Upload post
 router.post("/", upload.single("image"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No file Received" });
@@ -122,6 +123,21 @@ router.get("/image/:filename", async (req, res) => {
     downloadStream.pipe(res);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// Get post number by userId
+router.get("/stat/:userId", async (req, res) => {
+  try {
+    const postNum = await Post.find({ userId: req.params.userId }).count({
+      sent_at: null,
+    });
+    console.log(postNum);
+    res.status(200).json({
+      postNum: postNum,
+    });
+  } catch (err) {
+    res.status(401).json(err);
   }
 });
 

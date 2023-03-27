@@ -19,6 +19,7 @@ const AccountSchema = new Schema({
   },
   bio: {
     type: String,
+    default: "",
   },
   email: {
     type: String,

@@ -80,7 +80,7 @@ router.post("/", async (req, res) => {
     }
     const followRequest = new Follower({
       followedUserId: req.body.followedUserId,
-      followedUserId: req.body.followedUserId,
+      followerUserId: req.body.followerUserId,
       isAccepted: isAccepted,
     });
 
@@ -97,7 +97,7 @@ router.patch("/", async (req, res) => {
     const updatedAccount = await Account.updateOne(
       {
         followedUserId: req.body.followedUserId,
-        followedUserId: req.body.followedUserId,
+        followerUserId: req.body.followerUserId,
         isAccepted: false,
       },
       { $set: { isAccepted: true } }
@@ -110,15 +110,16 @@ router.patch("/", async (req, res) => {
 
 // Reject follow request
 router.delete("/", async (req, res) => {
-  try {
-    const removedRequest = await Legal.remove({
-      followedUserId: req.body.followedUserId,
-      followedUserId: req.body.followedUserId,
+  await Follower.deleteOne({
+    followedUserId: req.body.followedUserId,
+    followerUserId: req.body.followerUserId,
+  })
+    .then(() => {
+      res.json("deleted successfully");
+    })
+    .catch((err) => {
+      res.status(401).json(err);
     });
-    res.json(removedRequest);
-  } catch (err) {
-    res.json({ message: err });
-  }
 });
 
 module.exports = router;

@@ -241,13 +241,23 @@ router.patch("/bio/:userId", async (req, res) => {
   }
 });
 
-// Get user profile info by Id for search
+// Get user by Id
 router.get("/profile/:userId", async (req, res) => {
   try {
     const user = await Account.findOne({
       userId: req.params.userId,
     });
-    res.status(200).json({ username: user.username });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// Fuzzy Search username & userId
+router.get("/profile/:userId", async (req, res) => {
+  try {
+    const user = await Account.fuzzySearch(req.body.searchString);
+    res.status(200).json(user);
   } catch (err) {
     res.status(401).json({ message: err });
   }

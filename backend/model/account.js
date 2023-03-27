@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
+const mongooseFuzzySearching = require("mongoose-fuzzy-searching");
 const Schema = mongoose.Schema;
 
 const AccountSchema = new Schema({
@@ -56,6 +57,10 @@ const AccountSchema = new Schema({
     type: String,
     default: Date.now(),
   },
+});
+
+AccountSchema.plugin(mongooseFuzzySearching, {
+  fields: ["username", "userId"],
 });
 
 module.exports = mongoose.model("accounts", AccountSchema);

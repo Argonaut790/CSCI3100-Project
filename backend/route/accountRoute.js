@@ -182,7 +182,20 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a user profile
+// Deactivate user by Id
+router.patch("/deactivate/:userId", async (req, res) => {
+  try {
+    const updatedAccount = await Account.updateOne(
+      { userId: req.params.userId },
+      { $set: { isActivated: false } }
+    );
+    res.status(200).json({ updatedAccount });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// Get user profile by Id
 router.get("/profile/:userId", async (req, res) => {
   try {
     const user = await Account.find({

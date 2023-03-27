@@ -215,6 +215,18 @@ router.patch("/bio/:userId", async (req, res) => {
   }
 });
 
+// TODO: Get user profile info by Id for search
+router.get("/profile/:userId", async (req, res) => {
+  try {
+    const user = await Account.findOne({
+      userId: req.params.userId,
+    });
+    res.status(200).json({ username: user.username });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
 let refreshTokens = [];
 
 router.post("/token", (req, res) => {

@@ -5,6 +5,8 @@ import axios from "axios";
 
 import ImportAll from "./ImportAll";
 
+const MAXLENGTH = 200;
+
 const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
@@ -16,6 +18,7 @@ class Tweet extends Component {
     this.state = {
       image: null,
       desc: "",
+      wordCount: 0,
       previewURL: null,
       isLoading: false,
     };
@@ -26,18 +29,96 @@ class Tweet extends Component {
   }
 
   onDescriptionChange = (e) => {
-    const inputValue = e.target.value;
-    const words = inputValue.trim().split(/\s+/);
-    const wordCount = words.length;
+    let inputValue = e.target.value;
 
-    // Update the state only if the word count is within the limit
-    if (wordCount <= 200) {
-      this.setState({ desc: e.target.value });
-      e.target.style.height = "auto";
-      e.target.style.height = `${e.target.scrollHeight}px`;
+    // Update the state only if the limited input value is shorter than the current desc
+    if (inputValue.split(/\s+/).length <= MAXLENGTH) {
+      this.setState({ desc: inputValue });
     }
+
+    // const descWordCount = this.state.desc.split(/\s+/).length;
+    let inputLength = inputValue.split(/\s+/).length;
+    const inputArray = inputValue.split(/\s+/);
+
+    if (inputArray[inputLength - 1] === "") {
+      inputLength--;
+    }
+
+    this.setState({ wordCount: inputLength });
+
+    // Update the input element's height to fit its content
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
+
+    // console.log("wordCount " + this.state.wordCount);
+    // console.log("words changed");
+    // console.log(inputValue.split(/\s+/));
+    // console.log(this.state.desc.split(/\s+/));
   };
 
+  onPaste = (e) => {
+    // Prevent the default paste behavior
+    e.preventDefault();
+
+    // Get the pasted text from the event
+    const pastedText = e.clipboardData.getData("text");
+    // console.log("Paste " + pastedText);
+
+    // Use a regular expression to match the leading and trailing spaces
+    let leadingSpaces = pastedText.match(/^\s+/);
+    let trailingSpaces = pastedText.match(/\s+$/);
+
+    // Extract the leading and trailing spaces, if any
+    let leadingSpacesStr = leadingSpaces ? leadingSpaces[0] : "";
+    let trailingSpacesStr = trailingSpaces ? trailingSpaces[0] : "";
+
+    // Split the pasted text by whitespace characters and limit to 200 words
+    const words = pastedText
+      .trim()
+      .split(/\s+/)
+      .slice(0, MAXLENGTH - this.state.wordCount);
+
+    let sliced =
+      pastedText.trim().split(/\s+/).length !== words.length ? true : false;
+
+    if (this.state.desc.split(/\s+/).length + words.length === MAXLENGTH + 1)
+      sliced = true;
+
+    // console.log(this.state.desc.split(/\s+/));
+    // console.log(this.state.desc.split(/\s+/));
+    // console.log("sliced " + sliced);
+
+    // Prepend the leading spaces to the first word in the array
+    if (leadingSpaces) {
+      words[0] = leadingSpacesStr + words[0];
+    }
+
+    // Append the trailing spaces to the last word in the array
+    if (!sliced && trailingSpaces) {
+      words[words.length - 1] = words[words.length - 1] + trailingSpacesStr;
+    }
+
+    // Join the limited words back into a string
+    const inputValue = words.join(" ");
+
+    // console.log("Paste inputValue " + inputValue);
+
+    // console.log("Paste words " + words.length);
+    // Update the state with the limited pasted text
+    const desc = this.state.desc + inputValue;
+    if (this.state.wordCount <= MAXLENGTH) {
+      this.setState({ wordCount: this.state.wordCount + words.length });
+      this.setState({ desc: desc });
+
+      console.log("words changed");
+      console.log(inputValue.split(/\s+/));
+      console.log(desc.split(/\s+/));
+    }
+
+    // Update the input element's height to fit its content
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
+  };
 
   // componentDidUpdate(prevProps, prevState) {
   //   if (
@@ -278,9 +359,12 @@ class Tweet extends Component {
                         }}
                         value={this.state.desc}
                         onChange={this.onDescriptionChange}
+                        onPaste={this.onPaste}
                         ref={(ref) => (this.textarea = ref)}
                       ></textarea>
-                      <label for="floatingTextarea2">Description</label>
+                      <label for="floatingTextarea2">
+                        Description {this.state.wordCount}/{MAXLENGTH}
+                      </label>
                     </div>
                   </div>
                 </div>

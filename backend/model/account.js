@@ -31,7 +31,6 @@ const AccountSchema = new Schema({
   },
   confirmationCode: {
     type: String,
-    unique: true,
   },
   isActivated: {
     type: Boolean,

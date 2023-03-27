@@ -152,7 +152,7 @@ const SignUpModal = ({ setShowModal }) => {
           - At least length of 8, 1 upper case, 1 lower case, 1 number for
           password
         </div>
-        <div class="form-floating ">
+        <div className="form-floating ">
           <input
             type="email"
             name="email"
@@ -165,7 +165,7 @@ const SignUpModal = ({ setShowModal }) => {
           <label for="floatingInput">Email address</label>
         </div>
 
-        <div class="form-floating">
+        <div className="form-floating">
           <input
             type="text"
             name="username"
@@ -178,7 +178,7 @@ const SignUpModal = ({ setShowModal }) => {
           <label for="floatingInput">Username</label>
         </div>
 
-        <div class="form-floating">
+        <div className="form-floating">
           <input
             type="password"
             name="password"
@@ -191,7 +191,7 @@ const SignUpModal = ({ setShowModal }) => {
           <label for="floatingPassword">Password</label>
         </div>
 
-        <div class="form-floating mb-3">
+        <div className="form-floating mb-3">
           <input
             type="password"
             name="confirmPassword"

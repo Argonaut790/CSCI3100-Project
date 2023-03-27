@@ -3,9 +3,12 @@ const { v4: uuidv4 } = require("uuid");
 const Schema = mongoose.Schema;
 
 const AccountSchema = new Schema({
+  // TODO: check duplicate id
   userId: {
     type: String,
+    required: true,
     default: () => uuidv4().substr(0, 6),
+    unique: true,
   },
   username: {
     type: String,
@@ -13,7 +16,10 @@ const AccountSchema = new Schema({
   },
   password: {
     type: String,
-    required: false,
+  },
+  bio: {
+    type: String,
+    default: "",
   },
   email: {
     type: String,
@@ -23,10 +29,12 @@ const AccountSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  isPrivate: {
+    type: Boolean,
+    default: false,
+  },
   confirmationCode: {
     type: String,
-    required: false,
-    unique: true,
   },
   isActivated: {
     type: Boolean,
@@ -40,9 +48,9 @@ const AccountSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  isPrivate: {
-    type: Boolean,
-    default: false,
+  avatar: {
+    filename: String,
+    contentType: String,
   },
   timestamp: {
     type: String,

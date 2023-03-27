@@ -9,61 +9,69 @@ const sendConfirmationEmail = require("../emailVerify");
 
 // Login
 router.post("/login", async (req, res) => {
-  const account = new Account({
-    password: req.body.password,
-    email: req.body.email,
-  });
+  const user = await Account.findOne({ email: req.body.email });
 
-  const user = await Account.find({ email: req.body.email });
-  const count = await Account.find({
-    email: req.body.email,
-  }).count({ sent_at: null });
-
-  if (count != 1) {
+  if (!user) {
     res.status(400).send("Wrong email / password");
   } else {
-    user.forEach(async (e) => {
-      if (
-        (await bcrypt.compare(req.body.password, e.password)) &&
-        e.isActivated === true
-      ) {
-        if (e.isConfirmed === false) {
-          res
-            .status(401)
-            .send(
-              "Your account is not verified, Please check your email / spambox."
-            );
-        } else {
-          const accessToken = generateAccessToken(e.email);
-          const refreshToken = jwt.sign(e.email, process.env.REFRESH_TOEKN);
-          refreshTokens.push(refreshToken);
-          res.status(200).json({
-            username: e.username,
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-          });
-        }
-      } else if (e.isActivated === false) {
+    // Check if password correct
+    if (await bcrypt.compare(req.body.password, user.password)) {
+      // Check if account confirmed
+      if (user.isConfirmed === false) {
+        res
+          .status(401)
+          .send(
+            "Your account is not verified, Please check your email / spambox."
+          );
+        // Check if account activated
+      } else if (user.isActivated === false) {
         res
           .status(401)
           .send(
             "Your account is deactivated. Please contact the site administrator in admin@rettiwt.com"
           );
+        // Login successfully
       } else {
-        res.status(404).send();
+        const accessToken = generateAccessToken(user.email);
+        const refreshToken = jwt.sign(user.email, process.env.REFRESH_TOEKN);
+        refreshTokens.push(refreshToken);
+        res.status(200).json({
+          userId: user.userId,
+          username: user.username,
+          isAdmin: user.isAdmin,
+          isPrivate: user.isPrivate,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        });
       }
-    });
+    } else {
+      res.status(404).send();
+    }
   }
 });
 
 // Sign up
 router.post("/", async (req, res) => {
-  //TODO: server-side validation
-  if (req.body.isGoogleSign === true) {
+  const registeredEmailUser = await Account.find({
+    email: req.body.email,
+    isGoogleSign: false,
+  });
+  const registeredGoogleUser = await Account.find({
+    email: req.body.email,
+    isGoogleSign: true,
+  });
+  if (req.body.isGoogleSign == true) {
+    if (registeredEmailUser.length) {
+      // Already registered in email signup
+      return res.status(400).json("Email registered in our system");
+    } else if (registeredGoogleUser.length) {
+      return res.status(200).json(registeredGoogleUser[0]);
+    }
     const account = new Account({
       username: req.body.username,
       email: req.body.email,
       isGoogleSign: req.body.isGoogleSign,
+      isConfirmed: true,
     });
     try {
       const saveduser = await account.save();
@@ -72,11 +80,12 @@ router.post("/", async (req, res) => {
       res.json({ message: err });
     }
   } else {
-    const user = await Account.find({ email: req.body.email }).count({
-      sent_at: null,
-    });
-    if (user) {
-      return res.status(400).json("email exists");
+    if (registeredGoogleUser.length) {
+      // Already registered in Google signup
+      return res.status(400).json("Email registered using google signin");
+    } else if (registeredEmailUser.length) {
+      // Already registered in email signup
+      return res.status(400).json("Email registered in our system");
     }
 
     // Server-side validation
@@ -86,11 +95,9 @@ router.post("/", async (req, res) => {
       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
     );
     if (!req.body.email.match(emailRegEx)) {
-      console.log(1);
       return res.status(401).json("Invalid email");
     }
     if (!req.body.password.match(passwordRegEx)) {
-      console.log(2);
       return res.status(401).json("Invalid password");
     }
 
@@ -114,7 +121,9 @@ router.post("/", async (req, res) => {
       sendConfirmationEmail(req.body.username, req.body.email, token);
       res.status(200).json(saveduser);
     } catch (err) {
-      res.json({ message: err });
+      res
+        .status(401)
+        .json("Unkown error, please try again or sign up with another method.");
     }
   }
 });
@@ -124,7 +133,6 @@ router.patch("/auth/:confirmationCode", async (req, res) => {
   const user = await Account.find({
     confirmationCode: req.params.confirmationCode,
   });
-  console.log(req.params.confirmationCode);
   if (!user) {
     return res.status(404).send("not existed");
   }
@@ -169,13 +177,51 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a user profile
-router.get("/:email", async (req, res) => {
+// Deactivate user by Id
+router.patch("/deactivate/:userId", async (req, res) => {
   try {
-    const user = await Account.find({
-      email: req.params.email,
+    const updatedAccount = await Account.updateOne(
+      { userId: req.params.userId },
+      { $set: { isActivated: false } }
+    );
+    res.status(200).json({ updatedAccount });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// Get user bio by Id
+router.get("/bio/:userId", async (req, res) => {
+  try {
+    const user = await Account.findOne({
+      userId: req.params.userId,
     });
-    res.status(200).json({ user });
+    res.status(200).json({ bio: user.bio });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// Edit bio by Id
+router.patch("/bio/:userId", async (req, res) => {
+  try {
+    const user = await Account.updateOne(
+      { userId: req.params.userId },
+      { bio: req.body.bio }
+    );
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// TODO: Get user profile info by Id for search
+router.get("/profile/:userId", async (req, res) => {
+  try {
+    const user = await Account.findOne({
+      userId: req.params.userId,
+    });
+    res.status(200).json({ username: user.username });
   } catch (err) {
     res.status(401).json({ message: err });
   }

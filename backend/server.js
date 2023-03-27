@@ -26,6 +26,10 @@ db.once("open", () => console.log("Connected to database"));
 const accountRoute = require("./route/accountRoute");
 app.use("/account", accountRoute);
 
+//Follower System
+const followerRoute = require("./route/followerRoute");
+app.use("/follow", followerRoute);
+
 //test data passing to database
 const testRoute = require("./route/testRoute");
 app.use("/test", testRoute);

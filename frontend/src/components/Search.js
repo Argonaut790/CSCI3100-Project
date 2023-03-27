@@ -6,26 +6,26 @@ const Search = ({ loggedIn: { loggedIn } }) => {
     <>
       <Searchbar />
       {loggedIn && (
-        <ul class="list-group" id="following-div">
-          <li class="list-group-item" id="following-label">
+        <ul className="list-group" id="following-div">
+          <li className="list-group-item" id="following-label">
             Following
           </li>
-          <li class="list-group-item">
+          <li className="list-group-item">
             <UserID />
           </li>
-          <li class="list-group-item">
+          <li className="list-group-item">
             <UserID />
           </li>
-          <li class="list-group-item">
+          <li className="list-group-item">
             <UserID />
           </li>
-          <li class="list-group-item">
+          <li className="list-group-item">
             <UserID />
           </li>
-          <li class="list-group-item">
+          <li className="list-group-item">
             <UserID />
           </li>
-          <li class="list-group-item">
+          <li className="list-group-item">
             <UserID />
           </li>
         </ul>

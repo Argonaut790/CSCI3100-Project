@@ -9,48 +9,44 @@ const sendConfirmationEmail = require("../emailVerify");
 
 // Login
 router.post("/login", async (req, res) => {
-  const user = await Account.find({ email: req.body.email });
-  const count = await Account.find({
-    email: req.body.email,
-  }).count({ sent_at: null });
+  const user = await Account.findOne({ email: req.body.email });
 
-  if (count != 1) {
+  if (!user) {
     res.status(400).send("Wrong email / password");
   } else {
-    user.forEach(async (e) => {
-      // Check if password correct
-      if (await bcrypt.compare(req.body.password, e.password)) {
-        // Check if account confirmed
-        if (e.isConfirmed === false) {
-          res
-            .status(401)
-            .send(
-              "Your account is not verified, Please check your email / spambox."
-            );
-          // Check if account activated
-        } else if (e.isActivated === false) {
-          res
-            .status(401)
-            .send(
-              "Your account is deactivated. Please contact the site administrator in admin@rettiwt.com"
-            );
-          // Login successfully
-        } else {
-          const accessToken = generateAccessToken(e.email);
-          const refreshToken = jwt.sign(e.email, process.env.REFRESH_TOEKN);
-          refreshTokens.push(refreshToken);
-          res.status(200).json({
-            userId: e.userId,
-            username: e.username,
-            isAdmin: e.isAdmin,
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-          });
-        }
+    // Check if password correct
+    if (await bcrypt.compare(req.body.password, user.password)) {
+      // Check if account confirmed
+      if (user.isConfirmed === false) {
+        res
+          .status(401)
+          .send(
+            "Your account is not verified, Please check your email / spambox."
+          );
+        // Check if account activated
+      } else if (user.isActivated === false) {
+        res
+          .status(401)
+          .send(
+            "Your account is deactivated. Please contact the site administrator in admin@rettiwt.com"
+          );
+        // Login successfully
       } else {
-        res.status(404).send();
+        const accessToken = generateAccessToken(user.email);
+        const refreshToken = jwt.sign(user.email, process.env.REFRESH_TOEKN);
+        refreshTokens.push(refreshToken);
+        res.status(200).json({
+          userId: user.userId,
+          username: user.username,
+          isAdmin: user.isAdmin,
+          isPrivate: user.isPrivate,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        });
       }
-    });
+    } else {
+      res.status(404).send();
+    }
   }
 });
 
@@ -194,13 +190,38 @@ router.patch("/deactivate/:userId", async (req, res) => {
   }
 });
 
-// Get user profile by Id
-router.get("/profile/:userId", async (req, res) => {
+// Get user bio by Id
+router.get("/bio/:userId", async (req, res) => {
   try {
-    const user = await Account.find({
+    const user = await Account.findOne({
       userId: req.params.userId,
     });
-    res.status(200).json({ user });
+    res.status(200).json({ bio: user.bio });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// Edit bio by Id
+router.patch("/bio/:userId", async (req, res) => {
+  try {
+    const user = await Account.updateOne(
+      { userId: req.params.userId },
+      { bio: req.body.bio }
+    );
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// TODO: Get user profile info by Id for search
+router.get("/profile/:userId", async (req, res) => {
+  try {
+    const user = await Account.findOne({
+      userId: req.params.userId,
+    });
+    res.status(200).json({ username: user.username });
   } catch (err) {
     res.status(401).json({ message: err });
   }

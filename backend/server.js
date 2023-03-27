@@ -30,6 +30,14 @@ app.use("/account", accountRoute);
 const followerRoute = require("./route/followerRoute");
 app.use("/follow", followerRoute);
 
+//Like
+const likeRoute = require("./route/likeRoute");
+app.use("/like", likeRoute);
+
+//Comment
+const commentRoute = require("./route/commentRoute");
+app.use("/comment", commentRoute);
+
 //test data passing to database
 const testRoute = require("./route/testRoute");
 app.use("/test", testRoute);

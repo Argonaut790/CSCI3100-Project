@@ -167,7 +167,7 @@ router.patch("/:email", async (req, res) => {
   }
 });
 
-// Get all the users
+// Get all the users info
 router.get("/", async (req, res) => {
   try {
     const list = await Account.find();
@@ -177,12 +177,25 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Deactivate user by Id
-router.patch("/deactivate/:userId", async (req, res) => {
+// Change user status by Id
+router.patch("/status/:userId", async (req, res) => {
   try {
     const updatedAccount = await Account.updateOne(
       { userId: req.params.userId },
-      { $set: { isActivated: false } }
+      { $set: { isActivated: req.body.isActivated } }
+    );
+    res.status(200).json({ updatedAccount });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// Change user admin status by Id
+router.patch("/admin/:userId", async (req, res) => {
+  try {
+    const updatedAccount = await Account.updateOne(
+      { userId: req.params.userId },
+      { $set: { isAdmin: true } }
     );
     res.status(200).json({ updatedAccount });
   } catch (err) {
@@ -215,7 +228,7 @@ router.patch("/bio/:userId", async (req, res) => {
   }
 });
 
-// TODO: Get user profile info by Id for search
+// Get user profile info by Id for search
 router.get("/profile/:userId", async (req, res) => {
   try {
     const user = await Account.findOne({

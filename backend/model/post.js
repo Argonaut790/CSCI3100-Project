@@ -25,14 +25,6 @@ const postSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  likes: {
-    type: Array,
-    default: [],
-  },
-  reply: {
-    type: Array,
-    default: [],
-  },
   retweetedPostId: {
     type: String,
   },

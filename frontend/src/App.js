@@ -9,6 +9,7 @@ import Profile from "./components/Profile";
 import Tweet from "./components/Tweet";
 import AccountConfirm from "./components/AccountConfirm";
 import SignUp from "./components/SignUp";
+import Admin from "./components/Admin";
 
 const images = ImportAll(
   require.context("./images", false, /\.(png|jpe?g|svg)$/)
@@ -191,6 +192,15 @@ function App() {
           />
         )}
         {user && <TweetButton handleTweet={handleTweet} />}
+        {user && user.isAdmin && (
+          <NavItem
+            user={user}
+            text="Admin"
+            id="admin"
+            imgsrc="admin"
+            delay="4"
+          />
+        )}
         {user && (
           <Link
             to={"/home"}
@@ -210,7 +220,6 @@ function App() {
       <ScrollContext.Provider value={maskBackgroundRef}>
         {/* Routes */}
         {console.log(user)}
-        {/* {user ? ({admin ? (<Admin/) : (<User/>)}) : (<Login/>)} */}
         {/* user interface */}
         {!loggedIn && (
           <div
@@ -288,6 +297,9 @@ function App() {
                   path="/profile"
                   element={<Profile loggedIn={loggedIn} />}
                 />
+              )}
+              {user && user.isAdmin && (
+                <Route path="/admin" element={<Admin />} />
               )}
               {/* {user && <Route path="/tweet" element={<Tweet />} />} */}
               <Route path="/confirm" element={<AccountConfirm />} />

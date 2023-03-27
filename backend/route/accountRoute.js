@@ -202,6 +202,19 @@ router.get("/bio/:userId", async (req, res) => {
   }
 });
 
+// Edit bio by Id
+router.patch("/bio/:userId", async (req, res) => {
+  try {
+    const user = await Account.updateOne(
+      { userId: req.params.userId },
+      { bio: req.body.bio }
+    );
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
 let refreshTokens = [];
 
 router.post("/token", (req, res) => {

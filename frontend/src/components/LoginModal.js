@@ -5,12 +5,10 @@ import { useNavigate } from "react-router-dom";
 const LoginModal = ({ setShowModal }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const navigate = useNavigate();
 
   const login = () => {
-    console.log(checkAdmin(email));
     const user = {
       email: email,
       password: password,
@@ -19,18 +17,18 @@ const LoginModal = ({ setShowModal }) => {
       .post("http://localhost:5500/account/login", user)
       .then((res) => {
         if (res.status === 200) {
-          console.log("Signed in successfully");
+          console.log(res.data);
           document.getElementById("result").innerText =
             "Logged in successfully!";
           const userData = {
+            userId: res.data.userId,
             username: res.data.username,
             email: email,
-            isAdmin: isAdmin,
+            isAdmin: res.data.isAdmin,
             isGoogleSign: false,
           };
 
           localStorage.setItem("user", JSON.stringify(userData));
-          console.log("email : " + email);
           navigate("/");
         }
       })
@@ -42,24 +40,6 @@ const LoginModal = ({ setShowModal }) => {
           console.log("Error: ", err.response.status);
           document.getElementById("result").innerText =
             "Invalid email / password";
-        }
-      });
-  };
-
-  const checkAdmin = (email) => {
-    axios
-      .get("http://localhost:5500/account/" + email)
-      .then((res) => {
-        console.log(res.data.user[0].isAdmin);
-        if (res.status === 200) {
-          setIsAdmin(res.data.user[0].isAdmin);
-        } else {
-          console.log("Unknown Error");
-        }
-      })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          console.log("Error: ", err.response.status);
         }
       });
   };

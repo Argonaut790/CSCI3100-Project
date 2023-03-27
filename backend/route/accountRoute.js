@@ -40,7 +40,9 @@ router.post("/login", async (req, res) => {
           const refreshToken = jwt.sign(e.email, process.env.REFRESH_TOEKN);
           refreshTokens.push(refreshToken);
           res.status(200).json({
+            userId: e.userId,
             username: e.username,
+            isAdmin: e.isAdmin,
             accessToken: accessToken,
             refreshToken: refreshToken,
           });
@@ -97,11 +99,9 @@ router.post("/", async (req, res) => {
       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
     );
     if (!req.body.email.match(emailRegEx)) {
-      console.log(1);
       return res.status(401).json("Invalid email");
     }
     if (!req.body.password.match(passwordRegEx)) {
-      console.log(2);
       return res.status(401).json("Invalid password");
     }
 
@@ -137,7 +137,6 @@ router.patch("/auth/:confirmationCode", async (req, res) => {
   const user = await Account.find({
     confirmationCode: req.params.confirmationCode,
   });
-  console.log(req.params.confirmationCode);
   if (!user) {
     return res.status(404).send("not existed");
   }

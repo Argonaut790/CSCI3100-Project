@@ -59,18 +59,6 @@ function App() {
     }
   }, []);
 
-  if (user) {
-    console.log("User Exists");
-  } else {
-    console.log("User Doesn't Exist");
-  }
-  console.log("User Object : " + user);
-  const { username, email, isAdmin, isGoogleSign } = user || {};
-  console.log("username : " + username);
-  console.log("email : " + email);
-  console.log("Admin : " + isAdmin);
-  console.log("Google : " + isGoogleSign);
-
   const User = () => {
     return (
       <div
@@ -88,7 +76,7 @@ function App() {
         <div className="col-md-7 h-100 d-flex align-items-center">
           <div className="row d-flex flex-column" id="user-info">
             <div className="col-md-12 p-0">{user.username}</div>
-            <div className="col-md-12 p-0">#ID</div>
+            <div className="col-md-12 p-0">#{user.userId}</div>
             <button
               type="button"
               className="btn btn-dark"

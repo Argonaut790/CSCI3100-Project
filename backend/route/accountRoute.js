@@ -177,7 +177,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Change user status by Id
+// Update user isActivated status by Id
 router.patch("/status/:userId", async (req, res) => {
   try {
     const updatedAccount = await Account.updateOne(
@@ -185,6 +185,19 @@ router.patch("/status/:userId", async (req, res) => {
       { $set: { isActivated: req.body.isActivated } }
     );
     res.status(200).json({ updatedAccount });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// Update isPrivate status by Id
+router.patch("/private/:userId", async (req, res) => {
+  try {
+    const updatedAccount = await Account.updateOne(
+      { userId: req.params.userId },
+      { $set: { isPrivate: req.body.isPrivate } }
+    );
+    res.status(200).json(updatedAccount);
   } catch (err) {
     res.status(401).json({ message: err });
   }
@@ -218,11 +231,11 @@ router.get("/bio/:userId", async (req, res) => {
 // Edit bio by Id
 router.patch("/bio/:userId", async (req, res) => {
   try {
-    const user = await Account.updateOne(
+    const updatedAccount = await Account.updateOne(
       { userId: req.params.userId },
-      { bio: req.body.bio }
+      { $set: { bio: req.body.bio } }
     );
-    res.status(200).json(user);
+    res.status(200).json(updatedAccount);
   } catch (err) {
     res.status(401).json({ message: err });
   }

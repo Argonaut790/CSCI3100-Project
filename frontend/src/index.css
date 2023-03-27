@@ -206,7 +206,7 @@ img {
 }
 
 #post {
-  padding: 1rem !important;
+  padding: 1.5rem !important;
 }
 
 .post {
@@ -214,13 +214,13 @@ img {
 }
 
 .post-user-info {
-  height: 2.8rem;
+  height: 3.8rem;
   /* padding: 0 2rem; */
 }
 
 .post-user-avatar {
   margin: 0 0.5rem 0 0;
-  height: 100%;
+  height: 3.5rem;
   width: auto;
   aspect-ratio: 1/1;
   border-radius: 40px;
@@ -241,7 +241,7 @@ img {
 }
 
 .post-image {
-  width: 95%;
+  width: 100%;
   aspect-ratio: 1/1;
   object-fit: cover;
   object-position: center;
@@ -567,6 +567,26 @@ img {
   }
 }
 
+/* fade out animation */
+.toast.show.tweet-mask {
+  animation-name: fadeInHoldFadeOut;
+  animation-duration: 5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInHoldFadeOut {
+  0% {
+    opacity: 0;
+  }
+  10%,
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 /* profile  */
 #profile-mask {
   background-color: #000000cc;
@@ -586,4 +606,8 @@ img {
 
 .w-60 {
   width: 60%;
+}
+
+.w-30 {
+  width: 30%;
 }

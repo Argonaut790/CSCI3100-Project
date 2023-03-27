@@ -17,7 +17,7 @@ class Tweet extends Component {
       image: null,
       desc: "",
       previewURL: null,
-      // cropper: null,
+      isLoading: false,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -37,6 +37,7 @@ class Tweet extends Component {
       e.target.style.height = `${e.target.scrollHeight}px`;
     }
   };
+
 
   // componentDidUpdate(prevProps, prevState) {
   //   if (
@@ -145,6 +146,7 @@ class Tweet extends Component {
   async handleSubmit(e) {
     e.preventDefault();
 
+    this.setState({ isLoading: true });
     const { desc, image } = this.state;
 
     // Create a FormData object and append the image file to it
@@ -161,15 +163,13 @@ class Tweet extends Component {
         },
       });
 
-      console.log("Tweet submitted:", {
-        desc: this.state.desc,
-      });
-
-      console.log("POST SUCCESSFULLY");
-
+      this.props.handlePostStatus(200);
       // clear input fields
       this.setState({ image: null, desc: "", previewURL: null });
+      this.props.handleTweet();
+      this.setState({ isLoading: false });
     } catch (e) {
+      this.props.handlePostStatus(400);
       console.log(e);
       console.log("Can't Upload Image!");
     }
@@ -268,7 +268,7 @@ class Tweet extends Component {
                     <div className="form-floating h4">
                       <textarea
                         className="form-control"
-                        placeholder="Description(maximum 200 words)"
+                        placeholder="Description"
                         id="floatingTextarea2"
                         style={{
                           height: "auto",
@@ -293,6 +293,14 @@ class Tweet extends Component {
                 >
                   Tweet
                 </button>
+                {this.state.isLoading && (
+                  <div
+                    className=" px-3 d-flex justify-content-center align-items-center"
+                    // style={{ aspectRatio: "3/4" }}
+                  >
+                    <div className="spinner"></div>
+                  </div>
+                )}
               </div>
             </div>
           </form>

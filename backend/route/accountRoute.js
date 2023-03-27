@@ -54,14 +54,20 @@ router.post("/login", async (req, res) => {
 
 // Sign up
 router.post("/", async (req, res) => {
+  const registeredEmailUser = await Account.find({
+    email: req.body.email,
+    isGoogleSign: false,
+  });
+  const registeredGoogleUser = await Account.find({
+    email: req.body.email,
+    isGoogleSign: true,
+  });
   if (req.body.isGoogleSign == true) {
-    const registeredUser = await Account.find({
-      email: req.body.email,
-      isGoogleSign: false,
-    });
-    if (registeredUser) {
+    if (registeredEmailUser.length) {
       // Already registered in email signup
-      return res.status(400).json("email registered");
+      return res.status(400).json("Email registered in our system");
+    } else if (registeredGoogleUser.length) {
+      return res.status(200).json(registeredGoogleUser[0]);
     }
     const account = new Account({
       username: req.body.username,
@@ -76,25 +82,12 @@ router.post("/", async (req, res) => {
       res.json({ message: err });
     }
   } else {
-    const registeredUser = await Account.find({
-      email: req.body.email,
-    }).count({
-      sent_at: null,
-    });
-    if (registeredUser) {
-      const registeredGoogleUser = await Account.find({
-        email: req.body.email,
-        isGoogleSign: true,
-      }).count({
-        sent_at: null,
-      });
-      if (registeredGoogleUser) {
-        // Already registered in Google signup
-        return res.status(400).json("email registered using google signin");
-      } else {
-        // Already registered in email signup
-        return res.status(400).json("email registered");
-      }
+    if (registeredGoogleUser.length) {
+      // Already registered in Google signup
+      return res.status(400).json("Email registered using google signin");
+    } else if (registeredEmailUser.length) {
+      // Already registered in email signup
+      return res.status(400).json("Email registered in our system");
     }
 
     // Server-side validation
@@ -132,7 +125,9 @@ router.post("/", async (req, res) => {
       sendConfirmationEmail(req.body.username, req.body.email, token);
       res.status(200).json(saveduser);
     } catch (err) {
-      res.json({ message: err });
+      res
+        .status(401)
+        .json("Unkown error, please try again or sign up with another method.");
     }
   }
 });

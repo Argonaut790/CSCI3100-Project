@@ -101,7 +101,7 @@ function App() {
       </div>
     );
   };
-  // button type="button" class="btn btn-outline-dark"
+  // button type="button" className="btn btn-outline-dark"
 
   const NavItem = ({ text, id, imgsrc, delay }) => {
     const navLinkRef = useRef(null);

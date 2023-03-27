@@ -258,9 +258,9 @@ class Tweet extends Component {
                     <div className="h4 m-0" style={{ padding: "0 0.75rem" }}>
                       UserName
                     </div>
-                    <div class="form-floating h4">
+                    <div className="form-floating h4">
                       <textarea
-                        class="form-control"
+                        className="form-control"
                         placeholder="Description"
                         id="floatingTextarea2"
                         style={{

@@ -116,7 +116,7 @@ const LoginModal = ({ setShowModal }) => {
       ></button>
 
       <form onSubmit={onSubmit}>
-        <div class="form-floating ">
+        <div className="form-floating ">
           <input
             type="email"
             name="email"
@@ -129,7 +129,7 @@ const LoginModal = ({ setShowModal }) => {
           <label for="floatingInput">Email address</label>
         </div>
 
-        <div class="form-floating mb-3">
+        <div className="form-floating mb-3">
           <input
             type="password"
             name="password"

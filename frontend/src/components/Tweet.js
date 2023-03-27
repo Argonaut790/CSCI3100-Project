@@ -17,7 +17,7 @@ class Tweet extends Component {
       image: null,
       desc: "",
       previewURL: null,
-      isLoading: false,
+      // cropper: null,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -26,9 +26,16 @@ class Tweet extends Component {
   }
 
   onDescriptionChange = (e) => {
-    this.setState({ desc: e.target.value });
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
+    const inputValue = e.target.value;
+    const words = inputValue.trim().split(/\s+/);
+    const wordCount = words.length;
+
+    // Update the state only if the word count is within the limit
+    if (wordCount <= 200) {
+      this.setState({ desc: e.target.value });
+      e.target.style.height = "auto";
+      e.target.style.height = `${e.target.scrollHeight}px`;
+    }
   };
 
   // componentDidUpdate(prevProps, prevState) {
@@ -138,7 +145,6 @@ class Tweet extends Component {
   async handleSubmit(e) {
     e.preventDefault();
 
-    this.setState({ isLoading: true });
     const { desc, image } = this.state;
 
     // Create a FormData object and append the image file to it
@@ -155,13 +161,15 @@ class Tweet extends Component {
         },
       });
 
-      this.props.handlePostStatus(200);
+      console.log("Tweet submitted:", {
+        desc: this.state.desc,
+      });
+
+      console.log("POST SUCCESSFULLY");
+
       // clear input fields
       this.setState({ image: null, desc: "", previewURL: null });
-      this.props.handleTweet();
-      this.setState({ isLoading: false });
     } catch (e) {
-      this.props.handlePostStatus(400);
       console.log(e);
       console.log("Can't Upload Image!");
     }
@@ -260,7 +268,7 @@ class Tweet extends Component {
                     <div className="form-floating h4">
                       <textarea
                         className="form-control"
-                        placeholder="Description"
+                        placeholder="Description(maximum 200 words)"
                         id="floatingTextarea2"
                         style={{
                           height: "auto",
@@ -285,14 +293,6 @@ class Tweet extends Component {
                 >
                   Tweet
                 </button>
-                {this.state.isLoading && (
-                  <div
-                    className=" px-3 d-flex justify-content-center align-items-center"
-                    // style={{ aspectRatio: "3/4" }}
-                  >
-                    <div className="spinner"></div>
-                  </div>
-                )}
               </div>
             </div>
           </form>

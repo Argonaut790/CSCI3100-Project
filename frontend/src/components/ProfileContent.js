@@ -4,7 +4,6 @@ import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
 
 import ImportAll from "./ImportAll";
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const images = ImportAll(

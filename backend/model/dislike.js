@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const likeSchema = new Schema({
+const dislikeSchema = new Schema({
   postId: {
     type: String,
     required: true,
@@ -16,4 +16,4 @@ const likeSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("Like", likeSchema);
+module.exports = mongoose.model("Like", dislikeSchema);

@@ -1,6 +1,6 @@
-import { useRef, useEffect, useState, createRef } from "react";
+import { useRef, useEffect, useCallback, useState, createRef } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
-
+import axios from "axios";
 import ScrollContext from "./components/ScrollContext";
 import ImportAll from "./components/ImportAll";
 import Home from "./components/Home";
@@ -33,13 +33,36 @@ const TopLeft = () => {
 };
 
 function App() {
-  const [user, setUser] = useState();
+  const [userId, setUserId] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [tweetHandled, setTweetHandled] = useState(false);
   const [postStatus, setPostStatus] = useState(null);
+  const [username, setUsername] = useState("");
+  const [isAdmin, setIsAdmin] = useState("");
   const maskBackgroundRef = createRef();
 
   let location = useLocation();
+
+  useEffect(() => {
+    // Check if user logged in everytime if user change browsing page
+    const checkUserLogin = async () => {
+      const userId = JSON.parse(localStorage.getItem("user")).userId;
+      if (userId) {
+        setUserId(userId);
+        setLoggedIn(true);
+      } else {
+        setUserId("");
+        setLoggedIn(false);
+      }
+    };
+    checkUserLogin().catch(console.error);
+  }, [location]);
+
+  const handleLogout = useCallback(() => {
+    setUserId("");
+    setLoggedIn(false);
+    localStorage.removeItem("user");
+  }, []);
 
   const handleTweet = () => {
     if (tweetHandled) {
@@ -60,16 +83,22 @@ function App() {
     console.log("postStatus updated:", postStatus);
   }, [postStatus]);
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  }, []);
-
   const User = () => {
+    // Get user profile infomation from db
+    useEffect(() => {
+      const fetchUserData = async () => {
+        const res = await axios.get("http://localhost:5500/account/" + userId);
+        if (!res.error) {
+          setUsername(res.data.username);
+          setIsAdmin(res.data.isAdmin);
+        } else {
+          console.log(res);
+        }
+      };
+      fetchUserData().catch(console.error);
+    }, []);
+
+    // Render avatar, username, userId, lagout button in left-bottom corner
     return (
       <div
         className="row h4 m-0 d-flex flex-row align-items-md-center"
@@ -85,8 +114,8 @@ function App() {
         </div>
         <div className="col-md-7 h-100 d-flex align-items-center">
           <div className="row d-flex flex-column" id="user-info">
-            <div className="col-md-12 p-0">{user.username}</div>
-            <div className="col-md-12 p-0">#{user.userId}</div>
+            <div className="col-md-12 p-0">{username}</div>
+            <div className="col-md-12 p-0">#{userId}</div>
             <button
               type="button"
               className="btn btn-dark"
@@ -157,51 +186,33 @@ function App() {
     );
   };
 
-  useEffect(() => {
-    const loggedInUser = localStorage.getItem("user");
-    if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser);
-      setUser(foundUser);
-      setLoggedIn(true);
-    } else {
-      setUser(null);
-      setLoggedIn(false);
-    }
-  }, [location]);
-
-  const handleLogout = () => {
-    setUser(null);
-    setLoggedIn(false);
-    localStorage.removeItem("user");
-  };
-
-  const NavLinks = ({ user, handleTweet }) => {
+  const NavLinks = ({ userId, handleTweet }) => {
     return (
       <nav className="h4 nav flex-column p-0">
-        <NavItem user={user} text="Home" id="home" imgsrc="home" delay="1" />
+        <NavItem user={userId} text="Home" id="home" imgsrc="home" delay="1" />
         {/* {user && (
           <NavItem user={user} text="Chat" id="chat" imgsrc="chat" delay="2" />
         )} */}
-        {user && (
+        {loggedIn && (
           <NavItem
-            user={user}
+            user={userId}
             text="Profile"
             id="profile"
             imgsrc="user"
             delay="3"
           />
         )}
-        {user && <TweetButton handleTweet={handleTweet} />}
-        {user && user.isAdmin && (
+        {loggedIn && <TweetButton handleTweet={handleTweet} />}
+        {loggedIn && isAdmin && (
           <NavItem
-            user={user}
+            user={userId}
             text="Admin"
             id="admin"
             imgsrc="admin"
             delay="4"
           />
         )}
-        {user && (
+        {loggedIn && (
           <Link
             to={"/home"}
             onClick={handleLogout}
@@ -219,7 +230,7 @@ function App() {
     <div className="mask-background" ref={maskBackgroundRef}>
       <ScrollContext.Provider value={maskBackgroundRef}>
         {/* Routes */}
-        {console.log(user)}
+        {console.log(userId)}
         {/* user interface */}
         {!loggedIn && (
           <div
@@ -279,9 +290,9 @@ function App() {
               <div className="container-fluid" id="lhs">
                 <TopLeft />
                 <div className="row d-flex m-0" id="nav">
-                  <NavLinks user={user} handleTweet={handleTweet} />
+                  <NavLinks user={userId} handleTweet={handleTweet} />
                 </div>
-                {user && <User />}
+                {loggedIn && <User />}
               </div>
             </div>
             <Routes>
@@ -291,17 +302,17 @@ function App() {
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}
             /> */}
-              {/* {user && <Route path="/chat" element={<Chat />} />} */}
-              {user && (
+              {/* {loggedIn && <Route path="/chat" element={<Chat />} />} */}
+              {loggedIn && (
                 <Route
                   path="/profile"
                   element={<Profile loggedIn={loggedIn} />}
                 />
               )}
-              {user && user.isAdmin && (
+              {loggedIn && isAdmin && (
                 <Route path="/admin" element={<Admin />} />
               )}
-              {/* {user && <Route path="/tweet" element={<Tweet />} />} */}
+              {/* {loggedIn && <Route path="/tweet" element={<Tweet />} />} */}
               <Route path="/confirm" element={<AccountConfirm />} />
             </Routes>
           </div>

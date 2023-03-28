@@ -57,17 +57,19 @@ const Content = () => {
 };
 
 const PersonalInfo = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  // Get userId from localStorage
+  const userId = JSON.parse(localStorage.getItem("user")).userId;
   const [followedNum, setFollowedNum] = useState(0);
   const [followerNum, setFollowerNum] = useState(0);
   const [pendingNum, setPendingNum] = useState(0);
   const [postNum, setPostNum] = useState(0);
   const [userBio, setUserBio] = useState("");
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     const fetchFollowData = async () => {
       const res = await axios.get(
-        "http://localhost:5500/follow/stat/" + user.userId
+        "http://localhost:5500/follow/stat/" + userId
       );
       if (!res.error) {
         setFollowedNum(res.data.followedNum);
@@ -80,9 +82,7 @@ const PersonalInfo = () => {
     fetchFollowData().catch(console.error);
 
     const fetchPostData = async () => {
-      const res = await axios.get(
-        "http://localhost:5500/tweet/stat/" + user.userId
-      );
+      const res = await axios.get("http://localhost:5500/tweet/stat/" + userId);
       if (!res.error) {
         setPostNum(res.data.postNum);
       } else {
@@ -91,18 +91,17 @@ const PersonalInfo = () => {
     };
     fetchPostData().catch(console.error);
 
-    const fetchBioData = async () => {
-      const res = await axios.get(
-        "http://localhost:5500/account/bio/" + user.userId
-      );
+    const fetchUserData = async () => {
+      const res = await axios.get("http://localhost:5500/account/" + userId);
       if (!res.error) {
         setUserBio(res.data.bio);
+        setUsername(res.data.username);
       } else {
         console.log(res);
       }
     };
-    fetchBioData().catch(console.error);
-  }, [user]);
+    fetchUserData().catch(console.error);
+  }, [userId]);
 
   return (
     <div id="profile-mask" className="d-flex flex-column shadow py-4">
@@ -117,7 +116,7 @@ const PersonalInfo = () => {
         </div>
         <div className="d-grid gap-2 w-60 p-4">
           <div className="fw-bold border-bottom py-2">
-            {user.username} #{user.userId}
+            {username} #{userId}
           </div>
           <div className="text-break">{userBio}</div>
           <button type="button" className="btn btn-dark">

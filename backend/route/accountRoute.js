@@ -216,13 +216,20 @@ router.patch("/admin/:userId", async (req, res) => {
   }
 });
 
-// Get user bio by Id
-router.get("/bio/:userId", async (req, res) => {
+// Get user profile info by Id
+router.get("/:userId", async (req, res) => {
   try {
     const user = await Account.findOne({
       userId: req.params.userId,
     });
-    res.status(200).json({ bio: user.bio });
+    res.status(200).json({
+      bio: user.bio,
+      username: user.username,
+      email: user.email,
+      isPrivate: user.isPrivate,
+      isAdmin: user.isAdmin,
+      isGoogleSign: user.isGoogleSign,
+    });
   } catch (err) {
     res.status(401).json({ message: err });
   }

@@ -20,16 +20,11 @@ const LoginModal = ({ setShowModal }) => {
           console.log(res.data);
           document.getElementById("result").innerText =
             "Logged in successfully!";
-          const userData = {
-            userId: res.data.userId,
-            username: res.data.username,
-            email: email,
-            isPrivate: res.data.isPrivate,
-            isAdmin: res.data.isAdmin,
-            isGoogleSign: false,
-          };
 
-          localStorage.setItem("user", JSON.stringify(userData));
+          localStorage.setItem(
+            "user",
+            JSON.stringify({ userId: res.data.userId })
+          );
           navigate("/");
         }
       })

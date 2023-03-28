@@ -149,17 +149,24 @@ class FetchPost extends Component {
                 <p>#UserID {post.desc}</p>
               </div>
               <div
-                className="pt-2 d-flex flex-row border-top justify-content-evenly"
+                className="border-light border-opacity-50 pt-2 d-flex flex-row border-top justify-content-evenly"
                 id="post-function"
               >
-                <div className=" px-5 w-30 d-flex justify-content-center">
+                <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
                   <img
                     className="white-img"
-                    src={images["heart.svg"]}
-                    alt="heart"
+                    src={images["like.svg"]}
+                    alt="like"
                   />
                 </div>
-                <div className="px-5 border-start border-end w-30 d-flex justify-content-center">
+                <div className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center">
+                  <img
+                    className="white-img"
+                    src={images["dislike.svg"]}
+                    alt="dislike"
+                  />
+                </div>
+                <div className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center">
                   <img
                     className="white-img"
                     src={images["comment-alt.svg"]}
@@ -167,7 +174,7 @@ class FetchPost extends Component {
                   />
                 </div>
 
-                <div className="px-5 w-30 d-flex justify-content-center">
+                <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
                   <img
                     className="white-img"
                     src={images["arrows-retweet.svg"]}

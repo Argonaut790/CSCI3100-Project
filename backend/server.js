@@ -34,6 +34,10 @@ app.use("/follow", followerRoute);
 const likeRoute = require("./route/likeRoute");
 app.use("/like", likeRoute);
 
+//Like
+const dislikeRoute = require("./route/dislikeRoute");
+app.use("/like", dislikeRoute);
+
 //Comment
 const commentRoute = require("./route/commentRoute");
 app.use("/comment", commentRoute);

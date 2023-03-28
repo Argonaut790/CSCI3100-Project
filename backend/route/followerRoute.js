@@ -3,40 +3,64 @@ const Follower = require("../model/follower");
 const Account = require("../model/account");
 const router = express.Router();
 
-// Get followed user list
+// Get followed user list with followed user info
 router.get("/followed/:userId", async (req, res) => {
   try {
     const followedList = await Follower.find({
       followerUserId: req.params.userId,
       isAccepted: true,
     });
-    res.status(200).json(followedList);
+    const followedUserIds = followedList.map(
+      (followed) => followed["followedUserId"]
+    );
+    const users = await Account.find({
+      userId: {
+        $in: followedUserIds,
+      },
+    });
+    res.status(200).json(users);
   } catch (err) {
     res.status(401).json({ message: err });
   }
 });
 
-// Get follower list
+// Get follower list with follower user info
 router.get("/follower/:userId", async (req, res) => {
   try {
     const followerList = await Follower.find({
       followedUserId: req.params.userId,
       isAccepted: true,
     });
-    res.status(200).json(followerList);
+    const followerUserIds = followerList.map(
+      (follower) => follower["followerUserId"]
+    );
+    const users = await Account.find({
+      userId: {
+        $in: followerUserIds,
+      },
+    });
+    res.status(200).json(users);
   } catch (err) {
     res.status(401).json({ message: err });
   }
 });
 
-// Get pending follower list
+// Get pending follower list with pending follower user info
 router.get("/pending/:userId", async (req, res) => {
   try {
     const pendingFollowerList = await Follower.find({
       followedUserId: req.params.userId,
       isAccepted: false,
     });
-    res.status(200).json(pendingFollowerList);
+    const pendingUserIds = pendingFollowerList.map(
+      (pendingFollower) => pendingFollower["followerUserId"]
+    );
+    const users = await Account.find({
+      userId: {
+        $in: pendingUserIds,
+      },
+    });
+    res.status(200).json(users);
   } catch (err) {
     res.status(401).json({ message: err });
   }

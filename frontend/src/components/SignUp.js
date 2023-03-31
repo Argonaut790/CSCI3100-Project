@@ -72,12 +72,19 @@ const SignUp = () => {
       <button type="button" className="btn btn-light" onClick={handleSignUp}>
         Sign Up with Email
       </button>
-      <GoogleOAuthProvider clientId={clientId}>
-        <GoogleLogin
-          onSuccess={onGoogleSignInSuccess}
-          onError={onGoogleSignInFailure}
-        />
-      </GoogleOAuthProvider>
+        <GoogleOAuthProvider clientId={clientId}>
+            <GoogleLogin
+                theme="outline"
+                type="standard"
+                size="large"
+                text="signup_with"
+                shape="rectangular"
+                width="250"
+                locale="en"
+                onSuccess={onGoogleSignInSuccess}
+                onError={onGoogleSignInFailure}
+            />
+        </GoogleOAuthProvider>
       <button type="button" className="btn btn-light" onClick={handleLogIn}>
         Already have an account?
       </button>

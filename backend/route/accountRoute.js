@@ -123,7 +123,7 @@ router.post("/", async (req, res) => {
     } catch (err) {
       res
         .status(401)
-        .json("Unkown error, please try again or sign up with another method.");
+        .json("Unknown error, please try again or sign up with another method.");
     }
   }
 });

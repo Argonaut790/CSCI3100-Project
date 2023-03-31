@@ -131,5 +131,5 @@ const LoginModal = ({ setShowModal }) => {
     </div>
   );
 };
-
+// forgot password button ||
 export default LoginModal;

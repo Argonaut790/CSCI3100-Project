@@ -1,22 +1,23 @@
-import HomeContent from "./HomeContent";
+// import { Component } from "react";
+// import axios from "axios";
+
+import ProfileContent from "./ProfileContent";
 import Search from "./Search";
-import FollowList from "./FollowList";
 
 //function needs to be Capital Letter in the first
-const Home = (userId) => {
+const UserProfile = (loggedIn) => {
   return (
     <>
-      <div className="col-md" id="content">
-        <HomeContent />
+      <div className="col-md-6" id="content">
+        <ProfileContent />
       </div>
       <div className="col-md-3 vh-100" id="explore">
         <div className="container-fluid p-0" id="rhs">
           <Search />
-          {userId && <FollowList userId={userId} isFollowerList={false} />}
         </div>
       </div>
     </>
   );
 };
 
-export default Home;
+export default UserProfile;

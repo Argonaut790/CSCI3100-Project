@@ -56,6 +56,7 @@ router.post("/", upload.single("image"), async (req, res) => {
         contentType: file.contentType,
       },
       desc: desc,
+      userId: req.body.userId,
     });
 
     post.save().then(() => {

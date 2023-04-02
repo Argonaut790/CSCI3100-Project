@@ -268,7 +268,6 @@ router.get("/search/:searchString", async (req, res) => {
   try {
     // Validate and sanitize search string
     const sanitizedQuery = validator.escape(req.params.searchString + "");
-    console.log(sanitizedQuery);
     // Perform fuzzy search with RegExp
     const pattern = new RegExp(
       sanitizedQuery.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"),

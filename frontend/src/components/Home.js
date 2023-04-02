@@ -3,7 +3,7 @@ import Search from "./Search";
 import FollowList from "./FollowList";
 
 //function needs to be Capital Letter in the first
-const Home = (userId) => {
+const Home = ({ userId }) => {
   return (
     <>
       <div className="col-md" id="content">
@@ -13,6 +13,7 @@ const Home = (userId) => {
         <div className="container-fluid p-0" id="rhs">
           <Search />
           {userId && <FollowList userId={userId} isFollowerList={false} />}
+          {userId && <FollowList userId={userId} isFollowerList={true} />}
         </div>
       </div>
     </>

@@ -1,9 +1,17 @@
 const express = require("express");
 const Dislike = require("../model/like");
+const rateLimit = require("express-rate-limit");
 const router = express.Router();
 
+const dislikeLimiter = rateLimit({
+  windowMs: 10 * 1000, // 10 seconds
+  max: 1, // limit each IP to 1 request per windowMs
+  message: "You can only dislike or undislike once every 10 seconds.",
+});
+
+
 // Dislike
-router.post("/", async (req, res) => {
+router.post("/", dislikeLimiter, async (req, res) => {
   try {
     const dislike = new Dislike({
       postId: req.body.postId,
@@ -18,7 +26,7 @@ router.post("/", async (req, res) => {
 });
 
 // Undislike
-router.delete("/", async (req, res) => {
+router.delete("/", dislikeLimiter, async (req, res) => {
   await Dislike.deleteOne({
     postId: req.body.postId,
     userId: req.body.userId,

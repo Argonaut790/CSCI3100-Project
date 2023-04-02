@@ -22,9 +22,13 @@ const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
 db.once("open", () => console.log("Connected to database"));
 
-//Acount System
+//Account System
 const accountRoute = require("./route/accountRoute");
 app.use("/account", accountRoute);
+
+// Forgot Password System
+const forgotPasswordRoute = require("./route/forgotPasswordRoute");
+app.use("/account/forgot-password", forgotPasswordRoute);
 
 //Follower System
 const followerRoute = require("./route/followerRoute");
@@ -34,9 +38,9 @@ app.use("/follow", followerRoute);
 const likeRoute = require("./route/likeRoute");
 app.use("/like", likeRoute);
 
-//Like
+//DisLike
 const dislikeRoute = require("./route/dislikeRoute");
-app.use("/like", dislikeRoute);
+app.use("/dislike", dislikeRoute);
 
 //Comment
 const commentRoute = require("./route/commentRoute");

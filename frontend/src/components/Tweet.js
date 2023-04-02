@@ -236,6 +236,7 @@ class Tweet extends Component {
 
     // Add the description field to the formData object
     formData.append("desc", desc);
+    formData.append("userId", this.props.userId);
 
     try {
       await axios.post("http://localhost:5500/tweet", formData, {

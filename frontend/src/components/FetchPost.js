@@ -3,13 +3,15 @@ import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
 import DeleteButtonContext from "./DeleteButtonContext";
+import moment from "moment";
 
 const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
-const UserID = () => {
+const UserID = (user) => {
   const deleteButton = useContext(DeleteButtonContext);
+  let userId = user.userId;
 
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
@@ -23,7 +25,7 @@ const UserID = () => {
         </div>
         <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
           <div className="fw-bold">UserName</div>
-          <div>#UserID</div>
+          <div>#{userId}</div>
         </div>
       </div>
       {deleteButton && <div>{deleteButton}</div>}
@@ -52,15 +54,14 @@ class FetchPost extends Component {
     window.removeEventListener("scroll", this.handleScroll);
   }
 
-
   /*  Module: handleLickClick and handleDislikeClick
-  *   Version: 1.0 (28/3/2023)
-  *   Description: This module is used to handle the like and dislike button
-  *   and send the request to the backend. It will also limit the user to
-  *   only like or dislike once every 10 seconds (otherwise warning message will be given).
-  *
-  *   Parameter: postId, userId to post
-  * */
+   *   Version: 1.0 (28/3/2023)
+   *   Description: This module is used to handle the like and dislike button
+   *   and send the request to the backend. It will also limit the user to
+   *   only like or dislike once every 10 seconds (otherwise warning message will be given).
+   *
+   *   Parameter: postId, userId to post
+   * */
 
   handleLikeClick = async (postId, userId) => {
     try {
@@ -161,7 +162,7 @@ class FetchPost extends Component {
         >
           {posts.map((post, index) => (
             <div className="mask-post p-0" id="post" key={index}>
-              <UserID />
+              <UserID userId={post.userId} />
               <div
                 className="post-image-div d-flex justify-content-center align-items-center"
                 style={{ aspectRatio: "1/1" }}
@@ -189,18 +190,18 @@ class FetchPost extends Component {
                 className="d-flex flex-column overflow-hidden"
               >
                 <div className="h5 d-flex flex-row justify-content-between">
-                  <div>UserName</div>
-                  <div>post timestamp</div>
+                  <div>#{post.userId}</div>
+                  <div>{moment(post.timestamp).format("MMMM Do, h:mm a")}</div>
                 </div>
-                <p>#UserID {post.desc}</p>
+                <p>{post.desc}</p>
               </div>
               <div
                 className="border-light border-opacity-50 pt-2 d-flex flex-row border-top justify-content-evenly"
                 id="post-function"
               >
                 <div
-                    className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
-                    onClick={() => this.handleLikeClick(post._id, "userId")}
+                  className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
+                  onClick={() => this.handleLikeClick(post._id, "userId")}
                 >
                   <img
                     className="white-img"
@@ -209,8 +210,8 @@ class FetchPost extends Component {
                   />
                 </div>
                 <div
-                    className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center"
-                    onClick={() => this.handleDislikeClick(post._id, "userId")}
+                  className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center"
+                  onClick={() => this.handleDislikeClick(post._id, "userId")}
                 >
                   <img
                     className="white-img"

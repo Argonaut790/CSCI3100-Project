@@ -24,7 +24,7 @@ const Search = () => {
       }
     };
     if (searchString !== "") fetchResultItems().catch(console.error);
-  }, [searchString]);
+  }, [searchString, resultItems]);
 
   const SearchResults = () => {
     return (

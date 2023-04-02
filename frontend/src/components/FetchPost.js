@@ -9,10 +9,8 @@ const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
-const UserID = (user) => {
+const UserID = ({ userId, username }) => {
   const deleteButton = useContext(DeleteButtonContext);
-  let userId = user.userId;
-
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
       <div>
@@ -24,7 +22,7 @@ const UserID = (user) => {
           />
         </div>
         <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
-          <div className="fw-bold">UserName</div>
+          <div className="fw-bold">{username}</div>
           <div>#{userId}</div>
         </div>
       </div>
@@ -162,7 +160,7 @@ class FetchPost extends Component {
         >
           {posts.map((post, index) => (
             <div className="mask-post p-0" id="post" key={index}>
-              <UserID userId={post.userId} />
+              <UserID userId={post.userId} username={post.username} />
               <div
                 className="post-image-div d-flex justify-content-center align-items-center"
                 style={{ aspectRatio: "1/1" }}
@@ -190,7 +188,9 @@ class FetchPost extends Component {
                 className="d-flex flex-column overflow-hidden"
               >
                 <div className="h5 d-flex flex-row justify-content-between">
-                  <div>#{post.userId}</div>
+                  <div>
+                    <b>{post.username}</b>
+                  </div>
                   <div>{moment(post.timestamp).format("MMMM Do, h:mm a")}</div>
                 </div>
                 <p>{post.desc}</p>

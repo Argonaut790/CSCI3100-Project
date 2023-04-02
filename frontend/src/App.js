@@ -47,9 +47,9 @@ function App() {
   useEffect(() => {
     // Check if user logged in everytime if user change browsing page
     const checkUserLogin = async () => {
-      const userId = JSON.parse(localStorage.getItem("user")).userId;
-      if (userId) {
-        setUserId(userId);
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.userId && user.userId.length !== 0) {
+        setUserId(user.userId);
         setLoggedIn(true);
       } else {
         setUserId("");
@@ -231,7 +231,6 @@ function App() {
     <div className="mask-background" ref={maskBackgroundRef}>
       <ScrollContext.Provider value={maskBackgroundRef}>
         {/* Routes */}
-        {console.log(userId)}
         {/* user interface */}
         {!loggedIn && (
           <div

@@ -292,8 +292,8 @@ class Tweet extends Component {
                         alt="user-avatar"
                       />
                       <div className="d-flex align-items-md-center h-100 m-0 post-user-id">
-                        <div className="fw-bold">UserName</div>
-                        <div>#UserID</div>
+                        <div className="fw-bold">{this.props.username}</div>
+                        <div>#{this.props.userId}</div>
                       </div>
                     </div>
                     <div

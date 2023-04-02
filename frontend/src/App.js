@@ -250,6 +250,8 @@ function App() {
           <Tweet
             handleTweet={handleTweet}
             handlePostStatus={handlePostStatus}
+            userId={userId}
+            username={username}
           />
         )}
         {/* Tweet upload status */}

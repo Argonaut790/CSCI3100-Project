@@ -299,8 +299,8 @@ function App() {
               </div>
             </div>
             <Routes>
-              <Route path="/" element={<Home loggedIn={loggedIn} />} />
-              <Route path="/home" element={<Home loggedIn={loggedIn} />} />
+              <Route path="/" element={<Home userId={userId} />} />
+              <Route path="/home" element={<Home userId={userId} />} />
               {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}

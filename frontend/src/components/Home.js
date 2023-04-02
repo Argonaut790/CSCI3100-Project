@@ -3,8 +3,7 @@ import Search from "./Search";
 import FollowList from "./FollowList";
 
 //function needs to be Capital Letter in the first
-const Home = (loggedIn) => {
-  const userId = JSON.parse(localStorage.getItem("user")).userId;
+const Home = (userId) => {
   return (
     <>
       <div className="col-md" id="content">

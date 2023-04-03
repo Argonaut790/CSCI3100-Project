@@ -16,4 +16,4 @@ const dislikeSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("Like", dislikeSchema);
+module.exports = mongoose.model("Dislike", dislikeSchema);

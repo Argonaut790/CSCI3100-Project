@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import DeleteButtonContext from "./DeleteButtonContext";
+// import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
 
@@ -30,20 +30,11 @@ const TopMid = () => {
 };
 
 const Content = () => {
-  const [deleteButton, setdeleteButton] = useState(null);
+  const [deleteButton, setdeleteButton] = useState(false);
+  // const [deleteConfirmation, setdeleteConfirmation] = useState(null);
 
   useEffect(() => {
-    const deleteButtonDiv = (
-      <div className="btn">
-        <img
-          src={images["trash.svg"]}
-          className="white-img"
-          alt="delete-button"
-          id="delete-button"
-        />
-      </div>
-    );
-    setdeleteButton(deleteButtonDiv);
+    setdeleteButton(true);
   }, []);
 
   // Get userId from localStorage
@@ -54,9 +45,11 @@ const Content = () => {
   return (
     <div className="container-fluid p-0" id="mid-center">
       <PersonalInfo />
-      <DeleteButtonContext.Provider value={deleteButton}>
-        <FetchPost userID={userId}/>
-      </DeleteButtonContext.Provider>
+      <FetchPost
+        userID={userId}
+        // handleDeletePost={handleDeletePost}
+        deleteButton={deleteButton}
+      />
     </div>
   );
 };

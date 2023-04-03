@@ -1,16 +1,36 @@
-import { Component, useContext } from "react";
+import { Component } from "react";
 import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
-import DeleteButtonContext from "./DeleteButtonContext";
+// import DeleteButtonContext from "./DeleteButtonContext";
 import moment from "moment";
 
 const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
-const UserID = ({ userId, username }) => {
-  const deleteButton = useContext(DeleteButtonContext);
+const UserID = ({ postId, userId, username, deleteButton }) => {
+  const deleteButtonDiv = (
+    <div className="btn" onClick={() => handleDeletePost(postId)}>
+      <img
+        src={images["trash.svg"]}
+        className="white-img"
+        alt="delete-button"
+        id="delete-button"
+      />
+    </div>
+  );
+
+  const handleDeletePost = async (postId) => {
+    // setdeleteButton(true);
+    const res = await axios.delete("http://localhost:5500/tweet/" + postId);
+    if (!res.error) {
+      console.log(res);
+    } else {
+      console.log(res);
+    }
+  };
+
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
       <div>
@@ -26,7 +46,7 @@ const UserID = ({ userId, username }) => {
           <div>#{userId}</div>
         </div>
       </div>
-      {deleteButton && <div>{deleteButton}</div>}
+      {deleteButton && <div>{deleteButtonDiv}</div>}
     </div>
   );
 };
@@ -150,7 +170,7 @@ class FetchPost extends Component {
 
   render() {
     const { posts, isLoading } = this.state;
-
+    const { deleteButton } = this.props;
     return (
       <div className="container-fluid p-0" id="mid-center">
         <div
@@ -160,7 +180,12 @@ class FetchPost extends Component {
         >
           {posts.map((post, index) => (
             <div className="mask-post p-0" id="post" key={index}>
-              <UserID userId={post.userId} username={post.username} />
+              <UserID
+                postId={post._id}
+                userId={post.userId}
+                username={post.username}
+                deleteButton={deleteButton}
+              />
               <div
                 className="post-image-div d-flex justify-content-center align-items-center"
                 style={{ aspectRatio: "1/1" }}

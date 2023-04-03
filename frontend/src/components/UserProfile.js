@@ -12,7 +12,7 @@ const UserProfile = (loggedIn) => {
         <ProfileContent />
       </div>
       <div className="col-md-3 vh-100" id="explore">
-        <div className="container-fluid p-0" id="rhs">
+        <div className="container-fluid p-0 mt-4" id="rhs">
           <Search />
         </div>
       </div>

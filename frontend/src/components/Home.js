@@ -10,7 +10,7 @@ const Home = ({ userId }) => {
         <HomeContent />
       </div>
       <div className="col-md-3 vh-100" id="explore">
-        <div className="container-fluid p-0" id="rhs">
+        <div className="container-fluid p-0 d-grid gap-3 mt-4" id="rhs">
           <Search />
           {userId && <FollowList userId={userId} isFollowerList={false} />}
           {userId && <FollowList userId={userId} isFollowerList={true} />}

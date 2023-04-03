@@ -1,7 +1,6 @@
 const express = require("express");
 const Dislike = require("../model/dislike");
 const Like = require("../model/like");
-const rateLimit = require("express-rate-limit");
 const router = express.Router();
 
 // Dislike

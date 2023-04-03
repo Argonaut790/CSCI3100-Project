@@ -77,9 +77,9 @@ const SignUpModal = ({ setShowModal }) => {
     }
     if (username === "") {
       isUsernameInvalid = true;
-    } else if(username.length > 9){
+    } else if(username.length > 8){
         document.getElementById("result").innerText +=
-            "- Username must be less than 10 characters\n";
+            "- Username must be less than 9 characters\n";
         isUsernameLengthInvalid = true;
     }
     else {

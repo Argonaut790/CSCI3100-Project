@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const getConfirmationCode = require("../confimationCode");
 const sendConfirmationEmail = require("../emailVerify");
+const validator = require("validator");
 
 // Login
 router.post("/login", async (req, res) => {
@@ -123,7 +124,9 @@ router.post("/", async (req, res) => {
     } catch (err) {
       res
         .status(401)
-        .json("Unkown error, please try again or sign up with another method.");
+        .json(
+          "Unknown error, please try again or sign up with another method."
+        );
     }
   }
 });
@@ -261,10 +264,20 @@ router.get("/profile/:userId", async (req, res) => {
 });
 
 // Fuzzy Search username & userId
-router.get("/profile/:userId", async (req, res) => {
+router.get("/search/:searchString", async (req, res) => {
   try {
-    const user = await Account.fuzzySearch(req.body.searchString);
-    res.status(200).json(user);
+    // Validate and sanitize search string
+    const sanitizedQuery = validator.escape(req.params.searchString + "");
+    // Perform fuzzy search with RegExp
+    const pattern = new RegExp(
+      sanitizedQuery.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"),
+      "gi"
+    );
+    const users = await Account.find({
+      $or: [{ username: { $regex: pattern } }, { userId: { $regex: pattern } }],
+    });
+    //TODO: select useful fields only
+    res.status(200).json(users);
   } catch (err) {
     res.status(401).json({ message: err });
   }

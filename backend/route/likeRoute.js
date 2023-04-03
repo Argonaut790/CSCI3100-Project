@@ -1,9 +1,17 @@
 const express = require("express");
 const Like = require("../model/like");
+const rateLimit = require("express-rate-limit");
 const router = express.Router();
 
+const likeLimiter = rateLimit({
+  windowMs: 10 * 1000, // 10 seconds
+  max: 1, // limit each IP to 1 request per windowMs
+  message: "You can only like or unlike once every 10 seconds.",
+});
+
+
 // Like
-router.post("/", async (req, res) => {
+router.post("/", likeLimiter, async (req, res) => {
   try {
     const like = new Like({
       postId: req.body.postId,
@@ -18,7 +26,7 @@ router.post("/", async (req, res) => {
 });
 
 // Unlike
-router.delete("/", async (req, res) => {
+router.delete("/", likeLimiter, async (req, res) => {
   await Like.deleteOne({
     postId: req.body.postId,
     userId: req.body.userId,

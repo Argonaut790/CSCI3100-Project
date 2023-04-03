@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Post = require("../model/post");
+const Account = require("../model/account");
 const { GridFSBucket } = require("mongodb");
 const sharp = require("sharp");
 
@@ -56,6 +57,7 @@ router.post("/", upload.single("image"), async (req, res) => {
         contentType: file.contentType,
       },
       desc: desc,
+      userId: req.body.userId,
     });
 
     post.save().then(() => {
@@ -83,11 +85,15 @@ router.get("/", async (req, res) => {
       .skip(skip) //base on which page to show only the following posts
       .limit(limit);
 
-    //passing image url to fetch the whole chunks not 1 by 1
-    const postsWithImageUrls = posts.map((post) => {
-      const imageUrl = `http://${req.headers.host}/tweet/image/${post.image.filename}`;
-      return { ...post._doc, imageUrl };
-    });
+    // getting username and passing image url to fetch the whole chunks not 1 by 1
+    const postsWithImageUrls = await Promise.all(
+      posts.map(async (post) => {
+        const user = await Account.findOne({ userId: post.userId });
+        const username = user ? user.username : "";
+        const imageUrl = `http://${req.headers.host}/tweet/image/${post.image.filename}`;
+        return { ...post._doc, imageUrl, username };
+      })
+    );
 
     res.json(postsWithImageUrls);
   } catch (error) {

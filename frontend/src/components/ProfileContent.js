@@ -46,11 +46,16 @@ const Content = () => {
     setdeleteButton(deleteButtonDiv);
   }, []);
 
+  // Get userId from localStorage
+  const userId = JSON.parse(localStorage.getItem("user")).userId;
+  // print the userId in console
+  console.log("userId is: " + userId);
+
   return (
     <div className="container-fluid p-0" id="mid-center">
       <PersonalInfo />
       <DeleteButtonContext.Provider value={deleteButton}>
-        <FetchPost />
+        <FetchPost userID={userId}/>
       </DeleteButtonContext.Provider>
     </div>
   );

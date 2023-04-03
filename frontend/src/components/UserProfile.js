@@ -5,7 +5,7 @@ import ProfileContent from "./ProfileContent";
 import Search from "./Search";
 
 //function needs to be Capital Letter in the first
-const Profile = (loggedIn) => {
+const UserProfile = (loggedIn) => {
   return (
     <>
       <div className="col-md-6" id="content">
@@ -20,4 +20,4 @@ const Profile = (loggedIn) => {
   );
 };
 
-export default Profile;
+export default UserProfile;

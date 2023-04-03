@@ -10,6 +10,7 @@ import Tweet from "./components/Tweet";
 import AccountConfirm from "./components/AccountConfirm";
 import SignUp from "./components/SignUp";
 import Admin from "./components/Admin";
+import UserProfile from "./components/UserProfile";
 
 const images = ImportAll(
   require.context("./images", false, /\.(png|jpe?g|svg)$/)
@@ -46,9 +47,9 @@ function App() {
   useEffect(() => {
     // Check if user logged in everytime if user change browsing page
     const checkUserLogin = async () => {
-      const userId = JSON.parse(localStorage.getItem("user")).userId;
-      if (userId) {
-        setUserId(userId);
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.userId && user.userId.length !== 0) {
+        setUserId(user.userId);
         setLoggedIn(true);
       } else {
         setUserId("");
@@ -230,7 +231,6 @@ function App() {
     <div className="mask-background" ref={maskBackgroundRef}>
       <ScrollContext.Provider value={maskBackgroundRef}>
         {/* Routes */}
-        {console.log(userId)}
         {/* user interface */}
         {!loggedIn && (
           <div
@@ -249,6 +249,8 @@ function App() {
           <Tweet
             handleTweet={handleTweet}
             handlePostStatus={handlePostStatus}
+            userId={userId}
+            username={username}
           />
         )}
         {/* Tweet upload status */}
@@ -296,8 +298,8 @@ function App() {
               </div>
             </div>
             <Routes>
-              <Route path="/" element={<Home loggedIn={loggedIn} />} />
-              <Route path="/home" element={<Home loggedIn={loggedIn} />} />
+              <Route path="/" element={<Home userId={userId} />} />
+              <Route path="/home" element={<Home userId={userId} />} />
               {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}
@@ -314,6 +316,7 @@ function App() {
               )}
               {/* {loggedIn && <Route path="/tweet" element={<Tweet />} />} */}
               <Route path="/confirm" element={<AccountConfirm />} />
+              <Route path="/user" element={<UserProfile />}></Route>
             </Routes>
           </div>
         </div>

@@ -33,7 +33,7 @@ const SignUpModal = ({ setShowModal }) => {
             "Invalid email / password.";
         } else {
           document.getElementById("result").innerText =
-            "Unkown error, please try again.";
+            "Unknown error, please try again.";
         }
       });
 

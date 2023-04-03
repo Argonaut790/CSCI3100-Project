@@ -9,6 +9,11 @@ const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
+// Get userId from localStorage
+const userId = JSON.parse(localStorage.getItem("user")).userId;
+// print the userId in console
+console.log("userId is: " + userId);
+
 const UserID = ({ postId, userId, username, deleteButton }) => {
   const deleteButtonDiv = (
     <div className="btn" onClick={() => handleDeletePost(postId)}>
@@ -59,6 +64,8 @@ class FetchPost extends Component {
       isLoading: false,
       page: 0,
       hasMore: true,
+      likedPosts: JSON.parse(localStorage.getItem("likedPosts")) || [],
+      dislikedPosts: JSON.parse(localStorage.getItem("dislikedPosts")) || [],
     };
     // this.postListRef = createRef();
   }
@@ -73,7 +80,7 @@ class FetchPost extends Component {
   }
 
   /*  Module: handleLickClick and handleDislikeClick
-   *   Version: 1.0 (28/3/2023)
+   *   Version: 3.0 (3/4/2023)
    *   Description: This module is used to handle the like and dislike button
    *   and send the request to the backend. It will also limit the user to
    *   only like or dislike once every 10 seconds (otherwise warning message will be given).
@@ -83,37 +90,138 @@ class FetchPost extends Component {
 
   handleLikeClick = async (postId, userId) => {
     try {
-      const response = await axios.post("http://localhost:5500/like", {
-        postId,
-        userId,
+      // limit the user to only like or dislike once every 10 seconds
+      // I check the last time the user like or dislike the post
+      const lastLikeTime = localStorage.getItem(
+        `lastLikeTime_${postId}_${userId}`
+      );
+      const currentTime = Date.now();
+
+      if (lastLikeTime && currentTime - lastLikeTime < 10 * 1000) {
+        alert("You can only like or unlike once every 10 seconds.");
+        return;
+      }
+
+      localStorage.setItem(`lastLikeTime_${postId}_${userId}`, currentTime);
+
+      const response = await axios.get("http://localhost:5500/like", {
+        params: {
+          postId,
+          userId,
+        },
       });
 
-      if (response.status === 429) {
-        alert("You can only like or unlike once every 10 seconds.");
+      if (response.data.isLiked) {
+        // If the post is already liked, send a DELETE request to unlike it
+        await axios.delete("http://localhost:5500/like", {
+          params: {
+            postId,
+            userId,
+          },
+        });
+        console.log("Unliked successfully:", response.data);
+        this.setState(
+          (prevState) => ({
+            likedPosts: prevState.likedPosts.filter((id) => id !== postId),
+          }),
+          () => {
+            localStorage.setItem(
+              "likedPosts",
+              JSON.stringify(this.state.likedPosts)
+            );
+          }
+        );
       } else {
+        // If the post is not liked yet, send a POST request to like it
+        await axios.post("http://localhost:5500/like", {
+          postId,
+          userId,
+        });
         console.log("Liked successfully:", response.data);
+        this.setState(
+          (prevState) => ({
+            likedPosts: [...prevState.likedPosts, postId],
+          }),
+          () => {
+            localStorage.setItem(
+              "likedPosts",
+              JSON.stringify(this.state.likedPosts)
+            );
+          }
+        );
       }
     } catch (error) {
       console.error("Error liking post:", error);
-      alert("An error occurred, please try again later.");
+      alert("Debug 3");
     }
   };
 
   handleDislikeClick = async (postId, userId) => {
     try {
-      const response = await axios.post("http://localhost:5500/dislike", {
-        postId,
-        userId,
-      });
+      // limit the user to only like or dislike once every 10 seconds
+      // I check the last time the user like or dislike the post
+      const lastdislikeTime = localStorage.getItem(
+        `lastDislikeTime_${postId}_${userId}`
+      );
+      const currentTime = Date.now();
 
-      if (response.status === 429) {
+      if (lastdislikeTime && currentTime - lastdislikeTime < 10 * 1000) {
         alert("You can only dislike or undislike once every 10 seconds.");
+        return;
+      }
+
+      localStorage.setItem(`lastDislikeTime_${postId}_${userId}`, currentTime);
+
+      const response = await axios.get("http://localhost:5500/dislike", {
+        params: {
+          postId,
+          userId,
+        },
+      });
+      if (response.data.isDisliked) {
+        // If the post is already liked, send a DELETE request to unlike it
+        await axios.delete("http://localhost:5500/dislike", {
+          params: {
+            postId,
+            userId,
+          },
+        });
+        console.log("UnDisliked successfully:", response.data);
+        this.setState(
+          (prevState) => ({
+            dislikedPosts: prevState.dislikedPosts.filter(
+              (id) => id !== postId
+            ),
+          }),
+          () => {
+            localStorage.setItem(
+              "dislikedPosts",
+              JSON.stringify(this.state.dislikedPosts)
+            );
+          }
+        );
       } else {
+        // If the post is not liked yet, send a POST request to like it
+        await axios.post("http://localhost:5500/dislike", {
+          postId,
+          userId,
+        });
         console.log("Disliked successfully:", response.data);
+        this.setState(
+          (prevState) => ({
+            dislikedPosts: [...prevState.dislikedPosts, postId],
+          }),
+          () => {
+            localStorage.setItem(
+              "dislikedPosts",
+              JSON.stringify(this.state.dislikedPosts)
+            );
+          }
+        );
       }
     } catch (error) {
-      console.error("Error liking post:", error);
-      alert("An error occurred, please try again later.");
+      console.error("Error disliking post:", error);
+      alert("Debug 3");
     }
   };
 
@@ -226,22 +334,30 @@ class FetchPost extends Component {
               >
                 <div
                   className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
-                  onClick={() => this.handleLikeClick(post._id, "userId")}
+                  onClick={() => this.handleLikeClick(post._id, userId)}
                 >
                   <img
                     className="white-img"
-                    src={images["like.svg"]}
+                    src={
+                      this.state.likedPosts.includes(post._id)
+                        ? images["clickedLike.svg"]
+                        : images["like.svg"]
+                    }
                     alt="like"
                   />
                 </div>
                 <div
                   className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center"
-                  onClick={() => this.handleDislikeClick(post._id, "userId")}
+                  onClick={() => this.handleDislikeClick(post._id, userId)}
                 >
                   <img
                     className="white-img"
-                    src={images["dislike.svg"]}
-                    alt="dislike"
+                    src={
+                      this.state.dislikedPosts.includes(post._id)
+                        ? images["clickedDislike.svg"]
+                        : images["dislike.svg"]
+                    }
+                    alt="like"
                   />
                 </div>
                 <div className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center">

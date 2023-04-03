@@ -1,5 +1,6 @@
 const express = require("express");
 const Like = require("../model/like");
+const Dislike = require("../model/dislike");
 const rateLimit = require("express-rate-limit");
 const router = express.Router();
 
@@ -10,48 +11,69 @@ const likeLimiter = rateLimit({
 });
 
 
-// Like
-router.post("/", likeLimiter, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const like = new Like({
-      postId: req.body.postId,
-      userId: req.body.userId,
-    });
+    const { postId, userId } = req.body;
 
-    const savedLike = await like.save();
-    res.status(200).json(savedLike);
-  } catch (err) {
-    res.status(401).json(err);
-  }
-});
+    const existingDislike = await Dislike.findOne({ postId, userId });
+    if (existingDislike) {
+      return res.status(400).json({ message: "You have already disliked this post. Please undislike it before liking." });
+    }
 
-// Unlike
-router.delete("/", likeLimiter, async (req, res) => {
-  await Like.deleteOne({
-    postId: req.body.postId,
-    userId: req.body.userId,
-  })
-    .then(() => {
-      res.json("deleted successfully");
-    })
-    .catch((err) => {
-      res.status(401).json(err);
-    });
-});
+    const existingLike = await Like.findOne({ postId, userId });
+    if (existingLike) {
+      return res.status(400).json({ message: "You have already liked this post." });
+    }
 
-// Count like by postId
-router.get("/", async (req, res) => {
-  try {
-    const likeNum = await Like.count({
-      postId: req.body.postId,
-    });
+    const newLike = new Like({ postId, userId });
+    await newLike.save();
+
+    const likes = await Like.find({ postId });
+    const likeNum = likes.length;
+    const userIds = likes.map((like) => like.userId);
 
     res.status(200).json({
-      likeNum: likeNum,
+      postId,
+      likeNum,
+      userIds,
     });
   } catch (err) {
-    res.status(401).json(err);
+    res.status(500).json({ message: "Debug 2" });
   }
 });
+
+router.get("/", async (req, res) => {
+  try {
+    const { postId, userId } = req.query;
+
+    const likeNum = await Like.countDocuments({ postId });
+
+    const isLiked = await Like.exists({ postId, userId });
+
+    res.status(200).json({
+      likeNum,
+      isLiked,
+      postId,
+      userId,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Debug 1" });
+  }
+});
+// Unlike
+router.delete("/", likeLimiter, async (req, res) => {
+  const { postId, userId } = req.query;
+
+  await Like.deleteOne({ postId, userId })
+      .then(() => {
+        res.json("deleted successfully");
+      })
+      .catch((err) => {
+        res.status(401).json(err);
+      });
+});
+
+
+
 
 module.exports = router;

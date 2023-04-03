@@ -90,6 +90,13 @@ class FetchPost extends Component {
 
   handleLikeClick = async (postId, userId) => {
     try {
+      // check if the user has already disliked the post
+      if (this.state.dislikedPosts.includes(postId)) {
+        alert(
+          "You have already disliked this post. Please undislike it before liking."
+        );
+        return;
+      }
       // limit the user to only like or dislike once every 10 seconds
       // I check the last time the user like or dislike the post
       const lastLikeTime = localStorage.getItem(
@@ -158,6 +165,13 @@ class FetchPost extends Component {
 
   handleDislikeClick = async (postId, userId) => {
     try {
+      // check if the user has already liked the post
+      if (this.state.likedPosts.includes(postId)) {
+        alert(
+          "You have already liked this post. Please unlike it before disliking."
+        );
+        return;
+      }
       // limit the user to only like or dislike once every 10 seconds
       // I check the last time the user like or dislike the post
       const lastdislikeTime = localStorage.getItem(
@@ -225,6 +239,7 @@ class FetchPost extends Component {
     }
   };
 
+  // don't fetch the pictures again if the user scroll back to the top
   fetchPosts = async () => {
     const { page } = this.state;
     const { profile } = this.props;
@@ -239,21 +254,24 @@ class FetchPost extends Component {
       if (posts.length === 0) {
         this.setState({ hasMore: false });
       } else {
-        for (const post of posts) {
-          const imageResponse = await axios.get(
-            `http://localhost:5500/tweet/image/${post.image.filename}`,
-            {
-              responseType: "blob",
-            }
-          );
+        const postsWithImages = await Promise.all(
+          posts.map(async (post) => {
+            const imageResponse = await axios.get(
+              `http://localhost:5500/tweet/image/${post.image.filename}`,
+              {
+                responseType: "blob",
+              }
+            );
 
-          const imageURL = URL.createObjectURL(imageResponse.data);
+            const imageURL = URL.createObjectURL(imageResponse.data);
+            return { ...post, imageURL };
+          })
+        );
 
-          this.setState((prevState) => ({
-            posts: [...prevState.posts, { ...post, imageURL }],
-          }));
-        }
-        this.setState((prevState) => ({ page: prevState.page + 1 }));
+        this.setState((prevState) => ({
+          posts: [...prevState.posts, ...postsWithImages],
+          page: prevState.page + 1,
+        }));
       }
     } catch (error) {
       console.error("Error fetching posts:", error);

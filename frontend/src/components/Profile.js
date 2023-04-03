@@ -8,10 +8,10 @@ import Search from "./Search";
 const Profile = (loggedIn) => {
   return (
     <>
-      <div className="col-md-6" id="content">
+      <div className="col-lg-6" id="content">
         <ProfileContent />
       </div>
-      <div className="col-md-3 vh-100" id="explore">
+      <div className="col-lg-3 vh-100" id="explore">
         <div className="container-fluid p-0 mt-4" id="rhs">
           <Search />
         </div>

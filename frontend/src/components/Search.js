@@ -28,20 +28,25 @@ const Search = () => {
 
   const SearchResults = () => {
     return (
-      <div className="searchResult">
+      <div className="d-grid gap-2" id="search-result-div">
         {resultItems.length === 0 ? (
           <p>No result</p>
         ) : (
           resultItems.slice(0, 10).map((item) => (
-            <div className="post-user-info">
-              <a className="resultItem" href={"/user?userId=" + item.userId}>
+            <div className="search-result-info">
+              <a
+                className="resultItem text-decoration-none link-light"
+                href={"/user?userId=" + item.userId}
+              >
                 <img
                   src={images["user_avatar.jpg"]}
                   className="float-start post-user-avatar"
                   alt="user-avatar"
                 />
-                <div className="fw-bold">{item.username}</div>
-                <div>#{item.userId}</div>
+                <div className="d-grid">
+                  <div className="fw-bold">{item.username}</div>
+                  <div>#{item.userId}</div>
+                </div>
               </a>
             </div>
           ))
@@ -66,7 +71,11 @@ const Search = () => {
           value={searchString}
           onChange={onChangeSearchString}
         />
-        <label htmlFor="search-engine" className="d-flex align-items-md-center">
+        <label
+          htmlFor="search-engine"
+          className="d-flex align-items-md-center"
+          style={{ padding: "0.6rem", height: "unset" }}
+        >
           <img
             src={images["search.png"]}
             className="white-img"

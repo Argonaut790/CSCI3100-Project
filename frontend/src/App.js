@@ -288,7 +288,7 @@ function App() {
         )}
         <div className="container px-4">
           <div className="row gx-5 h-100">
-            <div className="col-md-3 vh-100" id="nav">
+            <div className="col-lg-3 vh-100" id="nav">
               <div className="container-fluid" id="lhs">
                 <TopLeft />
                 <div className="row d-flex m-0" id="nav">

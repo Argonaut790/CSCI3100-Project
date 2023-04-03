@@ -1,8 +1,8 @@
-import { Component, useContext } from "react";
+import { Component } from "react";
 import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
-import DeleteButtonContext from "./DeleteButtonContext";
+// import DeleteButtonContext from "./DeleteButtonContext";
 import moment from "moment";
 
 const images = ImportAll(
@@ -14,9 +14,28 @@ const userId = JSON.parse(localStorage.getItem("user")).userId;
 // print the userId in console
 console.log("userId is: " + userId);
 
+const UserID = ({ postId, userId, username, deleteButton }) => {
+  const deleteButtonDiv = (
+    <div className="btn" onClick={() => handleDeletePost(postId)}>
+      <img
+        src={images["trash.svg"]}
+        className="white-img"
+        alt="delete-button"
+        id="delete-button"
+      />
+    </div>
+  );
 
-const UserID = ({ userId, username }) => {
-  const deleteButton = useContext(DeleteButtonContext);
+  const handleDeletePost = async (postId) => {
+    // setdeleteButton(true);
+    const res = await axios.delete("http://localhost:5500/tweet/" + postId);
+    if (!res.error) {
+      console.log(res);
+    } else {
+      console.log(res);
+    }
+  };
+
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
       <div>
@@ -32,7 +51,7 @@ const UserID = ({ userId, username }) => {
           <div>#{userId}</div>
         </div>
       </div>
-      {deleteButton && <div>{deleteButton}</div>}
+      {deleteButton && <div>{deleteButtonDiv}</div>}
     </div>
   );
 };
@@ -73,7 +92,9 @@ class FetchPost extends Component {
     try {
       // limit the user to only like or dislike once every 10 seconds
       // I check the last time the user like or dislike the post
-      const lastLikeTime = localStorage.getItem(`lastLikeTime_${postId}_${userId}`);
+      const lastLikeTime = localStorage.getItem(
+        `lastLikeTime_${postId}_${userId}`
+      );
       const currentTime = Date.now();
 
       if (lastLikeTime && currentTime - lastLikeTime < 10 * 1000) {
@@ -100,12 +121,15 @@ class FetchPost extends Component {
         });
         console.log("Unliked successfully:", response.data);
         this.setState(
-            (prevState) => ({
-              likedPosts: prevState.likedPosts.filter((id) => id !== postId),
-            }),
-            () => {
-              localStorage.setItem("likedPosts", JSON.stringify(this.state.likedPosts));
-            }
+          (prevState) => ({
+            likedPosts: prevState.likedPosts.filter((id) => id !== postId),
+          }),
+          () => {
+            localStorage.setItem(
+              "likedPosts",
+              JSON.stringify(this.state.likedPosts)
+            );
+          }
         );
       } else {
         // If the post is not liked yet, send a POST request to like it
@@ -115,12 +139,15 @@ class FetchPost extends Component {
         });
         console.log("Liked successfully:", response.data);
         this.setState(
-            (prevState) => ({
-              likedPosts: [...prevState.likedPosts, postId],
-            }),
-            () => {
-              localStorage.setItem("likedPosts", JSON.stringify(this.state.likedPosts));
-            }
+          (prevState) => ({
+            likedPosts: [...prevState.likedPosts, postId],
+          }),
+          () => {
+            localStorage.setItem(
+              "likedPosts",
+              JSON.stringify(this.state.likedPosts)
+            );
+          }
         );
       }
     } catch (error) {
@@ -133,7 +160,9 @@ class FetchPost extends Component {
     try {
       // limit the user to only like or dislike once every 10 seconds
       // I check the last time the user like or dislike the post
-      const lastdislikeTime = localStorage.getItem(`lastDislikeTime_${postId}_${userId}`);
+      const lastdislikeTime = localStorage.getItem(
+        `lastDislikeTime_${postId}_${userId}`
+      );
       const currentTime = Date.now();
 
       if (lastdislikeTime && currentTime - lastdislikeTime < 10 * 1000) {
@@ -159,12 +188,17 @@ class FetchPost extends Component {
         });
         console.log("UnDisliked successfully:", response.data);
         this.setState(
-            (prevState) => ({
-              dislikedPosts: prevState.dislikedPosts.filter((id) => id !== postId),
-            }),
-            () => {
-              localStorage.setItem("dislikedPosts", JSON.stringify(this.state.dislikedPosts));
-            }
+          (prevState) => ({
+            dislikedPosts: prevState.dislikedPosts.filter(
+              (id) => id !== postId
+            ),
+          }),
+          () => {
+            localStorage.setItem(
+              "dislikedPosts",
+              JSON.stringify(this.state.dislikedPosts)
+            );
+          }
         );
       } else {
         // If the post is not liked yet, send a POST request to like it
@@ -174,12 +208,15 @@ class FetchPost extends Component {
         });
         console.log("Disliked successfully:", response.data);
         this.setState(
-            (prevState) => ({
-              dislikedPosts: [...prevState.dislikedPosts, postId],
-            }),
-            () => {
-              localStorage.setItem("dislikedPosts", JSON.stringify(this.state.dislikedPosts));
-            }
+          (prevState) => ({
+            dislikedPosts: [...prevState.dislikedPosts, postId],
+          }),
+          () => {
+            localStorage.setItem(
+              "dislikedPosts",
+              JSON.stringify(this.state.dislikedPosts)
+            );
+          }
         );
       }
     } catch (error) {
@@ -239,11 +276,9 @@ class FetchPost extends Component {
   //   }
   // };
 
-
-
   render() {
     const { posts, isLoading } = this.state;
-
+    const { deleteButton } = this.props;
     return (
       <div className="container-fluid p-0" id="mid-center">
         <div
@@ -253,7 +288,12 @@ class FetchPost extends Component {
         >
           {posts.map((post, index) => (
             <div className="mask-post p-0" id="post" key={index}>
-              <UserID userId={post.userId} username={post.username} />
+              <UserID
+                postId={post._id}
+                userId={post.userId}
+                username={post.username}
+                deleteButton={deleteButton}
+              />
               <div
                 className="post-image-div d-flex justify-content-center align-items-center"
                 style={{ aspectRatio: "1/1" }}
@@ -297,13 +337,13 @@ class FetchPost extends Component {
                   onClick={() => this.handleLikeClick(post._id, userId)}
                 >
                   <img
-                      className="white-img"
-                      src={
-                        this.state.likedPosts.includes(post._id)
-                            ? images["clickedLike.svg"]
-                            : images["like.svg"]
-                      }
-                      alt="like"
+                    className="white-img"
+                    src={
+                      this.state.likedPosts.includes(post._id)
+                        ? images["clickedLike.svg"]
+                        : images["like.svg"]
+                    }
+                    alt="like"
                   />
                 </div>
                 <div
@@ -311,13 +351,13 @@ class FetchPost extends Component {
                   onClick={() => this.handleDislikeClick(post._id, userId)}
                 >
                   <img
-                      className="white-img"
-                      src={
-                        this.state.dislikedPosts.includes(post._id)
-                            ? images["clickedDislike.svg"]
-                            : images["dislike.svg"]
-                      }
-                      alt="like"
+                    className="white-img"
+                    src={
+                      this.state.dislikedPosts.includes(post._id)
+                        ? images["clickedDislike.svg"]
+                        : images["dislike.svg"]
+                    }
+                    alt="like"
                   />
                 </div>
                 <div className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center">

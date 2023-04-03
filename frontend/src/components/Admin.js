@@ -49,7 +49,7 @@ const Admin = () => {
   };
 
   return (
-    <>
+    <div className="col-lg-9 mask-background text-light">
       <a href="/admin" className="btn btn-danger my-2">
         Reload Data
       </a>
@@ -71,9 +71,9 @@ const Admin = () => {
                 <th scope="col">Admin?</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="mask-background">
               {users.map((user) => (
-                <tr key={user.userId}>
+                <tr key={user.userId} className="text-light">
                   <th scope="row">{user.userId}</th>
                   <th scope="row">{user.username}</th>
                   <td>{user.email}</td>
@@ -81,6 +81,8 @@ const Admin = () => {
                     <td>
                       Active{" "}
                       <button
+                        type="button"
+                        class="btn btn-danger"
                         onClick={() => changeUserStatus(user.userId, false)}
                       >
                         Deactivate
@@ -101,7 +103,11 @@ const Admin = () => {
                   ) : (
                     <td>
                       N {"  "}
-                      <button onClick={() => grantAdmin(user.userId)}>
+                      <button
+                        type="button"
+                        class="btn btn-warning"
+                        onClick={() => grantAdmin(user.userId)}
+                      >
                         Grant Admin
                       </button>
                     </td>
@@ -112,7 +118,7 @@ const Admin = () => {
           </table>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

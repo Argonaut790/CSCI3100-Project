@@ -10,12 +10,19 @@ router.post("/", async (req, res) => {
 
     const existingLike = await Like.findOne({ postId, userId });
     if (existingLike) {
-      return res.status(400).json({ message: "You have already liked this post. Please unlike it before disliking." });
+      return res
+        .status(400)
+        .json({
+          message:
+            "You have already liked this post. Please unlike it before disliking.",
+        });
     }
 
     const existingDislike = await Dislike.findOne({ postId, userId });
     if (existingDislike) {
-      return res.status(400).json({ message: "You have already disliked this post." });
+      return res
+        .status(400)
+        .json({ message: "You have already disliked this post." });
     }
 
     const newDislike = new Dislike({ postId, userId });
@@ -40,12 +47,12 @@ router.delete("/", async (req, res) => {
   const { postId, userId } = req.query;
 
   await Dislike.deleteOne({ postId, userId })
-      .then(() => {
-        res.json("deleted successfully");
-      })
-      .catch((err) => {
-        res.status(401).json(err);
-      });
+    .then(() => {
+      res.json("deleted successfully");
+    })
+    .catch((err) => {
+      res.status(401).json(err);
+    });
 });
 
 // Count dislike by postId

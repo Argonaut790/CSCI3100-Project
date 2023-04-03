@@ -23,7 +23,7 @@ const TopMid = () => {
 const Content = () => {
   return (
     <div className="container-fluid p-0" id="mid-center">
-      <FetchPost />
+      <FetchPost profile={false} />
     </div>
   );
 };

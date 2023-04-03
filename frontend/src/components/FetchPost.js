@@ -1,12 +1,12 @@
-import { Component, useContext } from "react";
+import { Component } from "react";
 import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
-import DeleteButtonContext from "./DeleteButtonContext";
+// import DeleteButtonContext from "./DeleteButtonContext";
 import moment from "moment";
 
 const images = ImportAll(
-    require.context("../images", false, /\.(png|jpe?g|svg)$/)
+  require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
 // Get userId from localStorage
@@ -14,26 +14,45 @@ const userId = JSON.parse(localStorage.getItem("user")).userId;
 // print the userId in console
 console.log("userId is: " + userId);
 
+const UserID = ({ postId, userId, username, deleteButton }) => {
+  const deleteButtonDiv = (
+    <div className="btn" onClick={() => handleDeletePost(postId)}>
+      <img
+        src={images["trash.svg"]}
+        className="white-img"
+        alt="delete-button"
+        id="delete-button"
+      />
+    </div>
+  );
 
-const UserID = ({ userId, username }) => {
-  const deleteButton = useContext(DeleteButtonContext);
+  const handleDeletePost = async (postId) => {
+    // setdeleteButton(true);
+    const res = await axios.delete("http://localhost:5500/tweet/" + postId);
+    if (!res.error) {
+      console.log(res);
+    } else {
+      console.log(res);
+    }
+  };
+
   return (
-      <div className="post-user-info d-flex flex-row justify-content-between">
+    <div className="post-user-info d-flex flex-row justify-content-between">
+      <div>
         <div>
-          <div>
-            <img
-                src={images["user_avatar.jpg"]}
-                className="float-start post-user-avatar"
-                alt="user-avatar"
-            />
-          </div>
-          <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
-            <div className="fw-bold">{username}</div>
-            <div>#{userId}</div>
-          </div>
+          <img
+            src={images["user_avatar.jpg"]}
+            className="float-start post-user-avatar"
+            alt="user-avatar"
+          />
         </div>
-        {deleteButton && <div>{deleteButton}</div>}
+        <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+          <div className="fw-bold">{username}</div>
+          <div>#{userId}</div>
+        </div>
       </div>
+      {deleteButton && <div>{deleteButtonDiv}</div>}
+    </div>
   );
 };
 
@@ -73,12 +92,16 @@ class FetchPost extends Component {
     try {
       // check if the user has already disliked the post
       if (this.state.dislikedPosts.includes(postId)) {
-        alert("You have already disliked this post. Please undislike it before liking.");
+        alert(
+          "You have already disliked this post. Please undislike it before liking."
+        );
         return;
       }
       // limit the user to only like or dislike once every 10 seconds
       // I check the last time the user like or dislike the post
-      const lastLikeTime = localStorage.getItem(`lastLikeTime_${postId}_${userId}`);
+      const lastLikeTime = localStorage.getItem(
+        `lastLikeTime_${postId}_${userId}`
+      );
       const currentTime = Date.now();
 
       if (lastLikeTime && currentTime - lastLikeTime < 10 * 1000) {
@@ -105,12 +128,15 @@ class FetchPost extends Component {
         });
         console.log("Unliked successfully:", response.data);
         this.setState(
-            (prevState) => ({
-              likedPosts: prevState.likedPosts.filter((id) => id !== postId),
-            }),
-            () => {
-              localStorage.setItem("likedPosts", JSON.stringify(this.state.likedPosts));
-            }
+          (prevState) => ({
+            likedPosts: prevState.likedPosts.filter((id) => id !== postId),
+          }),
+          () => {
+            localStorage.setItem(
+              "likedPosts",
+              JSON.stringify(this.state.likedPosts)
+            );
+          }
         );
       } else {
         // If the post is not liked yet, send a POST request to like it
@@ -120,12 +146,15 @@ class FetchPost extends Component {
         });
         console.log("Liked successfully:", response.data);
         this.setState(
-            (prevState) => ({
-              likedPosts: [...prevState.likedPosts, postId],
-            }),
-            () => {
-              localStorage.setItem("likedPosts", JSON.stringify(this.state.likedPosts));
-            }
+          (prevState) => ({
+            likedPosts: [...prevState.likedPosts, postId],
+          }),
+          () => {
+            localStorage.setItem(
+              "likedPosts",
+              JSON.stringify(this.state.likedPosts)
+            );
+          }
         );
       }
     } catch (error) {
@@ -138,12 +167,16 @@ class FetchPost extends Component {
     try {
       // check if the user has already liked the post
       if (this.state.likedPosts.includes(postId)) {
-        alert("You have already liked this post. Please unlike it before disliking.");
+        alert(
+          "You have already liked this post. Please unlike it before disliking."
+        );
         return;
       }
       // limit the user to only like or dislike once every 10 seconds
       // I check the last time the user like or dislike the post
-      const lastdislikeTime = localStorage.getItem(`lastDislikeTime_${postId}_${userId}`);
+      const lastdislikeTime = localStorage.getItem(
+        `lastDislikeTime_${postId}_${userId}`
+      );
       const currentTime = Date.now();
 
       if (lastdislikeTime && currentTime - lastdislikeTime < 10 * 1000) {
@@ -169,12 +202,17 @@ class FetchPost extends Component {
         });
         console.log("UnDisliked successfully:", response.data);
         this.setState(
-            (prevState) => ({
-              dislikedPosts: prevState.dislikedPosts.filter((id) => id !== postId),
-            }),
-            () => {
-              localStorage.setItem("dislikedPosts", JSON.stringify(this.state.dislikedPosts));
-            }
+          (prevState) => ({
+            dislikedPosts: prevState.dislikedPosts.filter(
+              (id) => id !== postId
+            ),
+          }),
+          () => {
+            localStorage.setItem(
+              "dislikedPosts",
+              JSON.stringify(this.state.dislikedPosts)
+            );
+          }
         );
       } else {
         // If the post is not liked yet, send a POST request to like it
@@ -184,12 +222,15 @@ class FetchPost extends Component {
         });
         console.log("Disliked successfully:", response.data);
         this.setState(
-            (prevState) => ({
-              dislikedPosts: [...prevState.dislikedPosts, postId],
-            }),
-            () => {
-              localStorage.setItem("dislikedPosts", JSON.stringify(this.state.dislikedPosts));
-            }
+          (prevState) => ({
+            dislikedPosts: [...prevState.dislikedPosts, postId],
+          }),
+          () => {
+            localStorage.setItem(
+              "dislikedPosts",
+              JSON.stringify(this.state.dislikedPosts)
+            );
+          }
         );
       }
     } catch (error) {
@@ -201,10 +242,12 @@ class FetchPost extends Component {
   // don't fetch the pictures again if the user scroll back to the top
   fetchPosts = async () => {
     const { page } = this.state;
+    const { profile } = this.props;
     try {
       this.setState({ isLoading: true });
+      console.log(profile);
       const response = await axios.get(
-          `http://localhost:5500/tweet?limit=10&page=${page}`
+        `http://localhost:5500/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
       );
       const posts = response.data;
 
@@ -212,17 +255,17 @@ class FetchPost extends Component {
         this.setState({ hasMore: false });
       } else {
         const postsWithImages = await Promise.all(
-            posts.map(async (post) => {
-              const imageResponse = await axios.get(
-                  `http://localhost:5500/tweet/image/${post.image.filename}`,
-                  {
-                    responseType: "blob",
-                  }
-              );
+          posts.map(async (post) => {
+            const imageResponse = await axios.get(
+              `http://localhost:5500/tweet/image/${post.image.filename}`,
+              {
+                responseType: "blob",
+              }
+            );
 
-              const imageURL = URL.createObjectURL(imageResponse.data);
-              return { ...post, imageURL };
-            })
+            const imageURL = URL.createObjectURL(imageResponse.data);
+            return { ...post, imageURL };
+          })
         );
 
         this.setState((prevState) => ({
@@ -253,115 +296,118 @@ class FetchPost extends Component {
   //   }
   // };
 
-
-
   render() {
     const { posts, isLoading } = this.state;
-
+    const { deleteButton } = this.props;
     return (
-        <div className="container-fluid p-0" id="mid-center">
-          <div
-              className="row d-flex justify-content-center"
-              id="post-list"
-              // ref={this.postListRef}
-          >
-            {posts.map((post, index) => (
-                <div className="mask-post p-0" id="post" key={index}>
-                  <UserID userId={post.userId} username={post.username} />
-                  <div
-                      className="post-image-div d-flex justify-content-center align-items-center"
-                      style={{ aspectRatio: "1/1" }}
-                  >
-                    <div
-                        className="spinner"
-                        style={{ aspectRatio: "1/1", width: "65px", height: "65px" }}
-                        ref={(el) => (this[`spinner${index}`] = el)}
-                    ></div>
-                    <img
-                        src={post.imageUrl}
-                        className="post-image"
-                        alt={post.desc}
-                        style={{ display: "none" }}
-                        ref={(el) => (this[`image${index}`] = el)}
-                        // onload success
-                        onLoad={() => {
-                          this[`spinner${index}`].style.display = "none";
-                          this[`image${index}`].style.display = "block";
-                        }}
-                    />
-                  </div>
-                  <div
-                      id="post-description "
-                      className="d-flex flex-column overflow-hidden"
-                  >
-                    <div className="h5 d-flex flex-row justify-content-between">
-                      <div>
-                        <b>{post.username}</b>
-                      </div>
-                      <div>{moment(post.timestamp).format("MMMM Do, h:mm a")}</div>
-                    </div>
-                    <p>{post.desc}</p>
-                  </div>
-                  <div
-                      className="border-light border-opacity-50 pt-2 d-flex flex-row border-top justify-content-evenly"
-                      id="post-function"
-                  >
-                    <div
-                        className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
-                        onClick={() => this.handleLikeClick(post._id, userId)}
-                    >
-                      <img
-                          className="white-img"
-                          src={
-                            this.state.likedPosts.includes(post._id)
-                                ? images["clickedLike.svg"]
-                                : images["like.svg"]
-                          }
-                          alt="like"
-                      />
-                    </div>
-                    <div
-                        className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center"
-                        onClick={() => this.handleDislikeClick(post._id, userId)}
-                    >
-                      <img
-                          className="white-img"
-                          src={
-                            this.state.dislikedPosts.includes(post._id)
-                                ? images["clickedDislike.svg"]
-                                : images["dislike.svg"]
-                          }
-                          alt="like"
-                      />
-                    </div>
-                    <div className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center">
-                      <img
-                          className="white-img"
-                          src={images["comment-alt.svg"]}
-                          alt="comment"
-                      />
-                    </div>
-
-                    <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
-                      <img
-                          className="white-img"
-                          src={images["arrows-retweet.svg"]}
-                          alt="retweet"
-                      />
-                    </div>
-                  </div>
-                </div>
-            ))}
-            {isLoading && (
+      <div className="container-fluid p-0" id="mid-center">
+        <div
+          className="row d-flex justify-content-center"
+          id="post-list"
+          // ref={this.postListRef}
+        >
+          {posts.map((post, index) => (
+            <div className="mask-post p-0" id="post" key={index}>
+              <UserID
+                postId={post._id}
+                userId={post.userId}
+                username={post.username}
+                deleteButton={deleteButton}
+              />
+              <div
+                className="post-image-div d-flex justify-content-center align-items-center"
+                style={{ aspectRatio: "1/1" }}
+              >
                 <div
-                    className="mask-post p-0 d-flex justify-content-center align-items-center"
-                    style={{ aspectRatio: "3/4" }}
-                >
-                  <div className="spinner"></div>
+                  className="spinner"
+                  style={{ aspectRatio: "1/1", width: "65px", height: "65px" }}
+                  ref={(el) => (this[`spinner${index}`] = el)}
+                ></div>
+                <img
+                  src={post.imageUrl}
+                  className="post-image"
+                  alt={post.desc}
+                  style={{ display: "none" }}
+                  ref={(el) => (this[`image${index}`] = el)}
+                  // onload success
+                  onLoad={() => {
+                    this[`spinner${index}`].style.display = "none";
+                    this[`image${index}`].style.display = "block";
+                  }}
+                />
+              </div>
+              <div
+                id="post-description "
+                className="d-flex flex-column overflow-hidden"
+              >
+                <div className="h5 d-flex flex-row justify-content-between">
+                  <div>
+                    <b>{post.username}</b>
+                  </div>
+                  <div>{moment(post.timestamp).format("MMMM Do, h:mm a")}</div>
                 </div>
-            )}
-          </div>
+                <p>{post.desc}</p>
+              </div>
+              <div
+                className="border-light border-opacity-50 pt-2 d-flex flex-row border-top justify-content-evenly"
+                id="post-function"
+              >
+                <div
+                  className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
+                  onClick={() => this.handleLikeClick(post._id, userId)}
+                >
+                  <img
+                    className="white-img"
+                    src={
+                      this.state.likedPosts.includes(post._id)
+                        ? images["clickedLike.svg"]
+                        : images["like.svg"]
+                    }
+                    alt="like"
+                  />
+                </div>
+                <div
+                  className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center"
+                  onClick={() => this.handleDislikeClick(post._id, userId)}
+                >
+                  <img
+                    className="white-img"
+                    src={
+                      this.state.dislikedPosts.includes(post._id)
+                        ? images["clickedDislike.svg"]
+                        : images["dislike.svg"]
+                    }
+                    alt="like"
+                  />
+                </div>
+                <div className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center">
+                  <img
+                    className="white-img"
+                    src={images["comment-alt.svg"]}
+                    alt="comment"
+                  />
+                </div>
+
+                <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
+                  <img
+                    className="white-img"
+                    src={images["arrows-retweet.svg"]}
+                    alt="retweet"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+          {isLoading && (
+            <div
+              className="mask-post p-0 d-flex justify-content-center align-items-center"
+              style={{ aspectRatio: "3/4" }}
+            >
+              <div className="spinner"></div>
+            </div>
+          )}
         </div>
+      </div>
     );
   }
 }

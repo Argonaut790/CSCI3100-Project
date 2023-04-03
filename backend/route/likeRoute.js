@@ -9,12 +9,19 @@ router.post("/", async (req, res) => {
 
     const existingDislike = await Dislike.findOne({ postId, userId });
     if (existingDislike) {
-      return res.status(400).json({ message: "You have already disliked this post. Please undislike it before liking." });
+      return res
+        .status(400)
+        .json({
+          message:
+            "You have already disliked this post. Please undislike it before liking.",
+        });
     }
 
     const existingLike = await Like.findOne({ postId, userId });
     if (existingLike) {
-      return res.status(400).json({ message: "You have already liked this post." });
+      return res
+        .status(400)
+        .json({ message: "You have already liked this post." });
     }
 
     const newLike = new Like({ postId, userId });
@@ -53,19 +60,16 @@ router.get("/", async (req, res) => {
   }
 });
 // Unlike
-router.delete("/",  async (req, res) => {
+router.delete("/", async (req, res) => {
   const { postId, userId } = req.query;
 
   await Like.deleteOne({ postId, userId })
-      .then(() => {
-        res.json("deleted successfully");
-      })
-      .catch((err) => {
-        res.status(401).json(err);
-      });
+    .then(() => {
+      res.json("deleted successfully");
+    })
+    .catch((err) => {
+      res.status(401).json(err);
+    });
 });
-
-
-
 
 module.exports = router;

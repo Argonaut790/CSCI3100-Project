@@ -78,9 +78,13 @@ router.get("/", async (req, res) => {
     const limit = parseInt(req.query.limit) || 10; //using the URL /tweet?limit=10&page=${page} to pass the limit and page variable
     const page = parseInt(req.query.page) || 0; //10 post each page
     const skip = limit * page; //bias, skipping how many posts
+    const userId = req.query.userId;
+    const profile = req.query.profile;
 
+    //if userId is not null, then we will only get the posts that belong to the user
+    const query = userId && profile == "true" ? { userId } : {};
     //get all posts
-    const posts = await Post.find()
+    const posts = await Post.find(query)
       .sort({ timestamp: -1 })
       .skip(skip) //base on which page to show only the following posts
       .limit(limit);
@@ -149,15 +153,46 @@ router.get("/stat/:userId", async (req, res) => {
 
 // Delete post by Id
 router.delete("/:postId", async (req, res) => {
-  await Post.deleteOne({
-    postId: req.body.postId,
-  })
-    .then(() => {
-      res.json("deleted successfully");
-    })
-    .catch((err) => {
-      res.status(401).json(err);
-    });
+  try {
+    const postId = req.params.postId;
+
+    // Find the post with the provided postId
+    const post = await Post.findOne({ _id: postId });
+
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+
+    // Remove the post with the provided postId
+    const result = await Post.deleteOne({ _id: postId });
+
+    if (result.deletedCount === 1) {
+      // Delete the image using GridFSBucket
+      const bucket = new GridFSBucket(mongoose.connection.db, {
+        bucketName: "posts",
+      });
+
+      // Find the image file in the posts.files collection
+      const imageFile = await bucket
+        .find({ filename: post.image.filename })
+        .toArray();
+      if (imageFile.length > 0) {
+        // Delete the image file and its associated chunks
+        await bucket.delete(imageFile[0]._id);
+      }
+
+      res.json({
+        success: true,
+        message: "Post and image deleted successfully",
+      });
+    } else {
+      res.status(404).json({ success: false, message: "Post not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 });
 
 module.exports = router;

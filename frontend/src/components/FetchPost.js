@@ -172,7 +172,7 @@ class FetchPost extends Component {
         console.log("UnDisliked successfully:", response.data);
         this.setState(
             (prevState) => ({
-              likedPosts: prevState.likedPosts.filter((id) => id !== postId),
+              dislikedPosts: prevState.dislikedPosts.filter((id) => id !== postId),
             }),
             () => {
               localStorage.setItem("dislikedPosts", JSON.stringify(this.state.dislikedPosts));
@@ -184,10 +184,10 @@ class FetchPost extends Component {
           postId,
           userId,
         });
-        console.log("Liked successfully:", response.data);
+        console.log("Disliked successfully:", response.data);
         this.setState(
             (prevState) => ({
-              likedPosts: [...prevState.likedPosts, postId],
+              dislikedPosts: [...prevState.dislikedPosts, postId],
             }),
             () => {
               localStorage.setItem("dislikedPosts", JSON.stringify(this.state.dislikedPosts));
@@ -329,9 +329,9 @@ class FetchPost extends Component {
                   <img
                       className="white-img"
                       src={
-                        this.state.likedPosts.includes(post._id)
+                        this.state.dislikedPosts.includes(post._id)
                             ? images["clickedDislike.svg"]
-                            : images["Dislike.svg"]
+                            : images["dislike.svg"]
                       }
                       alt="like"
                   />

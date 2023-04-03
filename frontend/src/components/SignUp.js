@@ -28,7 +28,7 @@ const SignUp = () => {
       userObject.picture === ""
     ) {
       document.getElementById("errorMessage").innerText =
-        "Unkown error, please try again or sign up with another method.";
+        "Unknown error, please try again or sign up with another method.";
       return;
     }
     axios

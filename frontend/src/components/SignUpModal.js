@@ -63,6 +63,7 @@ const SignUpModal = ({ setShowModal }) => {
     let isUsernameInvalid = false;
     let isPasswordInvalid = false;
     let isConfirmPasswordInvalid = false;
+    let isUsernameLengthInvalid = false;
 
     document.getElementById("result").innerText = "";
     // Client-side validation
@@ -76,7 +77,12 @@ const SignUpModal = ({ setShowModal }) => {
     }
     if (username === "") {
       isUsernameInvalid = true;
-    } else {
+    } else if(username.length > 9){
+        document.getElementById("result").innerText +=
+            "- Username must be less than 10 characters\n";
+        isUsernameLengthInvalid = true;
+    }
+    else {
       isUsernameInvalid = false;
     }
     if (password === "") {
@@ -115,6 +121,7 @@ const SignUpModal = ({ setShowModal }) => {
     if (
       email !== "" &&
       username !== "" &&
+      isUsernameLengthInvalid === false &&
       password !== "" &&
       confirmPassword !== "" &&
       password === confirmPassword &&
@@ -130,6 +137,9 @@ const SignUpModal = ({ setShowModal }) => {
     document.getElementById("floatingUsername").className = isUsernameInvalid
       ? "form-control floating is-invalid"
       : "form-control floating";
+    document.getElementById("floatingUsername").className = isUsernameLengthInvalid
+        ? "form-control floating is-invalid"
+        : "form-control floating";
     document.getElementById("floatingPassword").className = isPasswordInvalid
       ? "form-control floating is-invalid"
       : "form-control floating";

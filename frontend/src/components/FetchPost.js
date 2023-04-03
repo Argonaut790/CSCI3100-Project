@@ -46,7 +46,7 @@ class FetchPost extends Component {
       page: 0,
       hasMore: true,
       likedPosts: JSON.parse(localStorage.getItem("likedPosts")) || [],
-        dislikedPosts: JSON.parse(localStorage.getItem("dislikedPosts")) || [],
+      dislikedPosts: JSON.parse(localStorage.getItem("dislikedPosts")) || [],
     };
     // this.postListRef = createRef();
   }
@@ -133,15 +133,15 @@ class FetchPost extends Component {
     try {
       // limit the user to only like or dislike once every 10 seconds
       // I check the last time the user like or dislike the post
-      const lastLikeTime = localStorage.getItem(`lastLikeTime_${postId}_${userId}`);
+      const lastdislikeTime = localStorage.getItem(`lastDislikeTime_${postId}_${userId}`);
       const currentTime = Date.now();
 
-      if (lastLikeTime && currentTime - lastLikeTime < 10 * 1000) {
+      if (lastdislikeTime && currentTime - lastdislikeTime < 10 * 1000) {
         alert("You can only dislike or undislike once every 10 seconds.");
         return;
       }
 
-      localStorage.setItem(`lastLikeTime_${postId}_${userId}`, currentTime);
+      localStorage.setItem(`lastDislikeTime_${postId}_${userId}`, currentTime);
 
       const response = await axios.get("http://localhost:5500/dislike", {
         params: {
@@ -149,7 +149,7 @@ class FetchPost extends Component {
           userId,
         },
       });
-      if (response.data.isDisLiked) {
+      if (response.data.isDisliked) {
         // If the post is already liked, send a DELETE request to unlike it
         await axios.delete("http://localhost:5500/dislike", {
           params: {
@@ -160,7 +160,7 @@ class FetchPost extends Component {
         console.log("UnDisliked successfully:", response.data);
         this.setState(
             (prevState) => ({
-              likedPosts: prevState.likedPosts.filter((id) => id !== postId),
+              dislikedPosts: prevState.dislikedPosts.filter((id) => id !== postId),
             }),
             () => {
               localStorage.setItem("dislikedPosts", JSON.stringify(this.state.dislikedPosts));
@@ -172,10 +172,10 @@ class FetchPost extends Component {
           postId,
           userId,
         });
-        console.log("Liked successfully:", response.data);
+        console.log("Disliked successfully:", response.data);
         this.setState(
             (prevState) => ({
-              likedPosts: [...prevState.likedPosts, postId],
+              dislikedPosts: [...prevState.dislikedPosts, postId],
             }),
             () => {
               localStorage.setItem("dislikedPosts", JSON.stringify(this.state.dislikedPosts));
@@ -313,9 +313,9 @@ class FetchPost extends Component {
                   <img
                       className="white-img"
                       src={
-                        this.state.likedPosts.includes(post._id)
+                        this.state.dislikedPosts.includes(post._id)
                             ? images["clickedDislike.svg"]
-                            : images["Dislike.svg"]
+                            : images["dislike.svg"]
                       }
                       alt="like"
                   />

@@ -1,5 +1,6 @@
 const express = require("express");
 const Dislike = require("../model/dislike");
+const Like = require("../model/like");
 const rateLimit = require("express-rate-limit");
 const router = express.Router();
 
@@ -15,18 +16,22 @@ router.post("/", dislikeLimiter, async (req, res) => {
   try {
     const { postId, userId } = req.body;
 
-    /*
     const existingLike = await Like.findOne({ postId, userId });
     if (existingLike) {
-      return res.status(400).json({ message: "You have already liked this post." });
-    }*/
+      return res.status(400).json({ message: "You have already liked this post. Please unlike it before disliking." });
+    }
 
-    const newdislike = new Dislike({ postId, userId });
-    await newdislike.save();
+    const existingDislike = await Dislike.findOne({ postId, userId });
+    if (existingDislike) {
+      return res.status(400).json({ message: "You have already disliked this post." });
+    }
+
+    const newDislike = new Dislike({ postId, userId });
+    await newDislike.save();
 
     const dislikes = await Dislike.find({ postId });
-    const dislikeNum = Dislikes.length;
-    const userIds = dislikes.map((like) => like.userId);
+    const dislikeNum = dislikes.length;
+    const userIds = dislikes.map((dislike) => dislike.userId);
 
     res.status(200).json({
       postId,
@@ -56,9 +61,9 @@ router.get("/", async (req, res) => {
   try {
     const { postId, userId } = req.query;
 
-    const dislikeNum = await Like.countDocuments({ postId });
+    const dislikeNum = await Dislike.countDocuments({ postId });
 
-    const isDisliked = await Like.exists({ postId, userId });
+    const isDisliked = await Dislike.exists({ postId, userId });
 
     res.status(200).json({
       dislikeNum,

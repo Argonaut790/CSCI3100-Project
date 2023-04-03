@@ -78,9 +78,13 @@ router.get("/", async (req, res) => {
     const limit = parseInt(req.query.limit) || 10; //using the URL /tweet?limit=10&page=${page} to pass the limit and page variable
     const page = parseInt(req.query.page) || 0; //10 post each page
     const skip = limit * page; //bias, skipping how many posts
+    const userId = req.query.userId;
+    const profile = req.query.profile;
 
+    //if userId is not null, then we will only get the posts that belong to the user
+    const query = userId && profile == "true" ? { userId } : {};
     //get all posts
-    const posts = await Post.find()
+    const posts = await Post.find(query)
       .sort({ timestamp: -1 })
       .skip(skip) //base on which page to show only the following posts
       .limit(limit);

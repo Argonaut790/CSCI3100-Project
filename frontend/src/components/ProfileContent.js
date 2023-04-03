@@ -46,8 +46,9 @@ const Content = () => {
     <div className="container-fluid p-0" id="mid-center">
       <PersonalInfo />
       <FetchPost
-        userID={userId}
+        // userID={userId}
         // handleDeletePost={handleDeletePost}
+        profile={true} // this is to tell FetchPost that it is in profile page
         deleteButton={deleteButton}
       />
     </div>

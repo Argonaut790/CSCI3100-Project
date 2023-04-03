@@ -227,10 +227,12 @@ class FetchPost extends Component {
 
   fetchPosts = async () => {
     const { page } = this.state;
+    const { profile } = this.props;
     try {
       this.setState({ isLoading: true });
+      console.log(profile);
       const response = await axios.get(
-        `http://localhost:5500/tweet?limit=10&page=${page}`
+        `http://localhost:5500/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
       );
       const posts = response.data;
 

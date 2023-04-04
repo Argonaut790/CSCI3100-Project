@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback, useState, createRef } from "react";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ScrollContext from "./components/ScrollContext";
 import ImportAll from "./components/ImportAll";
@@ -17,19 +17,27 @@ const images = ImportAll(
 );
 
 const TopLeft = () => {
+  const navigate = useNavigate();
+
+  const handleIconClick = () => {
+    navigate("/home");
+  };
+
   return (
-    <div
-      className="row h3 head d-flex flex-row align-items-center justify-content-center"
-      id="top-left"
-    >
-      <img
-        src={images["twittericon.png"]}
-        className="mr-1 white-img"
-        id="icon"
-        alt="icon"
-      />
-      <div id="rettiwt">Rettiwt</div>
-    </div>
+      <div
+          className="row h3 head d-flex flex-row align-items-center justify-content-center"
+          id="top-left"
+      >
+        <img
+            src={images["twittericon.png"]}
+            className="mr-1 white-img"
+            id="icon"
+            alt="icon"
+            onClick={handleIconClick}
+            style={{ cursor: "pointer" }}
+        />
+        <div id="rettiwt">Rettiwt</div>
+      </div>
   );
 };
 
@@ -106,12 +114,14 @@ function App() {
         id="user"
       >
         <div className="col-md-5 h-100 d-flex align-items-center justify-content-center">
-          <img
-            src={images["user_avatar.jpg"]}
-            className="float-start img-fluid"
-            id="avatar"
-            alt="avatar"
-          />
+          <Link to="/profile">
+            <img
+                src={images["user_avatar.jpg"]}
+                className="float-start img-fluid"
+                id="avatar"
+                alt="avatar"
+            />
+          </Link>
         </div>
         <div className="col-md-7 h-100 d-flex align-items-center">
           <div className="row d-flex flex-column" id="user-info">
@@ -131,7 +141,7 @@ function App() {
   };
   // button type="button" className="btn btn-outline-dark"
 
-  const NavItem = ({ text, id, imgsrc, delay }) => {
+  const NavItem = ({ text, id, imgsrc, delay, onClick }) => {
     const navLinkRef = useRef(null);
 
     useEffect(() => {
@@ -140,22 +150,22 @@ function App() {
     }, []);
 
     return (
-      <li>
-        <Link
-          to={`/${id}`}
-          className={`nav-link text-center mask btn delay-${delay}`}
-          style={{ cursor: "pointer" }}
-          id={`${id}`}
-          ref={navLinkRef}
-        >
-          <img
-            src={images[`${imgsrc}.png`]}
-            className="mr-1 white-img"
-            alt={`${id} icon`}
-          />
-          <span className="d-none d-md-inline">{text}</span>
-        </Link>
-      </li>
+        <li>
+          <Link
+              to={`/${id}`}
+              className={`nav-link text-center mask btn delay-${delay}`}
+              style={{ cursor: "pointer" }}
+              id={`${id}`}
+              ref={navLinkRef}
+          >
+            <img
+                src={images[`${imgsrc}.png`]}
+                className="mr-1 white-img"
+                alt={`${id} icon`}
+            />
+            <span className="d-none d-md-inline">{text}</span>
+          </Link>
+        </li>
     );
   };
 

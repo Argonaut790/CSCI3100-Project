@@ -1,5 +1,11 @@
 import { useRef, useEffect, useCallback, useState, createRef } from "react";
-import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import axios from "axios";
 import ScrollContext from "./components/ScrollContext";
 import ImportAll from "./components/ImportAll";
@@ -24,20 +30,20 @@ const TopLeft = () => {
   };
 
   return (
-      <div
-          className="row h3 head d-flex flex-row align-items-center justify-content-center"
-          id="top-left"
-      >
-        <img
-            src={images["twittericon.png"]}
-            className="mr-1 white-img"
-            id="icon"
-            alt="icon"
-            onClick={handleIconClick}
-            style={{ cursor: "pointer" }}
-        />
-        <div id="rettiwt">Rettiwt</div>
-      </div>
+    <div
+      className="row h3 head d-flex flex-row align-items-center justify-content-center"
+      id="top-left"
+    >
+      <img
+        src={images["twittericon.png"]}
+        className="mr-1 white-img"
+        id="icon"
+        alt="icon"
+        onClick={handleIconClick}
+        style={{ cursor: "pointer" }}
+      />
+      <div id="rettiwt">Rettiwt</div>
+    </div>
   );
 };
 
@@ -116,10 +122,10 @@ function App() {
         <div className="col-md-5 h-100 d-flex align-items-center justify-content-center">
           <Link to="/profile">
             <img
-                src={images["user_avatar.jpg"]}
-                className="float-start img-fluid"
-                id="avatar"
-                alt="avatar"
+              src={images["user_avatar.jpg"]}
+              className="float-start img-fluid"
+              id="avatar"
+              alt="avatar"
             />
           </Link>
         </div>
@@ -150,22 +156,22 @@ function App() {
     }, []);
 
     return (
-        <li>
-          <Link
-              to={`/${id}`}
-              className={`nav-link text-center mask btn delay-${delay}`}
-              style={{ cursor: "pointer" }}
-              id={`${id}`}
-              ref={navLinkRef}
-          >
-            <img
-                src={images[`${imgsrc}.png`]}
-                className="mr-1 white-img"
-                alt={`${id} icon`}
-            />
-            <span className="d-none d-md-inline">{text}</span>
-          </Link>
-        </li>
+      <li>
+        <Link
+          to={`/${id}`}
+          className={`nav-link text-center mask btn delay-${delay}`}
+          style={{ cursor: "pointer" }}
+          id={`${id}`}
+          ref={navLinkRef}
+        >
+          <img
+            src={images[`${imgsrc}.png`]}
+            className="mr-1 white-img"
+            alt={`${id} icon`}
+          />
+          <span className="d-none d-md-inline">{text}</span>
+        </Link>
+      </li>
     );
   };
 
@@ -291,7 +297,7 @@ function App() {
                 <div className="toast-body">Retweet Successfully! </div>
               )}
               {postStatus === 400 && (
-                <div className="toast-body">Retweet Failed Successfully! </div>
+                <div className="toast-body">Retweet Failed! </div>
               )}
             </div>
           </div>

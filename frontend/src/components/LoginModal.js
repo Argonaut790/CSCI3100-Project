@@ -102,7 +102,7 @@ const LoginModal = ({ setShowModal }) => {
             value={email}
             onChange={onChangeEmail}
           />
-          <label for="floatingInput">Email address</label>
+          <label htmlFor="floatingEmail">Email address</label>
         </div>
 
         <div className="form-floating mb-3">
@@ -115,7 +115,7 @@ const LoginModal = ({ setShowModal }) => {
             value={password}
             onChange={onChangePassword}
           />
-          <label for="floatingPassword">Password</label>
+          <label htmlFor="floatingPassword">Password</label>
         </div>
 
         <div className="buttonContainer d-grid">

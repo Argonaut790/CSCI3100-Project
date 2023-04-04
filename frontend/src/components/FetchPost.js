@@ -10,7 +10,7 @@ const images = ImportAll(
 );
 
 // Get userId from localStorage
-const userId = JSON.parse(localStorage.getItem("user")).userId;
+const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : "defaultUserId";
 // print the userId in console
 console.log("userId is: " + userId);
 

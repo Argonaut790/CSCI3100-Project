@@ -252,6 +252,7 @@ class Tweet extends Component {
       this.setState({ isLoading: false });
     } catch (e) {
       this.props.handlePostStatus(400);
+      this.setState({ isLoading: false });
       console.log(e);
       console.log("Can't Upload Image!");
     }
@@ -363,7 +364,7 @@ class Tweet extends Component {
                         onPaste={this.onPaste}
                         ref={(ref) => (this.textarea = ref)}
                       ></textarea>
-                      <label for="floatingTextarea2">
+                      <label htmlFor="floatingTextarea2">
                         Description {this.state.wordCount}/{MAXLENGTH}
                       </label>
                     </div>

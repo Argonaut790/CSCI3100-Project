@@ -31,24 +31,31 @@ router.post("/login", async (req, res) => {
   if (!user) {
     res.status(400).send("Wrong email / password");
   } else {
-    // Check if password correct
     if (bcrypt.compare(req.body.password, user.password)) {
-      // Check if account confirmed
+      // Password is correct
       if (user.isConfirmed === false) {
+        // account is not yet confirmed
         res
           .status(401)
           .send(
             "Your account is not verified, Please check your email / spambox."
           );
-        // Check if account activated
       } else if (user.isActivated === false) {
+        // account deactivated
         res
           .status(401)
           .send(
             "Your account is deactivated. Please contact the site administrator in admin@rettiwt.com"
           );
-        // Login successfully
+      } else if (user.isGoogleSign === true) {
+        // email used in google signin
+        res
+          .status(401)
+          .send(
+            "Your email is used in Google Sign in. Please continue with Google."
+          );
       } else {
+        // Login successfully
         const accessToken = generateAccessToken(user.email);
         const refreshToken = jwt.sign(user.email, process.env.REFRESH_TOEKN);
         refreshTokens.push(refreshToken);

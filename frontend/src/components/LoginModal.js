@@ -30,10 +30,8 @@ const LoginModal = ({ setShowModal, setShowForgotPasswordModal }) => {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          console.log("Error: ", err.response.status);
           document.getElementById("result").innerText = err.response.data;
         } else {
-          console.log("Error: ", err.response.status);
           document.getElementById("result").innerText =
             "Invalid email / password";
         }

@@ -34,7 +34,11 @@ const FollowList = ({ userId, isFollowerList }) => {
   return (
     <>
       <ul className="list-group" id="following-div">
-        <li className="list-group-item" id="following-label">
+        <li
+          key="followingTitle"
+          className="list-group-item"
+          id="following-label"
+        >
           {title}
         </li>
         {follows.map((follow) => (

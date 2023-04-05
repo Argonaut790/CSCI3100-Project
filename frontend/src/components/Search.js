@@ -9,7 +9,6 @@ const Search = () => {
 
   const onChangeSearchString = (e) => {
     setSearchString(e.target.value);
-    console.log(searchString);
   };
   useEffect(() => {
     const fetchResultItems = async () => {
@@ -18,13 +17,12 @@ const Search = () => {
       );
       if (!res.error) {
         setResultItems(res.data);
-        console.log(resultItems);
       } else {
         console.log(res);
       }
     };
     if (searchString !== "") fetchResultItems().catch(console.error);
-  }, [searchString, resultItems]);
+  }, [searchString]);
 
   const SearchResults = () => {
     return (

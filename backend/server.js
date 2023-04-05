@@ -4,7 +4,7 @@ const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const PORT = 5500;
+const PORT = process.env.PORT;
 
 // cross domain
 app.use(cors());

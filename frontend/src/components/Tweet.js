@@ -199,7 +199,7 @@ class Tweet extends Component {
   //       console.log(formData.get("desc"));
 
   //       try {
-  //         await axios.post("http://localhost:5500/tweet", formData, {
+  //         await axios.post(process.env.REACT_APP_DEV_API_PATH + "/tweet", formData, {
   //           headers: {
   //             "Content-Type": "multipart/form-data",
   //           },
@@ -240,11 +240,15 @@ class Tweet extends Component {
     formData.append("userId", this.props.userId);
 
     try {
-      await axios.post("http://localhost:5500/tweet", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await axios.post(
+        process.env.REACT_APP_DEV_API_PATH + "/tweet",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       this.props.handlePostStatus(200);
       // clear input fields

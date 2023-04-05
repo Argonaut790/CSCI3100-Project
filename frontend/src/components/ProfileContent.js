@@ -73,7 +73,7 @@ const PersonalInfo = () => {
   useEffect(() => {
     const fetchFollowData = async () => {
       const res = await axios.get(
-        "http://localhost:5500/follow/stat/" + userId
+        process.env.REACT_APP_DEV_API_PATH + "/follow/stat/" + userId
       );
       if (!res.error) {
         setFollowedNum(res.data.followedNum);
@@ -86,7 +86,9 @@ const PersonalInfo = () => {
     fetchFollowData().catch(console.error);
 
     const fetchPostData = async () => {
-      const res = await axios.get("http://localhost:5500/tweet/stat/" + userId);
+      const res = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/tweet/stat/" + userId
+      );
       if (!res.error) {
         setPostNum(res.data.postNum);
       } else {
@@ -96,7 +98,9 @@ const PersonalInfo = () => {
     fetchPostData().catch(console.error);
 
     const fetchUserData = async () => {
-      const res = await axios.get("http://localhost:5500/account/" + userId);
+      const res = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/account/" + userId
+      );
       if (!res.error) {
         setUserBio(res.data.bio);
         setEditedBio(res.data.bio);

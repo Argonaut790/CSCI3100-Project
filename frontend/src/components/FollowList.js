@@ -15,7 +15,7 @@ const FollowList = ({ userId, isFollowerList }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       const res = await axios.get(
-        "http://localhost:5500/follow" + apiString + userId
+        process.env.REACT_APP_DEV_API_PATH + "/follow" + apiString + userId
       );
       if (!res.error) {
         setFollows(res.data);

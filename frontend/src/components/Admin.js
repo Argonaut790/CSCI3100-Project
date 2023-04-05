@@ -6,7 +6,9 @@ const Admin = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:5500/account/");
+      const res = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/account/"
+      );
       if (!res.error) {
         setUsers(res.data);
       } else {
@@ -19,7 +21,7 @@ const Admin = () => {
   const changeUserStatus = async (userId, isActivated) => {
     try {
       const res = await axios.patch(
-        "http://localhost:5500/account/status/" + userId,
+        process.env.REACT_APP_DEV_API_PATH + "/account/status/" + userId,
         { isActivated: isActivated }
       );
       if (!res.error) {
@@ -35,7 +37,7 @@ const Admin = () => {
   const grantAdmin = async (userId) => {
     try {
       const res = await axios.patch(
-        "http://localhost:5500/account/admin/" + userId
+        process.env.REACT_APP_DEV_API_PATH + "/account/admin/" + userId
       );
       console.log(res);
       if (!res.error) {

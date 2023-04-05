@@ -5,7 +5,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const getConfirmationCode = require("../confimationCode");
-const sendConfirmationEmail = require("../emailVerify");
+const { sendConfirmationEmail } = require("../emailVerify");
 const validator = require("validator");
 
 //Image handler
@@ -77,7 +77,11 @@ router.post("/", async (req, res) => {
   if (req.body.isGoogleSign == true) {
     if (registeredEmailUser.length) {
       // Already registered in email signup
-      return res.status(400).json("Email registered in our system");
+      return res
+        .status(400)
+        .json(
+          "Email registered in our system. Please click 'Forgot Password' if you cannot login."
+        );
     } else if (registeredGoogleUser.length) {
       return res.status(200).json(registeredGoogleUser[0]);
     }
@@ -96,10 +100,18 @@ router.post("/", async (req, res) => {
   } else {
     if (registeredGoogleUser.length) {
       // Already registered in Google signup
-      return res.status(400).json("Email registered using google signin");
+      return res
+        .status(400)
+        .json(
+          "Email registered using Google signin. Please continue with Google."
+        );
     } else if (registeredEmailUser.length) {
       // Already registered in email signup
-      return res.status(400).json("Email registered in our system");
+      return res
+        .status(400)
+        .json(
+          "This email has been registered. Please click 'Forgot Password' if you cannot login."
+        );
     }
 
     // Server-side validation
@@ -146,7 +158,7 @@ router.post("/", async (req, res) => {
 
 // Confirm account
 router.patch("/auth/:confirmationCode", async (req, res) => {
-  const user = await Account.find({
+  const user = await Account.findOne({
     confirmationCode: req.params.confirmationCode,
   });
   if (!user) {

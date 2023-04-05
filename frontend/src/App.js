@@ -325,10 +325,7 @@ function App() {
             /> */}
               {/* {loggedIn && <Route path="/chat" element={<Chat />} />} */}
               {loggedIn && (
-                <Route
-                  path="/profile"
-                  element={<Profile loggedIn={loggedIn} />}
-                />
+                <Route path="/profile" element={<Profile userId={userId} />} />
               )}
               {loggedIn && isAdmin && (
                 <Route path="/admin" element={<Admin />} />

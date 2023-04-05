@@ -1,6 +1,7 @@
 import HomeContent from "./HomeContent";
 import Search from "./Search";
 import FollowList from "./FollowList";
+import PendingFollowList from "./PendingFollowList";
 
 //function needs to be Capital Letter in the first
 const Home = ({ userId }) => {
@@ -14,6 +15,7 @@ const Home = ({ userId }) => {
           <Search />
           {userId && <FollowList userId={userId} isFollowerList={false} />}
           {userId && <FollowList userId={userId} isFollowerList={true} />}
+          {userId && <PendingFollowList userId={userId} />}
         </div>
       </div>
     </>

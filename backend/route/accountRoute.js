@@ -5,7 +5,10 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const getConfirmationCode = require("../confimationCode");
-const { sendConfirmationEmail } = require("../emailVerify");
+const {
+  sendConfirmationEmail,
+  sendPasswordResetEmail,
+} = require("../emailVerify");
 const validator = require("validator");
 
 //Image handler
@@ -29,7 +32,7 @@ router.post("/login", async (req, res) => {
     res.status(400).send("Wrong email / password");
   } else {
     // Check if password correct
-    if (await bcrypt.compare(req.body.password, user.password)) {
+    if (bcrypt.compare(req.body.password, user.password)) {
       // Check if account confirmed
       if (user.isConfirmed === false) {
         res
@@ -168,30 +171,56 @@ router.patch("/auth/:confirmationCode", async (req, res) => {
     { confirmationCode: req.params.confirmationCode },
     { $set: { isConfirmed: true } }
   );
-  res.status(200).json(updatedAccount);
+  res.status(200).json(user.userId);
+});
+
+// Forgot Password
+router.patch("/password", async (req, res) => {
+  // Get user by email
+  const user = await Account.findOne({ email: req.body.email });
+  if (!user) {
+    return res.status(404).send("No user found with that email address.");
+  }
+  try {
+    // Generate confirmation code
+    const token = getConfirmationCode();
+    await Account.updateOne(
+      { email: req.body.email },
+      { $set: { confirmationCode: token, isConfirmed: false } }
+    );
+    sendPasswordResetEmail(user.username, req.body.email, token);
+    res
+      .status(200)
+      .send("A password reset email has been sent to your email address.");
+  } catch (err) {
+    res
+      .status(500)
+      .send("Internal server error. Please try again or contact admin.");
+  }
 });
 
 // Update password of a user
-router.patch("/:email", async (req, res) => {
+router.patch("/password/reset", async (req, res) => {
   try {
-    const user = await Account.find({
-      username: req.body.username,
-      email: req.params.email,
-    }).count({ sent_at: null });
+    const user = await Account.findOne({
+      userId: req.body.userId,
+    });
+    if (!user) {
+      return res.status(404).send("User Not Found.");
+    }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    if (user > 0) {
-      const updatedAccount = await Account.updateMany(
-        { email: req.params.email },
-        { $set: { password: hashedPassword } }
-      );
-
-      res.status(200).json(updatedAccount);
-    } else {
-      res.status(404).send("not existed");
-    }
+    await Account.updateOne(
+      {
+        userId: req.body.userId,
+      },
+      { $set: { password: hashedPassword } }
+    );
+    res.status(200).send("Password has been successfully reset.");
   } catch (err) {
-    res.status(401).json({ message: err });
+    res
+      .status(500)
+      .send("Internal server error. Please try again or contact admin.");
   }
 });
 

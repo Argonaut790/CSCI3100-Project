@@ -124,7 +124,7 @@ function App() {
         <div className="col-md-5 h-100 d-flex align-items-center justify-content-center">
           <Link to="/profile">
             <img
-              src={images["user_avatar.jpg"]}
+              src={images["avatar.png"]}
               className="float-start img-fluid"
               id="avatar"
               alt="avatar"

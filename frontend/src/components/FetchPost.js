@@ -16,7 +16,7 @@ const userId = localStorage.getItem("user")
 // print the userId in console
 console.log("userId is: " + userId);
 
-const UserID = ({ postId, userId, username, deleteButton }) => {
+const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
   const deleteButtonDiv = (
     <div className="btn" onClick={() => handleDeletePost(postId)}>
       <img
@@ -43,13 +43,23 @@ const UserID = ({ postId, userId, username, deleteButton }) => {
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
       <div>
-        <div>
-          <img
-            src={images["user_avatar.jpg"]}
-            className="float-start post-user-avatar"
-            alt="user-avatar"
-          />
-        </div>
+        {userAvatar ? (
+          <div>
+            <img
+              src={userAvatar}
+              className="float-start post-user-avatar"
+              alt="user-avatar"
+            />
+          </div>
+        ) : (
+          <div>
+            <img
+              src={images["avatar.png"]}
+              className="float-start post-user-avatar white-img"
+              alt="user-avatar"
+            />
+          </div>
+        )}
         <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
           <div className="fw-bold">{username}</div>
           <div>#{userId}</div>
@@ -269,13 +279,10 @@ class FetchPost extends Component {
       } else {
         const postsWithImages = await Promise.all(
           posts.map(async (post) => {
-            const imageResponse = await axios.get(
-              process.env.REACT_APP_DEV_API_PATH +
-                `/tweet/image/${post.image.filename}`,
-              {
-                responseType: "blob",
-              }
-            );
+            console.log(post.imageUrl);
+            const imageResponse = await axios.get(post.imageUrl, {
+              responseType: "blob",
+            });
 
             const imageURL = URL.createObjectURL(imageResponse.data);
             return { ...post, imageURL };
@@ -327,6 +334,7 @@ class FetchPost extends Component {
                 userId={post.userId}
                 username={post.username}
                 deleteButton={deleteButton}
+                userAvatar={post.avatarURL}
               />
               <div
                 className="post-image-div d-flex justify-content-center align-items-center"

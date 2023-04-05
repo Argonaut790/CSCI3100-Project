@@ -269,8 +269,11 @@ router.get("/profile/:userId", async (req, res) => {
     const user = await Account.findOne({
       userId: req.params.userId,
     });
-    const imageUrl = `http://${req.headers.host}/account/profile/avatar/${user.avatar.filename}`;
-    return res.status(200).json(imageUrl);
+    const avatarFile = user.avatar.filename;
+    if (avatarFile) {
+      const imageUrl = `http://${req.headers.host}/account/profile/avatar/${avatarFile}`;
+      return res.status(200).json(imageUrl);
+    } else return null;
   } catch (err) {
     res.status(401).json({ message: err });
   }
@@ -308,7 +311,19 @@ router.patch("/profile/:userId", upload.single("image"), async (req, res) => {
     const username = req.body.username; //username
     const bio = req.body.bio; //bio
 
-    if (image) {
+    if (!image) {
+      // In case there is no image, update only the bio
+      const updatedAccount = await Account.updateOne(
+        { userId: req.params.userId },
+        { $set: { bio: bio, username: username } }
+      );
+
+      // Send the response here
+      res.status(200).json({
+        message: "Profile updated",
+        updatedAccount,
+      });
+    } else {
       // Compress and resize the image using sharp
       const metadata = await sharp(image.buffer).metadata();
 
@@ -330,12 +345,6 @@ router.patch("/profile/:userId", upload.single("image"), async (req, res) => {
         }) // Set the desired dimensions
         .jpeg({ quality: 95 }) // Set the desired output format
         .toBuffer();
-      console.log("cropsize: " + cropSize);
-
-      console.log("<--------------------------------->");
-      console.log("Image: " + image);
-      console.log("Bio: " + bio);
-      console.log("<--------------------------------->");
 
       //we use uploads collection to store those images' chunk
       const bucket = new GridFSBucket(conn.db, { bucketName: "accounts" });
@@ -376,18 +385,6 @@ router.patch("/profile/:userId", upload.single("image"), async (req, res) => {
 
       uploadStream.write(resizedImageBuffer);
       uploadStream.end();
-    } else {
-      // In case there is no image, update only the bio
-      const updatedAccount = await Account.updateOne(
-        { userId: req.params.userId },
-        { $set: { bio: bio, username: username } }
-      );
-
-      // Send the response here
-      res.status(200).json({
-        message: "Profile updated",
-        updatedAccount,
-      });
     }
   } catch (err) {
     res.status(401).json({ message: err });

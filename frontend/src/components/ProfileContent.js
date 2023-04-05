@@ -115,7 +115,7 @@ const PersonalInfo = () => {
     const fetchAvatar = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5500/account/profile/${userId}`
+          process.env.REACT_APP_DEV_API_PATH + "/account/profile/" + userId
         );
         if (!res.error) {
           const avatarData = res.data;
@@ -353,7 +353,7 @@ const PersonalInfo = () => {
               />
             ) : (
               <img
-                src={images["avatar.svg"]}
+                src={images["avatar.png"]}
                 className="float-start rounded-circle"
                 alt="profile-avatar"
                 id="profile-avatar"

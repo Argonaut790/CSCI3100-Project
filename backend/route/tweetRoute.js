@@ -112,7 +112,15 @@ router.get("/", async (req, res) => {
         const user = await Account.findOne({ userId: post.userId });
         const username = user ? user.username : "";
         const imageUrl = `http://${req.headers.host}/tweet/image/${post.image.filename}`;
-        return { ...post._doc, imageUrl, username };
+
+        const userAvatar = user.avatar.filename || null;
+        let avatarURL = null;
+        if (userAvatar) {
+          avatarURL = `http://${req.headers.host}/account/profile/avatar/${userAvatar}`;
+        } else {
+          avatarURL = null;
+        }
+        return { ...post._doc, imageUrl, username, avatarURL };
       })
     );
 

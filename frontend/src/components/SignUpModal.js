@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const SignUpModal = ({ setShowModal }) => {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const captchaRef = useRef(null);
 
   const createAccount = () => {
     const user = {
@@ -126,6 +128,8 @@ const SignUpModal = ({ setShowModal }) => {
       password === confirmPassword &&
       password.match(passwordRegEx)
     ) {
+      const token = captchaRef.current.getValue();
+      captchaRef.current.reset();
       createAccount();
     }
 
@@ -213,6 +217,11 @@ const SignUpModal = ({ setShowModal }) => {
           />
           <label htmlFor="floatingConfirmPassword">Confirm Password</label>
         </div>
+
+        <ReCAPTCHA
+          sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+          ref={captchaRef}
+        />
 
         <div className="buttonContainer d-grid">
           <input

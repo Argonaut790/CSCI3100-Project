@@ -17,6 +17,10 @@ const AccountSchema = new Schema({
   password: {
     type: String,
   },
+  avatar: {
+    filename: String,
+    contentType: String,
+  },
   bio: {
     type: String,
     default: "",

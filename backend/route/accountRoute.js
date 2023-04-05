@@ -8,6 +8,19 @@ const getConfirmationCode = require("../confimationCode");
 const sendConfirmationEmail = require("../emailVerify");
 const validator = require("validator");
 
+//Image handler
+const mongoose = require("mongoose");
+const { GridFSBucket } = require("mongodb");
+const sharp = require("sharp");
+
+//multer
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+//Setup GridFS
+const conn = mongoose.connection;
+
 // Login
 router.post("/login", async (req, res) => {
   const user = await Account.findOne({ email: req.body.email });
@@ -238,14 +251,132 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-// Edit bio by Id
-router.patch("/bio/:userId", async (req, res) => {
+// Get user profile avatar by Id
+router.get("/profile/:userId", async (req, res) => {
   try {
-    const updatedAccount = await Account.updateOne(
-      { userId: req.params.userId },
-      { $set: { bio: req.body.bio } }
-    );
-    res.status(200).json(updatedAccount);
+    const user = await Account.findOne({
+      userId: req.params.userId,
+    });
+    const imageUrl = `http://${req.headers.host}/account/profile/avatar/${user.avatar.filename}`;
+    return res.status(200).json(imageUrl);
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+router.get("/profile/avatar/:filename", async (req, res) => {
+  try {
+    // connect to mongo upload collection bucket,
+    // here bucket we mean we have "upload.chunks" and "uploads.files"
+    // so it actually have two collection but the root is upload which is the bucket
+    const bucket = new GridFSBucket(conn.db, { bucketName: "accounts" });
+
+    //get filename from URL params
+    const filename = req.params.filename;
+
+    // config download type
+    res.set("Content-Type", "image/jpeg"); // Or any other appropriate content type
+    const downloadStream = bucket.openDownloadStreamByName(filename);
+
+    downloadStream.on("error", (error) => {
+      res.status(500).json({ message: error.message });
+    });
+
+    //pipe the downloaded result to res
+    downloadStream.pipe(res);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Upload profile avatar, bio
+router.patch("/profile/:userId", upload.single("image"), async (req, res) => {
+  try {
+    const image = req.file || null;
+    const username = req.body.username; //username
+    const bio = req.body.bio; //bio
+
+    if (image) {
+      // Compress and resize the image using sharp
+      const metadata = await sharp(image.buffer).metadata();
+
+      const originalWidth = metadata.width;
+      const originalHeight = metadata.height;
+      const desiredSize = 200;
+
+      // Calculate the central part of the image
+      const cropSize = Math.min(originalWidth, originalHeight);
+      const left = parseInt((originalWidth - cropSize) / 2);
+      const top = parseInt((originalHeight - cropSize) / 2);
+
+      const resizedImageBuffer = await sharp(image.buffer)
+        .extract({ left: left, top: top, width: cropSize, height: cropSize }) // Set the cropping region
+        .resize({
+          width: desiredSize,
+          height: desiredSize,
+          kernel: sharp.kernel.lanczos3,
+        }) // Set the desired dimensions
+        .jpeg({ quality: 95 }) // Set the desired output format
+        .toBuffer();
+      console.log("cropsize: " + cropSize);
+
+      console.log("<--------------------------------->");
+      console.log("Image: " + image);
+      console.log("Bio: " + bio);
+      console.log("<--------------------------------->");
+
+      //we use uploads collection to store those images' chunk
+      const bucket = new GridFSBucket(conn.db, { bucketName: "accounts" });
+
+      const uploadStream = bucket.openUploadStream(image.originalname, {
+        contentType: image.mimetype,
+      });
+
+      uploadStream.on("error", (err) => {
+        console.error(err);
+        res.status(500).send(err);
+      });
+
+      uploadStream.on("finish", async (file) => {
+        // Create a new post object and save it to the database
+        const imageObj = {
+          filename: file.filename,
+          contentType: file.contentType,
+        };
+
+        // Update the user's bio and avatar in DB
+        const updatedAccount = await Account.updateOne(
+          { userId: req.params.userId },
+          { $set: { bio: bio, avatar: imageObj, username: username } }
+        );
+
+        // Send the response here
+        res.status(200).json({
+          message: "File uploaded and stored in MongoDB, profile updated",
+          file,
+          updatedAccount,
+        });
+
+        // post.save().then(() => {
+        //   console.log("Data inserted successfully");
+        // });
+      });
+
+      uploadStream.write(resizedImageBuffer);
+      uploadStream.end();
+    } else {
+      // In case there is no image, update only the bio
+      const updatedAccount = await Account.updateOne(
+        { userId: req.params.userId },
+        { $set: { bio: bio, username: username } }
+      );
+
+      // Send the response here
+      res.status(200).json({
+        message: "Profile updated",
+        updatedAccount,
+      });
+    }
   } catch (err) {
     res.status(401).json({ message: err });
   }

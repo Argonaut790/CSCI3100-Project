@@ -274,6 +274,26 @@ img {
   height: 100vh;
 }
 
+.mask-avatar {
+  backface-visibility: 0.5;
+  background-image: url("./images/user_avatar.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.mask-avatar::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #0000009e;
+  border-radius: 100%;
+}
+
 .mask-post {
   background-color: #0000009e;
   border-radius: 20px;
@@ -611,6 +631,13 @@ img {
   object-fit: cover;
   object-position: center;
   box-shadow: 0 0 0.8rem rgb(255 255 255 / 53%);
+}
+
+#edit-avatar {
+  width: 30%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: center;
 }
 
 .w-40 {

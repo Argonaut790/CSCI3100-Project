@@ -10,7 +10,9 @@ const images = ImportAll(
 );
 
 // Get userId from localStorage
-const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : "defaultUserId";
+const userId = localStorage.getItem("user")
+  ? JSON.parse(localStorage.getItem("user")).userId
+  : "defaultUserId";
 // print the userId in console
 console.log("userId is: " + userId);
 
@@ -250,6 +252,8 @@ class FetchPost extends Component {
         `http://localhost:5500/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
       );
       const posts = response.data;
+
+      console.log("posts: ", posts);
 
       if (posts.length === 0) {
         this.setState({ hasMore: false });

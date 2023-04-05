@@ -262,6 +262,8 @@ class FetchPost extends Component {
       );
       const posts = response.data;
 
+      console.log("posts: ", posts);
+
       if (posts.length === 0) {
         this.setState({ hasMore: false });
       } else {

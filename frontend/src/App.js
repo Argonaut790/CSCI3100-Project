@@ -35,8 +35,8 @@ const TopLeft = () => {
       id="top-left"
     >
       <img
-        src={images["twittericon.png"]}
-        className="mr-1 white-img"
+        src={images["doge.png"]}
+        className="mr-1"
         id="icon"
         alt="icon"
         onClick={handleIconClick}

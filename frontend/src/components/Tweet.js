@@ -154,6 +154,7 @@ class Tweet extends Component {
     // Create a preview URL when an image is selected
     if (target.type === "file" && value) {
       const previewURL = URL.createObjectURL(value);
+      console.log(previewURL);
       this.setState({ previewURL });
       // this.setState({ previewURL }, () => {
       //   // Initialize Cropper when an image is selected

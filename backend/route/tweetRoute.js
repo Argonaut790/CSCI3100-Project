@@ -24,10 +24,27 @@ router.post("/", upload.single("image"), async (req, res) => {
   const desc = req.body.desc;
 
   // Compress and resize the image using sharp
+  const metadata = await sharp(image.buffer).metadata();
+
+  const originalWidth = metadata.width;
+  const originalHeight = metadata.height;
+  const desiredSize = 1280;
+
+  // Calculate the central part of the image
+  const cropSize = Math.min(originalWidth, originalHeight);
+  const left = parseInt((originalWidth - cropSize) / 2);
+  const top = parseInt((originalHeight - cropSize) / 2);
+
   const resizedImageBuffer = await sharp(image.buffer)
-    .resize({ width: 1280 }) // Set the desired width
-    .jpeg({ quality: 80 }) // Set the desired quality (0-100)
+    .extract({ left: left, top: top, width: cropSize, height: cropSize }) // Set the cropping region
+    .resize({
+      width: desiredSize,
+      height: desiredSize,
+      kernel: sharp.kernel.lanczos3,
+    }) // Set the desired dimensions
+    .jpeg({ quality: 95 }) // Set the desired output format
     .toBuffer();
+  console.log("cropsize: " + cropSize);
 
   console.log("<--------------------------------->");
   console.log(image);

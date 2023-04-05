@@ -2,7 +2,6 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 
-//TODO: render confirm page
 const AccountConfirm = () => {
   const [searchParams] = useSearchParams();
   const verifyUser = async (code) => {

@@ -114,7 +114,7 @@ const SignUpModal = ({ setShowModal }) => {
     const token = captchaRef.current.getValue();
     if (!token || token === "") {
       document.getElementById("result").innerText +=
-        "Please finish the captcha";
+        "- Please finish the captcha";
     }
     if (
       email !== "" &&

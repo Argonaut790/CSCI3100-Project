@@ -17,6 +17,7 @@ import AccountConfirm from "./components/AccountConfirm";
 import SignUp from "./components/SignUp";
 import Admin from "./components/Admin";
 import UserProfile from "./components/UserProfile";
+import ResetPassword from "./components/ResetPassword";
 
 const images = ImportAll(
   require.context("./images", false, /\.(png|jpe?g|svg)$/)
@@ -335,6 +336,7 @@ function App() {
               {/* {loggedIn && <Route path="/tweet" element={<Tweet />} />} */}
               <Route path="/confirm" element={<AccountConfirm />} />
               <Route path="/user" element={<UserProfile />}></Route>
+              <Route path="/reset-password" element={<ResetPassword />} />
             </Routes>
           </div>
         </div>

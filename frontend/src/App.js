@@ -102,7 +102,9 @@ function App() {
     // Get user profile infomation from db
     useEffect(() => {
       const fetchUserData = async () => {
-        const res = await axios.get("http://localhost:5500/account/" + userId);
+        const res = await axios.get(
+          process.env.REACT_APP_DEV_API_PATH + "/account/" + userId
+        );
         if (!res.error) {
           setUsername(res.data.username);
           setIsAdmin(res.data.isAdmin);

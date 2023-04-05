@@ -4,7 +4,7 @@ import axios from "axios";
 
 const verifyUser = (code) => {
   return axios
-    .patch("http://localhost:5500/account/auth/" + code)
+    .patch(process.env.REACT_APP_DEV_API_PATH + "/account/auth/" + code)
     .then((response) => {
       return response.data;
     });

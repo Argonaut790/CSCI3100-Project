@@ -18,7 +18,7 @@ const SignUpModal = ({ setShowModal }) => {
     };
 
     axios
-      .post("http://localhost:5500/account", user)
+      .post(process.env.REACT_APP_DEV_API_PATH + "/account", user)
       .then((res) => {
         if (res.status === 200) {
           console.log("Signed Up successfully");

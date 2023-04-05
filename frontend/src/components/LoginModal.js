@@ -14,7 +14,7 @@ const LoginModal = ({ setShowModal }) => {
       password: password,
     };
     axios
-      .post("http://localhost:5500/account/login", user)
+      .post(process.env.REACT_APP_DEV_API_PATH + "/account/login", user)
       .then((res) => {
         if (res.status === 200) {
           console.log(res.data);

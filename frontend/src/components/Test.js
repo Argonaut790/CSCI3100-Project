@@ -17,7 +17,7 @@ export default class Test extends Component {
     e.preventDefault();
     const { username, email, password } = this.state;
     try {
-      await axios.post("http://localhost:5500/test", {
+      await axios.post(process.env.REACT_APP_DEV_API_PATH + "/test", {
         username,
         email,
         password,
@@ -28,7 +28,9 @@ export default class Test extends Component {
       this.setState({ username: "", email: "", password: "" });
 
       // Fetch the updated data from the server
-      const response = await axios.get("http://localhost:5500/test");
+      const response = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/test"
+      );
       this.setState({ data: response.data });
     } catch (e) {
       console.log(e);
@@ -39,7 +41,9 @@ export default class Test extends Component {
   async componentDidMount() {
     // Fetch the initial data from the server on mount
     try {
-      const response = await axios.get("http://localhost:5500/test");
+      const response = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/test"
+      );
       this.setState({ data: response.data });
     } catch (e) {
       console.log(e);

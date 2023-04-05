@@ -13,7 +13,7 @@ const Search = () => {
   useEffect(() => {
     const fetchResultItems = async () => {
       const res = await axios.get(
-        "http://localhost:5500/account/search/" + searchString
+        process.env.REACT_APP_DEV_API_PATH + "/account/search/" + searchString
       );
       if (!res.error) {
         setResultItems(res.data);

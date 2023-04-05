@@ -5,12 +5,14 @@ import axios from "axios";
 import SignUpModal from "./SignUpModal";
 import LoginModal from "./LoginModal";
 import { useNavigate } from "react-router-dom";
+import ForgotPasswordModal from "./ForgotPasswordModal";
 
 const SignUp = () => {
   const clientId =
     "221274346471-hn17eih5bjq1p6kprlcal0g9cv644sqm.apps.googleusercontent.com";
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const navigate = useNavigate();
 
   const onGoogleSignInSuccess = (response) => {
@@ -52,11 +54,13 @@ const SignUp = () => {
 
   const handleSignUp = () => {
     setShowSignUpModal(true);
+    setShowForgotPasswordModal(false);
     setShowLoginModal(false);
   };
 
   const handleLogIn = () => {
     setShowSignUpModal(false);
+    setShowForgotPasswordModal(false);
     setShowLoginModal(true);
   };
 
@@ -97,7 +101,15 @@ const SignUp = () => {
       {showSignUpModal ? (
         <SignUpModal setShowModal={setShowSignUpModal} />
       ) : null}
-      {showLoginModal ? <LoginModal setShowModal={setShowLoginModal} /> : null}
+      {showLoginModal ? (
+        <LoginModal
+          setShowModal={setShowLoginModal}
+          setShowForgotPasswordModal={setShowForgotPasswordModal}
+        />
+      ) : null}
+      {showForgotPasswordModal ? (
+        <ForgotPasswordModal setShowModal={setShowForgotPasswordModal} />
+      ) : null}
     </div>
   );
 };

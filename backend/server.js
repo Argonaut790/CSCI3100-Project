@@ -26,10 +26,6 @@ db.once("open", () => console.log("Connected to database"));
 const accountRoute = require("./route/accountRoute");
 app.use("/account", accountRoute);
 
-// Forgot Password System
-const forgotPasswordRoute = require("./route/forgotPasswordRoute");
-app.use("/account/forgot-password", forgotPasswordRoute);
-
 //Follower System
 const followerRoute = require("./route/followerRoute");
 app.use("/follow", followerRoute);

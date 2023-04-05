@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const LoginModal = ({ setShowModal }) => {
+const LoginModal = ({ setShowModal, setShowForgotPasswordModal }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -83,6 +83,11 @@ const LoginModal = ({ setShowModal }) => {
       : "form-control floating";
   };
 
+  const handleForgotPassword = () => {
+    setShowForgotPasswordModal(true);
+    setShowModal(false);
+  };
+
   return (
     <div className="modalContainer">
       <button
@@ -126,7 +131,9 @@ const LoginModal = ({ setShowModal }) => {
           />
         </div>
       </form>
-      <button>Forgot password?</button>
+      <button className="btn btn-light" onClick={handleForgotPassword}>
+        Forgot Password?
+      </button>
       <span id="result"></span>
     </div>
   );

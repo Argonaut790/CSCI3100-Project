@@ -82,7 +82,7 @@ const Admin = () => {
                       Active{" "}
                       <button
                         type="button"
-                        class="btn btn-danger"
+                        className="btn btn-danger"
                         onClick={() => changeUserStatus(user.userId, false)}
                       >
                         Deactivate
@@ -105,7 +105,7 @@ const Admin = () => {
                       N {"  "}
                       <button
                         type="button"
-                        class="btn btn-warning"
+                        className="btn btn-warning"
                         onClick={() => grantAdmin(user.userId)}
                       >
                         Grant Admin

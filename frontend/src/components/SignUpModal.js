@@ -77,12 +77,11 @@ const SignUpModal = ({ setShowModal }) => {
     }
     if (username === "") {
       isUsernameInvalid = true;
-    } else if(username.length > 8){
-        document.getElementById("result").innerText +=
-            "- Username must be less than 9 characters\n";
-        isUsernameLengthInvalid = true;
-    }
-    else {
+    } else if (username.length > 8) {
+      document.getElementById("result").innerText +=
+        "- Username must be less than 9 characters\n";
+      isUsernameLengthInvalid = true;
+    } else {
       isUsernameInvalid = false;
     }
     if (password === "") {
@@ -137,7 +136,8 @@ const SignUpModal = ({ setShowModal }) => {
     document.getElementById("floatingUsername").className = isUsernameInvalid
       ? "form-control floating is-invalid"
       : "form-control floating";
-    document.getElementById("floatingUsername").className = isUsernameLengthInvalid
+    document.getElementById("floatingUsername").className =
+      isUsernameLengthInvalid
         ? "form-control floating is-invalid"
         : "form-control floating";
     document.getElementById("floatingPassword").className = isPasswordInvalid
@@ -172,7 +172,7 @@ const SignUpModal = ({ setShowModal }) => {
             value={email}
             onChange={onChangeEmail}
           />
-          <label for="floatingInput">Email address</label>
+          <label htmlFor="floatingEmail">Email address</label>
         </div>
 
         <div className="form-floating">
@@ -185,7 +185,7 @@ const SignUpModal = ({ setShowModal }) => {
             value={username}
             onChange={onChangeUsername}
           />
-          <label for="floatingInput">Username</label>
+          <label htmlFor="floatingUsername">Username</label>
         </div>
 
         <div className="form-floating">
@@ -198,7 +198,7 @@ const SignUpModal = ({ setShowModal }) => {
             value={password}
             onChange={onChangePassword}
           />
-          <label for="floatingPassword">Password</label>
+          <label htmlFor="floatingPassword">Password</label>
         </div>
 
         <div className="form-floating mb-3">
@@ -211,7 +211,7 @@ const SignUpModal = ({ setShowModal }) => {
             value={confirmPassword}
             onChange={onChangeConfirmPassword}
           />
-          <label for="floatingPassword">Confirm Password</label>
+          <label htmlFor="floatingConfirmPassword">Confirm Password</label>
         </div>
 
         <div className="buttonContainer d-grid">

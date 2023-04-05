@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
     res.send({ status: "Object created successfully" });
     console.log("Data inserted successfully");
   } catch (error) {
-    res.send({ status: "Test failed successfully" });
+    res.send({ status: "Test failed" });
     console.log(error);
   }
 });
@@ -28,7 +28,7 @@ router.get("/", async (req, res) => {
     res.send(data);
     console.log("Data retrieved successfully");
   } catch (error) {
-    res.send({ status: "Test failed successfully" });
+    res.send({ status: "Test failed" });
     console.log(error);
   }
 });

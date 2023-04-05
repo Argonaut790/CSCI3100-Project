@@ -35,8 +35,8 @@ const TopLeft = () => {
       id="top-left"
     >
       <img
-        src={images["doge.png"]}
-        className="mr-1"
+        src={images["twittericon.png"]}
+        className="mr-1 white-img"
         id="icon"
         alt="icon"
         onClick={handleIconClick}
@@ -297,7 +297,7 @@ function App() {
                 <div className="toast-body">Retweet Successfully! </div>
               )}
               {postStatus === 400 && (
-                <div className="toast-body">Retweet Failed Successfully! </div>
+                <div className="toast-body">Retweet Failed! </div>
               )}
             </div>
           </div>

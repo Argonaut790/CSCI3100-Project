@@ -10,7 +10,9 @@ const images = ImportAll(
 );
 
 // Get userId from localStorage
-const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : "defaultUserId";
+const userId = localStorage.getItem("user")
+  ? JSON.parse(localStorage.getItem("user")).userId
+  : "defaultUserId";
 // print the userId in console
 console.log("userId is: " + userId);
 
@@ -28,7 +30,9 @@ const UserID = ({ postId, userId, username, deleteButton }) => {
 
   const handleDeletePost = async (postId) => {
     // setdeleteButton(true);
-    const res = await axios.delete("http://localhost:5500/tweet/" + postId);
+    const res = await axios.delete(
+      process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
+    );
     if (!res.error) {
       console.log(res);
     } else {
@@ -111,16 +115,19 @@ class FetchPost extends Component {
 
       localStorage.setItem(`lastLikeTime_${postId}_${userId}`, currentTime);
 
-      const response = await axios.get("http://localhost:5500/like", {
-        params: {
-          postId,
-          userId,
-        },
-      });
+      const response = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/like",
+        {
+          params: {
+            postId,
+            userId,
+          },
+        }
+      );
 
       if (response.data.isLiked) {
         // If the post is already liked, send a DELETE request to unlike it
-        await axios.delete("http://localhost:5500/like", {
+        await axios.delete(process.env.REACT_APP_DEV_API_PATH + "/like", {
           params: {
             postId,
             userId,
@@ -140,7 +147,7 @@ class FetchPost extends Component {
         );
       } else {
         // If the post is not liked yet, send a POST request to like it
-        await axios.post("http://localhost:5500/like", {
+        await axios.post(process.env.REACT_APP_DEV_API_PATH + "/like", {
           postId,
           userId,
         });
@@ -186,15 +193,18 @@ class FetchPost extends Component {
 
       localStorage.setItem(`lastDislikeTime_${postId}_${userId}`, currentTime);
 
-      const response = await axios.get("http://localhost:5500/dislike", {
-        params: {
-          postId,
-          userId,
-        },
-      });
+      const response = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/dislike",
+        {
+          params: {
+            postId,
+            userId,
+          },
+        }
+      );
       if (response.data.isDisliked) {
         // If the post is already liked, send a DELETE request to unlike it
-        await axios.delete("http://localhost:5500/dislike", {
+        await axios.delete(process.env.REACT_APP_DEV_API_PATH + "/dislike", {
           params: {
             postId,
             userId,
@@ -216,7 +226,7 @@ class FetchPost extends Component {
         );
       } else {
         // If the post is not liked yet, send a POST request to like it
-        await axios.post("http://localhost:5500/dislike", {
+        await axios.post(process.env.REACT_APP_DEV_API_PATH + "/dislike", {
           postId,
           userId,
         });
@@ -247,7 +257,8 @@ class FetchPost extends Component {
       this.setState({ isLoading: true });
       console.log(profile);
       const response = await axios.get(
-        `http://localhost:5500/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
+        process.env.REACT_APP_DEV_API_PATH +
+          `/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
       );
       const posts = response.data;
 
@@ -257,7 +268,8 @@ class FetchPost extends Component {
         const postsWithImages = await Promise.all(
           posts.map(async (post) => {
             const imageResponse = await axios.get(
-              `http://localhost:5500/tweet/image/${post.image.filename}`,
+              process.env.REACT_APP_DEV_API_PATH +
+                `/tweet/image/${post.image.filename}`,
               {
                 responseType: "blob",
               }

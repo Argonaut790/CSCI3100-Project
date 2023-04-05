@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const SignUpModal = ({ setShowModal }) => {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const captchaRef = useRef(null);
 
   const createAccount = () => {
     const user = {
@@ -16,25 +18,15 @@ const SignUpModal = ({ setShowModal }) => {
     };
 
     axios
-      .post("http://localhost:5500/account", user)
+      .post(process.env.REACT_APP_DEV_API_PATH + "/account", user)
       .then((res) => {
         if (res.status === 200) {
-          console.log("Signed Up successfully");
           document.getElementById("result").innerText =
             "User was registered successfully! Please check your email";
         }
       })
       .catch((err) => {
-        if (err.response.status === 404) {
-          document.getElementById("result").innerText =
-            "This email has been registered. Please click 'Forgot Password' if you cannot login.";
-        } else if (err.response.status === 401) {
-          document.getElementById("result").innerText =
-            "Invalid email / password.";
-        } else {
-          document.getElementById("result").innerText =
-            "Unknown error, please try again.";
-        }
+        document.getElementById("result").innerText = err.response.data;
       });
 
     setUserName("");
@@ -62,6 +54,8 @@ const SignUpModal = ({ setShowModal }) => {
     let isEmailInvalid = false;
     let isUsernameInvalid = false;
     let isPasswordInvalid = false;
+    let isPasswordEmpty = false;
+    let isConfirmPasswordEmpty = false;
     let isConfirmPasswordInvalid = false;
     let isUsernameLengthInvalid = false;
 
@@ -85,10 +79,10 @@ const SignUpModal = ({ setShowModal }) => {
       isUsernameInvalid = false;
     }
     if (password === "") {
-      isPasswordInvalid = true;
+      isPasswordEmpty = true;
     }
     if (confirmPassword === "") {
-      isConfirmPasswordInvalid = true;
+      isConfirmPasswordEmpty = true;
     }
     if (password !== confirmPassword) {
       document.getElementById("result").innerText +=
@@ -113,10 +107,15 @@ const SignUpModal = ({ setShowModal }) => {
         "- Please enter your " +
         (isEmailInvalid ? "email" : "") +
         (isUsernameInvalid ? " username" : "") +
-        (isPasswordInvalid ? " password" : "") +
-        (isConfirmPasswordInvalid ? " and confirm your password " : "");
+        (isPasswordEmpty ? " password" : "") +
+        (isConfirmPasswordEmpty ? " and confirm your password " : "");
+      document.getElementById("result").innerText += "\n";
     }
-
+    const token = captchaRef.current.getValue();
+    if (!token || token === "") {
+      document.getElementById("result").innerText +=
+        "Please finish the captcha";
+    }
     if (
       email !== "" &&
       username !== "" &&
@@ -124,8 +123,10 @@ const SignUpModal = ({ setShowModal }) => {
       password !== "" &&
       confirmPassword !== "" &&
       password === confirmPassword &&
-      password.match(passwordRegEx)
+      password.match(passwordRegEx) &&
+      token
     ) {
+      captchaRef.current.reset();
       createAccount();
     }
 
@@ -133,18 +134,16 @@ const SignUpModal = ({ setShowModal }) => {
     document.getElementById("floatingEmail").className = isEmailInvalid
       ? "form-control floating is-invalid"
       : "form-control floating";
-    document.getElementById("floatingUsername").className = isUsernameInvalid
-      ? "form-control floating is-invalid"
-      : "form-control floating";
     document.getElementById("floatingUsername").className =
-      isUsernameLengthInvalid
+      isUsernameInvalid || isUsernameLengthInvalid
         ? "form-control floating is-invalid"
         : "form-control floating";
-    document.getElementById("floatingPassword").className = isPasswordInvalid
-      ? "form-control floating is-invalid"
-      : "form-control floating";
+    document.getElementById("floatingPassword").className =
+      isPasswordInvalid || isPasswordEmpty
+        ? "form-control floating is-invalid"
+        : "form-control floating";
     document.getElementById("floatingConfirmPassword").className =
-      isConfirmPasswordInvalid
+      isConfirmPasswordInvalid || isConfirmPasswordEmpty
         ? "form-control floating is-invalid"
         : "form-control floating";
   };
@@ -212,6 +211,12 @@ const SignUpModal = ({ setShowModal }) => {
             onChange={onChangeConfirmPassword}
           />
           <label htmlFor="floatingConfirmPassword">Confirm Password</label>
+        </div>
+        <div className="form-floating mb-3">
+          <ReCAPTCHA
+            sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+            ref={captchaRef}
+          />
         </div>
 
         <div className="buttonContainer d-grid">

@@ -257,7 +257,8 @@ class FetchPost extends Component {
       this.setState({ isLoading: true });
       console.log(profile);
       const response = await axios.get(
-        `http://localhost:5500/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
+        process.env.REACT_APP_DEV_API_PATH +
+          `/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
       );
       const posts = response.data;
 
@@ -267,7 +268,8 @@ class FetchPost extends Component {
         const postsWithImages = await Promise.all(
           posts.map(async (post) => {
             const imageResponse = await axios.get(
-              `http://localhost:5500/tweet/image/${post.image.filename}`,
+              process.env.REACT_APP_DEV_API_PATH +
+                `/tweet/image/${post.image.filename}`,
               {
                 responseType: "blob",
               }

@@ -1,25 +1,26 @@
 import React from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-
-const verifyUser = (code) => {
-  return axios
-    .patch(process.env.REACT_APP_DEV_API_PATH + "/account/auth/" + code)
-    .then((response) => {
-      return response.data;
-    });
-};
 
 //TODO: render confirm page
 const AccountConfirm = () => {
   const [searchParams] = useSearchParams();
+  const verifyUser = async (code) => {
+    return axios
+      .patch(process.env.REACT_APP_DEV_API_PATH + "/account/auth/" + code)
+      .then((response) => {
+        return response.data;
+      });
+  };
+
   verifyUser(searchParams.get("confirmationCode"));
 
   return (
-    <div className="accountConfirmContainer">
-      <h3>Account confirmed!</h3>
-      <Link to={"/home"}>Back to main page</Link>
-    </div>
+    <>
+      <div className="col-lg-9 mask-background text-light">
+        <h3> Account confirmed, please login!</h3>
+      </div>
+    </>
   );
 };
 

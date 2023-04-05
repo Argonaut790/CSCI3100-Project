@@ -145,7 +145,7 @@ router.post("/", async (req, res) => {
 
 // Confirm account
 router.patch("/auth/:confirmationCode", async (req, res) => {
-  const user = await Account.find({
+  const user = await Account.findOne({
     confirmationCode: req.params.confirmationCode,
   });
   if (!user) {

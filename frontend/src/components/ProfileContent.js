@@ -65,6 +65,7 @@ const PersonalInfo = () => {
   const [userBio, setUserBio] = useState("");
   const [username, setUsername] = useState("");
   const [userAvatar, setUserAvatar] = useState(null);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const [edit, setEdit] = useState(false);
   const [editedUsername, setEditedUsername] = useState(username);
@@ -106,6 +107,7 @@ const PersonalInfo = () => {
         setEditedBio(res.data.bio);
         setUsername(res.data.username);
         setEditedUsername(res.data.username);
+        setIsPrivate(res.data.isPrivate);
       } else {
         console.log(res);
       }
@@ -376,7 +378,7 @@ const PersonalInfo = () => {
         <div> {postNum} Posts</div>
         <div> {followerNum} Followers</div>
         <div> {followedNum} Followings</div>
-        <div> {pendingNum} Pending</div>
+        {isPrivate && <div> {pendingNum} Pending</div>}
       </div>
     </div>
   );

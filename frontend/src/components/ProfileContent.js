@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 // import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
@@ -73,6 +73,7 @@ const PersonalInfo = () => {
   const [editedBio, setEditedBio] = useState(userBio);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchFollowData = async () => {
@@ -179,6 +180,10 @@ const PersonalInfo = () => {
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
+  const refreshPage = () => {
+    navigate(location.pathname, { replace: true });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -218,7 +223,7 @@ const PersonalInfo = () => {
 
     handleEdit();
     setIsLoading(false);
-    navigate("/profile");
+    refreshPage();
   };
 
   return (
@@ -237,17 +242,17 @@ const PersonalInfo = () => {
             ) : (
               <>
                 {userAvatar ? (
-                  <div
-                    className="d-flex btn p-0 border-0 justify-content-center align-items-center rounded-circle mask-avatar"
-                    id="profile-avatar"
-                    style={{
-                      backgroundImage: `url(${userAvatar})`,
-                      filter: "none",
-                    }}
+                  <label
+                    htmlFor="image-upload"
+                    className="cursor-pointer d-flex justify-content-center align-items-center"
                   >
-                    <label
-                      htmlFor="image-upload"
-                      className="cursor-pointer d-flex justify-content-center align-items-center"
+                    <div
+                      className="d-flex btn p-0 border-0 justify-content-center align-items-center rounded-circle mask-avatar"
+                      id="profile-avatar"
+                      style={{
+                        backgroundImage: `url(${userAvatar})`,
+                        filter: "none",
+                      }}
                     >
                       <img
                         src={images["add.svg"]}
@@ -263,8 +268,8 @@ const PersonalInfo = () => {
                         accept="image/*"
                         onChange={handleEditAvatar}
                       />
-                    </label>
-                  </div>
+                    </div>
+                  </label>
                 ) : (
                   <div
                     className="d-flex btn p-0 border-0 justify-content-center align-items-center rounded-circle mask-avatar"

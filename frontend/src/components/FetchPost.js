@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, useState } from "react";
 import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
@@ -16,7 +16,40 @@ const userId = localStorage.getItem("user")
 // print the userId in console
 console.log("userId is: " + userId);
 
-const UserID = ({ postId, userId, username, deleteButton, userAvatar , handleDeletePost}) => {
+const UserID = ({ postId, userId, username, deleteButton, userAvatar}) => {
+
+  const [deleteStatus, setDeleteStatus] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
+
+  const handleDeleteStatus = (status) => {
+    setDeleteStatus(status);
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 3000);
+    setTimeout(() => setDeleteStatus(null), 3000);
+    console.log("Post Status : " + deleteStatus);
+  };
+
+  const handleDeletePost = async (postId) => {
+    if (window.confirm("Do you want to delete this post?")) {
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
+        );
+        console.log("Post deleted successfully!");
+        handleDeleteStatus(200);
+        // Wait for 5 seconds before refreshing the page
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        window.location.reload(); // refresh the page
+      } catch (error) {
+        console.error("Error deleting post:", error);
+        handleDeleteStatus(400);
+        // Wait for 5 seconds before refreshing the page
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        window.location.reload(); // refresh the page
+      }
+    }
+  };
+
   const deleteButtonDiv = (
     <div className="btn" onClick={() => handleDeletePost(postId)}>
       <img
@@ -67,6 +100,39 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar , handleDel
         </div>
       </div>
       {deleteButton && <div>{deleteButtonDiv}</div>}
+      {/* Updating Profile notification */}
+      {deleteStatus && (
+          <div
+              className={`position-fixed bottom-0 end-0 p-3 fade-in ${showNotification ? 'show' : ''}`}
+              style={{ zIndex: "11" }}
+          >
+            <div
+                id="liveToast"
+                className="toast show tweet-mask"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+            >
+              <div className="toast-header" style={{ color: "black" }}>
+                {/* <img src="..." className="rounded me-2" alt="..." /> */}
+                <strong className="me-auto">Rettiwt</strong>
+                {/* <small>11 mins ago</small> */}
+                <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="toast"
+                    aria-label="Close"
+                ></button>
+              </div>
+              {deleteStatus === 200 && (
+                  <div className="toast-body">Post has been deleted! </div>
+              )}
+              {deleteStatus === 400 && (
+                  <div className="toast-body">Post has not been deleted! </div>
+              )}
+            </div>
+          </div>
+      )}
     </div>
   );
 };
@@ -332,7 +398,6 @@ class FetchPost extends Component {
                 userId={post.userId}
                 username={post.username}
                 deleteButton={deleteButton}
-                handleDeletePost={this.props.handleDeletePost}
                 userAvatar={post.avatarURL}
               />
               <div

@@ -65,7 +65,6 @@ const Content = () => {
         // handleDeletePost={handleDeletePost}
         profile={true} // this is to tell FetchPost that it is in profile page
         deleteButton={deleteButton}
-        handleDeletePost={handleDeletePost}
       />
     </div>
   );

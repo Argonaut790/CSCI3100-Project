@@ -348,6 +348,10 @@ router.patch("/profile/:userId", upload.single("image"), async (req, res) => {
     const username = req.body.username; //username
     const bio = req.body.bio; //bio
 
+    const user = await Account.findOne({
+      userId: req.params.userId,
+    });
+
     if (!image) {
       // In case there is no image, update only the bio
       const updatedAccount = await Account.updateOne(
@@ -361,6 +365,15 @@ router.patch("/profile/:userId", upload.single("image"), async (req, res) => {
         updatedAccount,
       });
     } else {
+      if (user.avatar && user.avatar.filename) {
+        // If the user has an old avatar, delete it
+        const bucket = new GridFSBucket(conn.db, { bucketName: "accounts" });
+        const oldAvatar = await bucket.find({ filename: user.avatar.filename }).toArray();
+        if (oldAvatar.length > 0) {
+          await bucket.delete(oldAvatar[0]._id);
+        }
+      }
+
       // Compress and resize the image using sharp
       const metadata = await sharp(image.buffer).metadata();
 

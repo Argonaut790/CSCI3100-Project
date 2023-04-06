@@ -294,7 +294,7 @@ class Tweet extends Component {
                   <div className="post-user-info p-0 d-flex flex-row justify-content-between">
                     <div>
                       <img
-                        src={images["user_avatar.jpg"]}
+                        src={this.props.userAvatar}
                         className="float-start post-user-avatar"
                         alt="user-avatar"
                       />
@@ -349,7 +349,7 @@ class Tweet extends Component {
                       )}
                     </label>
                   </div>
-                  <div className="p-0" id="post-describtion">
+                  <div className="p-0" id="post-description">
                     <div className="h4 m-0" style={{ padding: "0 0.75rem" }}>
                       UserName
                     </div>

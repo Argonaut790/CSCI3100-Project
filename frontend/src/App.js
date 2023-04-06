@@ -134,14 +134,14 @@ function App() {
         id="user"
       >
         <div className="col-md-5 h-100 d-flex align-items-center justify-content-center">
-          <Link to="/profile">
+          <ConditionalNavLink to="/profile">
             <img
               src={userAvatar}
               className="float-start img-fluid"
               id="avatar"
               alt="avatar"
             />
-          </Link>
+          </ConditionalNavLink>
         </div>
         <div className="col-md-7 h-100 d-flex align-items-center">
           <div className="row d-flex flex-column" id="user-info">
@@ -217,6 +217,27 @@ function App() {
     );
   };
 
+  const ConditionalNavLink = ({ to, children, ...rest }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleClick = (e) => {
+      e.preventDefault();
+
+      if (location.pathname === to) {
+        window.location.reload();
+      } else {
+        navigate(to);
+      }
+    };
+
+    return (
+        <Link to={to} onClick={handleClick} {...rest}>
+          {children}
+        </Link>
+    );
+  };
+
   const NavLinks = ({ userId, handleTweet }) => {
     return (
       <nav className="h4 nav flex-column p-0">
@@ -281,6 +302,7 @@ function App() {
             handlePostStatus={handlePostStatus}
             userId={userId}
             username={username}
+            userAvatar={userAvatar}
           />
         )}
         {/* Tweet upload status */}

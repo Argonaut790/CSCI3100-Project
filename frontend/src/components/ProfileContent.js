@@ -70,7 +70,9 @@ const PersonalInfo = () => {
 
   const [edit, setEdit] = useState(false);
   const [editedUsername, setEditedUsername] = useState(username);
+  const [editNameCount, setEditNameCount] = useState(username.length);
   const [editedBio, setEditedBio] = useState(userBio);
+  const [editBioCount, setEditBioCount] = useState(userBio.length);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -112,6 +114,8 @@ const PersonalInfo = () => {
         setUsername(res.data.username);
         setEditedUsername(res.data.username);
         setIsPrivate(res.data.isPrivate);
+        setEditNameCount(res.data.username.length);
+        setEditBioCount(res.data.bio.length);
       } else {
         console.log(res);
       }
@@ -169,10 +173,12 @@ const PersonalInfo = () => {
 
   const onChangeUsername = (e) => {
     setEditedUsername(e.target.value);
+    setEditNameCount(e.target.value.length);
   };
 
   const onChangeBio = (e) => {
     setEditedBio(e.target.value);
+    setEditBioCount(e.target.value.length);
 
     // Update the input element's height to fit its content
     // it's not working
@@ -312,7 +318,7 @@ const PersonalInfo = () => {
                 onChange={onChangeUsername}
                 maxLength={8}
               />
-              <label htmlFor="floatingUsername">Edit UserName</label>
+              <label htmlFor="floatingUsername">Edit UserName {editNameCount}/8</label>
             </div>
 
             {/* bio */}
@@ -327,7 +333,7 @@ const PersonalInfo = () => {
                 onChange={onChangeBio}
                 maxLength={200}
               />
-              <label htmlFor="floatingUsername">Edit Bio</label>
+              <label htmlFor="floatingUsername">Edit Bio {editBioCount}/200</label>
             </div>
             {/* privacy toggle switch */}
             <div className="d-flex flex-row">

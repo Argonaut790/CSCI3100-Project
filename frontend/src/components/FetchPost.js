@@ -337,11 +337,13 @@ class FetchPost extends Component {
                 className="post-image-div d-flex justify-content-center align-items-center"
                 style={{ aspectRatio: "1/1" }}
               >
-                <div
+                <img
                   className="spinner"
                   style={{ aspectRatio: "1/1", width: "65px", height: "65px" }}
+                  src={images["doge.png"]}
+                  alt="spinner"
                   ref={(el) => (this[`spinner${index}`] = el)}
-                ></div>
+                ></img>
                 <img
                   src={post.imageUrl}
                   className="post-image"
@@ -422,7 +424,11 @@ class FetchPost extends Component {
               className="mask-post p-0 d-flex justify-content-center align-items-center"
               style={{ aspectRatio: "3/4" }}
             >
-              <div className="spinner"></div>
+              <img
+                className="spinner"
+                src={images["doge.png"]}
+                alt="spinner"
+              ></img>
             </div>
           )}
         </div>

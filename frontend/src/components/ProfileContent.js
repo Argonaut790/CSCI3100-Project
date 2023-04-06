@@ -314,7 +314,7 @@ const PersonalInfo = () => {
               <label htmlFor="floatingUsername">Edit Bio</label>
             </div>
             {/* Exit Editing Button */}
-            {isLoading ? (
+            {!isLoading ? (
               <div className="d-flex flex-row justify-content-evenly">
                 <button
                   type="button"
@@ -324,7 +324,11 @@ const PersonalInfo = () => {
                 >
                   Confirm Change
                 </button>
-                <div className="spinner"></div>
+                <img
+                  className="spinner"
+                  src={images["doge.png"]}
+                  alt="spinner"
+                ></img>
               </div>
             ) : (
               <button

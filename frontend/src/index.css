@@ -586,10 +586,10 @@ img {
 .spinner {
   width: 65px;
   aspect-ratio: 1/1;
-  border: 8px solid;
-  border-color: #c844ff transparent #c844ff transparent;
-  border-radius: 50%;
-  animation: spin-anim 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+  /* border: 8px solid; */
+  /* border-color: #c844ff transparent #c844ff transparent; */
+  /* border-radius: 50%; */
+  animation: spin-anim 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
 }
 
 @keyframes spin-anim {

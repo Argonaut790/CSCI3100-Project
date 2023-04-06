@@ -18,6 +18,7 @@ import SignUp from "./components/SignUp";
 import Admin from "./components/Admin";
 import UserProfile from "./components/UserProfile";
 import ResetPassword from "./components/ResetPassword";
+import Notification from './components/Notification';
 
 const images = ImportAll(
   require.context("./images", false, /\.(png|jpe?g|svg)$/)
@@ -373,6 +374,7 @@ function App() {
         {/* admin interface */}
         {/* login interface */}
       </ScrollContext.Provider>
+      <Notification />
     </div>
   );
 }

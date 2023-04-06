@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useNotification } from '../NotificationContext';
 // import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
@@ -43,20 +44,6 @@ const Content = () => {
   // print the userId in console
   console.log(userId);
 
-  const handleDeletePost = async (postId) => {
-    if (window.confirm("Do you want to delete this post?")) {
-      try {
-        await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
-        );
-        console.log("Post deleted successfully!");
-        window.location.reload(); // refresh the page
-      } catch (error) {
-        console.error("Error deleting post:", error);
-      }
-    }
-  };
-
   return (
     <div className="container-fluid p-0" id="mid-center">
       <PersonalInfo />
@@ -89,10 +76,10 @@ const PersonalInfo = () => {
   const [editedBio, setEditedBio] = useState(userBio);
   const [editBioCount, setEditBioCount] = useState((userBio.split(/\s+/)).length);
 
-  const [showNotification, setShowNotification] = useState(false);
-
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     const fetchFollowData = async () => {
@@ -247,16 +234,10 @@ const PersonalInfo = () => {
   };
 
   const refreshPage = () => {
-    navigate(location.pathname, { replace: true });
+    //navigate(location.pathname, { replace: true });
+    window.location.reload();
   };
 
-  const handleProfileStatus = (status) => {
-    setProfileStatus(status);
-    setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 5000);
-    setTimeout(() => setProfileStatus(null), 5000);
-    console.log("Post Status : " + profileStatus);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -285,20 +266,29 @@ const PersonalInfo = () => {
       setUsername(editedUsername);
       setUserBio(editedBio);
       if (previewURL) setUserAvatar(previewURL);
-      handleProfileStatus(200);
       // clear input fields
       setPreviewURL(null);
       // this.setState({ isLoading: false });
+
+      handleEdit();
+
+      showNotification('User profile has been changed!', 'success');
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      refreshPage();
+      //setTimeout(() => {
+        //handleProfileStatus(200);
+      //}, 6000);
     } catch (e) {
       // this.setState({ isLoading: false });
-      handleProfileStatus(400);
       console.log(e);
       console.log("Can't Upload Image!");
-    }
+      handleEdit();
 
-    handleEdit();
+      showNotification('User profile has not been changed!', 'error');
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      refreshPage();
+    }
     setIsLoading(false);
-    refreshPage();
   };
 
   return (
@@ -482,39 +472,6 @@ const PersonalInfo = () => {
         <div> {followedNum} Followings</div>
         {isPrivate && <div> {pendingNum} Pending</div>}
       </div>
-      {/* Updating Profile notification */}
-      {profileStatus && (
-          <div
-              className={`position-fixed bottom-0 end-0 p-3 fade-in ${showNotification ? 'show' : ''}`}
-              style={{ zIndex: "11" }}
-          >
-            <div
-                id="liveToast"
-                className="toast show tweet-mask"
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
-            >
-              <div className="toast-header" style={{ color: "black" }}>
-                {/* <img src="..." className="rounded me-2" alt="..." /> */}
-                <strong className="me-auto">Rettiwt</strong>
-                {/* <small>11 mins ago</small> */}
-                <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="toast"
-                    aria-label="Close"
-                ></button>
-              </div>
-              {profileStatus === 200 && (
-                  <div className="toast-body">User profile has been changed! </div>
-              )}
-              {profileStatus === 400 && (
-                  <div className="toast-body">User profile is unchanged! </div>
-              )}
-            </div>
-          </div>
-      )}
     </div>
   );
 };

@@ -308,10 +308,10 @@ function App() {
                 ></button>
               </div>
               {postStatus === 200 && (
-                <div className="toast-body">Retweet Successfully! </div>
+                <div className="toast-body">Rettiwt Successfully! </div>
               )}
               {postStatus === 400 && (
-                <div className="toast-body">Retweet Failed! </div>
+                <div className="toast-body">Rettiwt Failed Successfully! </div>
               )}
             </div>
           </div>

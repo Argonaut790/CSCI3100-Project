@@ -46,10 +46,10 @@ const ForgotPasswordModal = ({ setShowModal }) => {
       document.getElementById("result").innerText +=
         "Please finish the captcha";
     }
-    // if (email !== "" && token) {
-    captchaRef.current.reset();
-    resetPassword();
-    // }
+    if (email !== "" && token) {
+      captchaRef.current.reset();
+      resetPassword();
+    }
   };
 
   return (

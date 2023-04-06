@@ -118,7 +118,7 @@ router.post("/", async (req, res) => {
 // Accept follow request
 router.patch("/", async (req, res) => {
   try {
-    const updatedAccount = await Account.updateOne(
+    const updatedAccount = await Follower.updateOne(
       {
         followedUserId: req.body.followedUserId,
         followerUserId: req.body.followerUserId,
@@ -132,7 +132,7 @@ router.patch("/", async (req, res) => {
   }
 });
 
-// Reject follow request
+// Reject follow request / Unfollow
 router.delete("/", async (req, res) => {
   await Follower.deleteOne({
     followedUserId: req.body.followedUserId,

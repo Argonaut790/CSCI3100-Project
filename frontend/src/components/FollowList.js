@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import ImportAll from "./ImportAll";
+import UserItem from "./UserItem";
 
 // Params:
 // @userId: userId of current user
@@ -26,11 +26,30 @@ const FollowList = ({ userId, isFollowerList }) => {
     fetchUserData().catch(console.error);
   }, [userId, apiString]);
 
-  const images = ImportAll(
-    require.context("../images", false, /\.(png|jpe?g|svg)$/)
-  );
+  const handleRemove = async (followUserId) => {
+    const followData = isFollowerList
+      ? {
+          followedUserId: userId,
+          followerUserId: followUserId,
+        }
+      : {
+          followedUserId: followUserId,
+          followerUserId: userId,
+        };
+    console.log(followData);
+    const res = await axios.delete(
+      process.env.REACT_APP_DEV_API_PATH + "/follow/",
+      followData
+    );
+    if (!res.error) {
+      console.log(res);
+      // Show Successful message
+    } else {
+      console.log(res);
+      // Show Error message
+    }
+  };
 
-  //TODO: get avatar from db
   return (
     <>
       <ul className="list-group" id="following-div">
@@ -42,19 +61,16 @@ const FollowList = ({ userId, isFollowerList }) => {
           {title}
         </li>
         {follows.map((follow) => (
-          <li key={follow.userId} className="list-group-item">
-            <div className="post-user-info">
-              <img
-                src={images["user_avatar.jpg"]}
-                className="float-start post-user-avatar"
-                alt="user-avatar"
-              />
-              <div className="d-flex align-items-md-center h-100 m-0 post-user-id">
-                <div className="fw-bold">{follow.username}</div>
-                <div>#{follow.userId}</div>
-              </div>
-            </div>
-          </li>
+          <UserItem
+            userId={follow.userId}
+            username={follow.username}
+            buttons={[
+              {
+                text: isFollowerList ? "Remove" : "Unfollow",
+                onClick: handleRemove,
+              },
+            ]}
+          />
         ))}
         {!follows.length && (
           <li key="no-follow" className="list-group-item">

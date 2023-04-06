@@ -43,6 +43,20 @@ const Content = () => {
   // print the userId in console
   console.log(userId);
 
+  const handleDeletePost = async (postId) => {
+    if (window.confirm("Do you want to delete this post?")) {
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
+        );
+        console.log("Post deleted successfully!");
+        window.location.reload(); // refresh the page
+      } catch (error) {
+        console.error("Error deleting post:", error);
+      }
+    }
+  };
+
   return (
     <div className="container-fluid p-0" id="mid-center">
       <PersonalInfo />
@@ -51,6 +65,7 @@ const Content = () => {
         // handleDeletePost={handleDeletePost}
         profile={true} // this is to tell FetchPost that it is in profile page
         deleteButton={deleteButton}
+        handleDeletePost={handleDeletePost}
       />
     </div>
   );
@@ -67,12 +82,15 @@ const PersonalInfo = () => {
   const [username, setUsername] = useState("");
   const [userAvatar, setUserAvatar] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [profileStatus, setProfileStatus] = useState(null);
 
   const [edit, setEdit] = useState(false);
   const [editedUsername, setEditedUsername] = useState(username);
   const [editNameCount, setEditNameCount] = useState(username.length);
   const [editedBio, setEditedBio] = useState(userBio);
   const [editBioCount, setEditBioCount] = useState(userBio.length);
+
+  const [showNotification, setShowNotification] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -190,6 +208,14 @@ const PersonalInfo = () => {
     navigate(location.pathname, { replace: true });
   };
 
+  const handleProfileStatus = (status) => {
+    setProfileStatus(status);
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 5000);
+    setTimeout(() => setProfileStatus(null), 5000);
+    console.log("Post Status : " + profileStatus);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -217,12 +243,13 @@ const PersonalInfo = () => {
       setUsername(editedUsername);
       setUserBio(editedBio);
       if (previewURL) setUserAvatar(previewURL);
-
+      handleProfileStatus(200);
       // clear input fields
       setPreviewURL(null);
       // this.setState({ isLoading: false });
     } catch (e) {
       // this.setState({ isLoading: false });
+      handleProfileStatus(400);
       console.log(e);
       console.log("Can't Upload Image!");
     }
@@ -413,6 +440,39 @@ const PersonalInfo = () => {
         <div> {followedNum} Followings</div>
         {isPrivate && <div> {pendingNum} Pending</div>}
       </div>
+      {/* Updating Profile notification */}
+      {profileStatus && (
+          <div
+              className={`position-fixed bottom-0 end-0 p-3 fade-in ${showNotification ? 'show' : ''}`}
+              style={{ zIndex: "11" }}
+          >
+            <div
+                id="liveToast"
+                className="toast show tweet-mask"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+            >
+              <div className="toast-header" style={{ color: "black" }}>
+                {/* <img src="..." className="rounded me-2" alt="..." /> */}
+                <strong className="me-auto">Rettiwt</strong>
+                {/* <small>11 mins ago</small> */}
+                <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="toast"
+                    aria-label="Close"
+                ></button>
+              </div>
+              {profileStatus === 200 && (
+                  <div className="toast-body">User profile has been changed! </div>
+              )}
+              {profileStatus === 400 && (
+                  <div className="toast-body">User profile is unchanged! </div>
+              )}
+            </div>
+          </div>
+      )}
     </div>
   );
 };

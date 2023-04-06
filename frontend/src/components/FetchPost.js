@@ -16,7 +16,7 @@ const userId = localStorage.getItem("user")
 // print the userId in console
 console.log("userId is: " + userId);
 
-const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
+const UserID = ({ postId, userId, username, deleteButton, userAvatar , handleDeletePost}) => {
   const deleteButtonDiv = (
     <div className="btn" onClick={() => handleDeletePost(postId)}>
       <img
@@ -28,6 +28,7 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
     </div>
   );
 
+  /*
   const handleDeletePost = async (postId) => {
     // setdeleteButton(true);
     const res = await axios.delete(
@@ -38,7 +39,7 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
     } else {
       console.log(res);
     }
-  };
+  };*/
 
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
@@ -331,6 +332,7 @@ class FetchPost extends Component {
                 userId={post.userId}
                 username={post.username}
                 deleteButton={deleteButton}
+                handleDeletePost={this.props.handleDeletePost}
                 userAvatar={post.avatarURL}
               />
               <div

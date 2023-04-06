@@ -129,10 +129,12 @@ const LoginModal = ({ setShowModal, setShowForgotPasswordModal }) => {
           />
         </div>
       </form>
-      <button className="btn btn-light" onClick={handleForgotPassword}>
-        Forgot Password?
-      </button>
-      <span id="result"></span>
+      <div className="d-grid gap-1 pt-2">
+        <button className="btn btn-light" onClick={handleForgotPassword}>
+          Forgot Password?
+        </button>
+        <span id="result"></span>
+      </div>
     </div>
   );
 };

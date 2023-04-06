@@ -121,6 +121,7 @@ const PersonalInfo = () => {
         );
         if (!res.error) {
           const avatarData = res.data;
+          console.log("avartarData: ", avatarData);
           const imageResponse = await axios.get(avatarData, {
             responseType: "blob",
           });
@@ -198,15 +199,10 @@ const PersonalInfo = () => {
       setUserBio(editedBio);
       if (previewURL) setUserAvatar(previewURL);
 
-      // this.props.handlePostStatus(200);
       // clear input fields
-      setEditedBio(userBio);
-      setEditedUsername(username);
       setPreviewURL(null);
-      // this.props.handleTweet();
       // this.setState({ isLoading: false });
     } catch (e) {
-      // this.props.handlePostStatus(400);
       // this.setState({ isLoading: false });
       console.log(e);
       console.log("Can't Upload Image!");

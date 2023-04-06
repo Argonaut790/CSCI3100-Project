@@ -55,6 +55,7 @@ function App() {
   const [postStatus, setPostStatus] = useState(null);
   const [username, setUsername] = useState("");
   const [isAdmin, setIsAdmin] = useState("");
+  const [userAvatar, setUserAvatar] = useState(null);
   const maskBackgroundRef = createRef();
 
   let location = useLocation();
@@ -72,7 +73,37 @@ function App() {
       }
     };
     checkUserLogin().catch(console.error);
-  }, [location]);
+
+    const fetchUserData = async () => {
+      const res = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/account/" + userId
+      );
+      if (!res.error) {
+        setUsername(res.data.username);
+        setIsAdmin(res.data.isAdmin);
+        console.log(res.data.avatar);
+        const avatarURL =
+          process.env.REACT_APP_DEV_API_PATH +
+          "/account/profile/avatar/" +
+          res.data.avatar;
+        console.log("Home page's avatarURL: " + avatarURL);
+        const imageResponse = await axios.get(avatarURL, {
+          responseType: "blob",
+        });
+        console.log("imageResponse : " + imageResponse);
+        if (imageResponse) {
+          const imageURL = URL.createObjectURL(imageResponse.data);
+          console.log("imageURL : " + imageURL);
+          setUserAvatar(imageURL);
+        } else {
+          console.log("imageResponse : " + imageResponse + " is null");
+        }
+      } else {
+        console.log(res);
+      }
+    };
+    fetchUserData().catch(console.error);
+  }, [userId, location]);
 
   const handleLogout = useCallback(() => {
     setUserId("");
@@ -95,27 +126,7 @@ function App() {
     console.log("Post Status : " + postStatus);
   };
 
-  useEffect(() => {
-    console.log("postStatus updated:", postStatus);
-  }, [postStatus]);
-
   const User = () => {
-    // Get user profile infomation from db
-    useEffect(() => {
-      const fetchUserData = async () => {
-        const res = await axios.get(
-          process.env.REACT_APP_DEV_API_PATH + "/account/" + userId
-        );
-        if (!res.error) {
-          setUsername(res.data.username);
-          setIsAdmin(res.data.isAdmin);
-        } else {
-          console.log(res);
-        }
-      };
-      fetchUserData().catch(console.error);
-    }, []);
-
     // Render avatar, username, userId, lagout button in left-bottom corner
     return (
       <div
@@ -125,7 +136,7 @@ function App() {
         <div className="col-md-5 h-100 d-flex align-items-center justify-content-center">
           <Link to="/profile">
             <img
-              src={images["avatar.png"]}
+              src={userAvatar}
               className="float-start img-fluid"
               id="avatar"
               alt="avatar"

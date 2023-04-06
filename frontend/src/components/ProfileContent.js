@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 // import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
@@ -70,6 +71,8 @@ const PersonalInfo = () => {
   const [edit, setEdit] = useState(false);
   const [editedUsername, setEditedUsername] = useState(username);
   const [editedBio, setEditedBio] = useState(userBio);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFollowData = async () => {
@@ -169,6 +172,11 @@ const PersonalInfo = () => {
 
   const onChangeBio = (e) => {
     setEditedBio(e.target.value);
+
+    // Update the input element's height to fit its content
+    // it's not working
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
   const handleSubmit = async (e) => {
@@ -210,6 +218,7 @@ const PersonalInfo = () => {
 
     handleEdit();
     setIsLoading(false);
+    navigate("/profile");
   };
 
   return (
@@ -285,7 +294,7 @@ const PersonalInfo = () => {
               </>
             )}
           </div>
-          <div className="d-grid gap-2 w-60 p-4 text-muted">
+          <div className="d-grid gap-3 w-60 p-4 text-muted">
             {/* UserName and Id */}
             <div className="form-floating">
               <input
@@ -301,7 +310,7 @@ const PersonalInfo = () => {
             </div>
 
             {/* bio */}
-            <div className="form-floating">
+            <div className="form-floating ">
               <input
                 type="text"
                 name="Bio"
@@ -313,8 +322,19 @@ const PersonalInfo = () => {
               />
               <label htmlFor="floatingUsername">Edit Bio</label>
             </div>
+            {/* privacy toggle switch */}
+            <div className="d-flex flex-row">
+              <label class="switch">
+                <input type="checkbox" />
+                <span class="slider round"></span>
+              </label>
+              {/** TODO: Handle Privacy TO Chnage Text To Public || Private */}
+              <div className="fw-bold text-uppercase text-light ps-3 d-flex justify-content-center align-items-center">
+                Public
+              </div>
+            </div>
             {/* Exit Editing Button */}
-            {!isLoading ? (
+            {isLoading ? (
               <div className="d-flex flex-row justify-content-evenly">
                 <button
                   type="button"

@@ -88,7 +88,7 @@ const PersonalInfo = () => {
   const [editedUsername, setEditedUsername] = useState(username);
   const [editNameCount, setEditNameCount] = useState(username.length);
   const [editedBio, setEditedBio] = useState(userBio);
-  const [editBioCount, setEditBioCount] = useState(userBio.length);
+  const [editBioCount, setEditBioCount] = useState((userBio.split(/\s+/)).length);
 
   const [showNotification, setShowNotification] = useState(false);
 
@@ -133,7 +133,7 @@ const PersonalInfo = () => {
         setEditedUsername(res.data.username);
         setIsPrivate(res.data.isPrivate);
         setEditNameCount(res.data.username.length);
-        setEditBioCount(res.data.bio.length);
+        setEditBioCount(res.data.bio.split(/\s+/).length);
       } else {
         console.log(res);
       }
@@ -195,11 +195,54 @@ const PersonalInfo = () => {
   };
 
   const onChangeBio = (e) => {
-    setEditedBio(e.target.value);
-    setEditBioCount(e.target.value.length);
+    let inputValue = e.target.value;
+    // Update the state only if the limited input value is shorter than the current desc
+    if (inputValue.split(/\s+/).length <= 200) {
+      setEditedBio(inputValue);
+    }
+
+    // const descWordCount = this.state.desc.split(/\s+/).length;
+    let inputLength = inputValue.split(/\s+/).length;
+    const inputArray = inputValue.split(/\s+/);
+
+    if (inputArray[inputLength - 1] === "") {
+      inputLength--;
+    }
+
+    setEditBioCount(inputLength);
 
     // Update the input element's height to fit its content
     // it's not working
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
+  };
+
+  const onPaste = (e) => {
+    // Prevent the default paste behavior
+    e.preventDefault();
+
+    // Get the pasted text from the event
+    const pastedText = e.clipboardData.getData("text");
+
+    // Calculate the number of words in the current bio and the pasted text
+    const currentWordCount = editedBio.split(/\s+/).length;
+    const pastedWordCount = pastedText.split(/\s+/).length;
+
+    // Calculate the remaining words allowed in the bio
+    const remainingWords = 200 - currentWordCount;
+
+    // If the pasted text has more words than allowed, truncate it
+    const allowedPastedWords = pastedText.split(/\s+/).slice(0, remainingWords);
+    const allowedPastedText = allowedPastedWords.join(" ");
+
+    // Concatenate the current bio and the allowed pasted text
+    const newBio = editedBio + " " + allowedPastedText;
+
+    // Update the state with the new bio and its word count
+    setEditedBio(newBio);
+    setEditBioCount(newBio.split(/\s+/).length);
+
+    // Update the input element's height to fit its content
     e.target.style.height = "auto";
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
@@ -358,7 +401,7 @@ const PersonalInfo = () => {
                 placeholder="Edit Bio"
                 value={editedBio}
                 onChange={onChangeBio}
-                maxLength={200}
+                onPaste={onPaste}
               />
               <label htmlFor="floatingUsername">Edit Bio {editBioCount}/200</label>
             </div>

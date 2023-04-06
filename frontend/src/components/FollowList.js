@@ -27,19 +27,17 @@ const FollowList = ({ userId, isFollowerList }) => {
   }, [userId, apiString]);
 
   const handleRemove = async (followUserId) => {
-    const followData = isFollowerList
-      ? {
-          followedUserId: userId,
-          followerUserId: followUserId,
-        }
-      : {
-          followedUserId: followUserId,
-          followerUserId: userId,
-        };
-    console.log(followData);
+    const followedUserId = isFollowerList ? userId : followUserId;
+    const followerUserId = isFollowerList ? followUserId : userId;
+
     const res = await axios.delete(
       process.env.REACT_APP_DEV_API_PATH + "/follow/",
-      followData
+      {
+        params: {
+          followedUserId,
+          followerUserId,
+        },
+      }
     );
     if (!res.error) {
       console.log(res);

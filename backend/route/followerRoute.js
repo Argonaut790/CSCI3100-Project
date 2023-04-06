@@ -133,17 +133,21 @@ router.patch("/", async (req, res) => {
 });
 
 // Reject follow request / Unfollow
-router.delete("/", async (req, res) => {
-  await Follower.deleteOne({
-    followedUserId: req.body.followedUserId,
-    followerUserId: req.body.followerUserId,
-  })
-    .then(() => {
-      res.json("deleted successfully");
-    })
-    .catch((err) => {
-      res.status(401).json(err);
+router.delete("/:followedUserId/:followerUserId", async (req, res) => {
+  try {
+    const { followedUserId, followerUserId } = req.query;
+    const result = await Follower.deleteOne({
+      followedUserId: followedUserId,
+      followerUserId: followerUserId,
     });
+    if (result.deletedCount > 0) {
+      res.json("deleted successfully");
+    } else {
+      res.json("Document not found or not deleted");
+    }
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
 });
 
 module.exports = router;

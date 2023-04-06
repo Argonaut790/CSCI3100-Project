@@ -54,13 +54,15 @@ const PendingFollowList = ({ userId }) => {
   };
 
   const handleReject = async (followerUserId) => {
-    const followData = {
-      followedUserId: userId,
-      followerUserId: followerUserId,
-    };
+    const followedUserId = userId;
     const res = await axios.delete(
       process.env.REACT_APP_DEV_API_PATH + "/follow/",
-      followData
+      {
+        params: {
+          followedUserId,
+          followerUserId,
+        },
+      }
     );
     if (!res.error) {
       // Show Successful message

@@ -19,10 +19,10 @@ router.post("/", async (req, res) => {
 });
 
 // Delete comment
-router.delete("/", async (req, res) => {
+router.delete("/:postId/:userId", async (req, res) => {
   await Comment.deleteOne({
-    postId: req.body.postId,
-    userId: req.body.userId,
+    postId: req.params.postId,
+    userId: req.params.userId,
   })
     .then(() => {
       res.json("deleted successfully");

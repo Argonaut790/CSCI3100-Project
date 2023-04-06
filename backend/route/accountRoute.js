@@ -472,8 +472,8 @@ router.post("/token", (req, res) => {
   });
 });
 
-router.delete("/login", async (req, res) => {
-  refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
+router.delete("/login/:token", async (req, res) => {
+  refreshTokens = refreshTokens.filter((token) => token !== req.params.token);
   res.sendStatus(204);
 });
 

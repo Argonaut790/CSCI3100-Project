@@ -133,7 +133,7 @@ router.patch("/", async (req, res) => {
 });
 
 // Reject follow request / Unfollow
-router.delete("/:followedUserId/:followerUserId", async (req, res) => {
+router.delete("/", async (req, res) => {
   try {
     const { followedUserId, followerUserId } = req.query;
     const result = await Follower.deleteOne({

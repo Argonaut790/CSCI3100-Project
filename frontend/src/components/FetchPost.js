@@ -265,21 +265,18 @@ class FetchPost extends Component {
     const { profile } = this.props;
     try {
       this.setState({ isLoading: true });
-      console.log(profile);
+
       const response = await axios.get(
         process.env.REACT_APP_DEV_API_PATH +
           `/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
       );
       const posts = response.data;
 
-      console.log("posts: ", posts);
-
       if (posts.length === 0) {
         this.setState({ hasMore: false });
       } else {
         const postsWithImages = await Promise.all(
           posts.map(async (post) => {
-            console.log(post.imageUrl);
             const imageResponse = await axios.get(post.imageUrl, {
               responseType: "blob",
             });
@@ -340,11 +337,13 @@ class FetchPost extends Component {
                 className="post-image-div d-flex justify-content-center align-items-center"
                 style={{ aspectRatio: "1/1" }}
               >
-                <div
+                <img
                   className="spinner"
                   style={{ aspectRatio: "1/1", width: "65px", height: "65px" }}
+                  src={images["doge.png"]}
+                  alt="spinner"
                   ref={(el) => (this[`spinner${index}`] = el)}
-                ></div>
+                ></img>
                 <img
                   src={post.imageUrl}
                   className="post-image"
@@ -425,7 +424,11 @@ class FetchPost extends Component {
               className="mask-post p-0 d-flex justify-content-center align-items-center"
               style={{ aspectRatio: "3/4" }}
             >
-              <div className="spinner"></div>
+              <img
+                className="spinner"
+                src={images["doge.png"]}
+                alt="spinner"
+              ></img>
             </div>
           )}
         </div>

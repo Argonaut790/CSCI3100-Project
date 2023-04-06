@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 // import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
@@ -71,6 +72,9 @@ const PersonalInfo = () => {
   const [editedUsername, setEditedUsername] = useState(username);
   const [editedBio, setEditedBio] = useState(userBio);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => {
     const fetchFollowData = async () => {
       const res = await axios.get(
@@ -121,6 +125,7 @@ const PersonalInfo = () => {
         );
         if (!res.error) {
           const avatarData = res.data;
+          console.log("avartarData: ", avatarData);
           const imageResponse = await axios.get(avatarData, {
             responseType: "blob",
           });
@@ -168,6 +173,15 @@ const PersonalInfo = () => {
 
   const onChangeBio = (e) => {
     setEditedBio(e.target.value);
+
+    // Update the input element's height to fit its content
+    // it's not working
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
+  };
+
+  const refreshPage = () => {
+    navigate(location.pathname, { replace: true });
   };
 
   const handleSubmit = async (e) => {
@@ -198,15 +212,10 @@ const PersonalInfo = () => {
       setUserBio(editedBio);
       if (previewURL) setUserAvatar(previewURL);
 
-      // this.props.handlePostStatus(200);
       // clear input fields
-      setEditedBio(userBio);
-      setEditedUsername(username);
       setPreviewURL(null);
-      // this.props.handleTweet();
       // this.setState({ isLoading: false });
     } catch (e) {
-      // this.props.handlePostStatus(400);
       // this.setState({ isLoading: false });
       console.log(e);
       console.log("Can't Upload Image!");
@@ -214,6 +223,7 @@ const PersonalInfo = () => {
 
     handleEdit();
     setIsLoading(false);
+    refreshPage();
   };
 
   return (
@@ -232,17 +242,17 @@ const PersonalInfo = () => {
             ) : (
               <>
                 {userAvatar ? (
-                  <div
-                    className="d-flex btn p-0 border-0 justify-content-center align-items-center rounded-circle mask-avatar"
-                    id="profile-avatar"
-                    style={{
-                      backgroundImage: `url(${userAvatar})`,
-                      filter: "none",
-                    }}
+                  <label
+                    htmlFor="image-upload"
+                    className="cursor-pointer d-flex justify-content-center align-items-center"
                   >
-                    <label
-                      htmlFor="image-upload"
-                      className="cursor-pointer d-flex justify-content-center align-items-center"
+                    <div
+                      className="d-flex btn p-0 border-0 justify-content-center align-items-center rounded-circle mask-avatar"
+                      id="profile-avatar"
+                      style={{
+                        backgroundImage: `url(${userAvatar})`,
+                        filter: "none",
+                      }}
                     >
                       <img
                         src={images["add.svg"]}
@@ -258,8 +268,8 @@ const PersonalInfo = () => {
                         accept="image/*"
                         onChange={handleEditAvatar}
                       />
-                    </label>
-                  </div>
+                    </div>
+                  </label>
                 ) : (
                   <div
                     className="d-flex btn p-0 border-0 justify-content-center align-items-center rounded-circle mask-avatar"
@@ -289,7 +299,7 @@ const PersonalInfo = () => {
               </>
             )}
           </div>
-          <div className="d-grid gap-2 w-60 p-4 text-muted">
+          <div className="d-grid gap-3 w-60 p-4 text-muted">
             {/* UserName and Id */}
             <div className="form-floating">
               <input
@@ -305,7 +315,7 @@ const PersonalInfo = () => {
             </div>
 
             {/* bio */}
-            <div className="form-floating">
+            <div className="form-floating ">
               <input
                 type="text"
                 name="Bio"
@@ -316,6 +326,17 @@ const PersonalInfo = () => {
                 onChange={onChangeBio}
               />
               <label htmlFor="floatingUsername">Edit Bio</label>
+            </div>
+            {/* privacy toggle switch */}
+            <div className="d-flex flex-row">
+              <label class="switch">
+                <input type="checkbox" />
+                <span class="slider round"></span>
+              </label>
+              {/** TODO: Handle Privacy TO Chnage Text To Public || Private */}
+              <div className="fw-bold text-uppercase text-light ps-3 d-flex justify-content-center align-items-center">
+                Public
+              </div>
             </div>
             {/* Exit Editing Button */}
             {isLoading ? (
@@ -328,7 +349,11 @@ const PersonalInfo = () => {
                 >
                   Confirm Change
                 </button>
-                <div className="spinner"></div>
+                <img
+                  className="spinner"
+                  src={images["doge.png"]}
+                  alt="spinner"
+                ></img>
               </div>
             ) : (
               <button

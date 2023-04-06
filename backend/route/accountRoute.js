@@ -290,6 +290,7 @@ router.get("/:userId", async (req, res) => {
       bio: user.bio,
       username: user.username,
       email: user.email,
+      avatar: user.avatar.filename,
       isPrivate: user.isPrivate,
       isAdmin: user.isAdmin,
       isGoogleSign: user.isGoogleSign,

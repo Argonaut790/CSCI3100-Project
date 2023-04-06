@@ -80,7 +80,7 @@ const Search = () => {
             id="search-icon"
             alt=" "
           />
-          Search Twitter
+          Search User
         </label>
         {searchString !== "" && <SearchResults />}
       </div>

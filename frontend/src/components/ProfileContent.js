@@ -310,6 +310,7 @@ const PersonalInfo = () => {
                 placeholder="Edit UserName"
                 value={editedUsername}
                 onChange={onChangeUsername}
+                maxLength={8}
               />
               <label htmlFor="floatingUsername">Edit UserName</label>
             </div>
@@ -324,6 +325,7 @@ const PersonalInfo = () => {
                 placeholder="Edit Bio"
                 value={editedBio}
                 onChange={onChangeBio}
+                maxLength={200}
               />
               <label htmlFor="floatingUsername">Edit Bio</label>
             </div>

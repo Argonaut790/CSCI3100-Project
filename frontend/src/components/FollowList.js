@@ -41,10 +41,10 @@ const FollowList = ({ userId, isFollowerList }) => {
     );
     if (!res.error) {
       console.log(res);
-      // Show Successful message
+      // Update follow list
+      setFollows(follows.filter((follow) => follow.userId !== followUserId));
     } else {
       console.log(res);
-      // Show Error message
     }
   };
 

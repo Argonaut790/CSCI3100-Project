@@ -46,10 +46,11 @@ const PendingFollowList = ({ userId }) => {
       followData
     );
     if (!res.error) {
-      // Show Successful message
+      // Update pending list
+      setFollows(follows.filter((follow) => follow.userId !== followerUserId));
+      // Update follower list
     } else {
       console.log(res);
-      // Show Error message
     }
   };
 
@@ -65,11 +66,10 @@ const PendingFollowList = ({ userId }) => {
       }
     );
     if (!res.error) {
-      // Show Successful message
-      //re render
+      // Update pending list
+      setFollows(follows.filter((follow) => follow.userId !== followerUserId));
     } else {
       console.log(res);
-      // Show Error message
     }
   };
 

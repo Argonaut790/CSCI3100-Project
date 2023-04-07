@@ -25,10 +25,15 @@ const images = ImportAll(
 );
 
 const TopLeft = () => {
+  const location = useLocation();
   const navigate = useNavigate();
 
   const handleIconClick = () => {
-    navigate("/home");
+    if (location.pathname === "/home" || location.pathname === "/") {
+        window.location.reload();
+    } else {
+        navigate("/home");
+    }
   };
 
   return (

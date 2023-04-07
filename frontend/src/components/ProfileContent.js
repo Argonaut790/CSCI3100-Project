@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useNotification } from '../NotificationContext';
 // import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
@@ -75,9 +74,6 @@ const PersonalInfo = () => {
   const [editNameCount, setEditNameCount] = useState(username.length);
   const [editedBio, setEditedBio] = useState(userBio);
   const [editBioCount, setEditBioCount] = useState((userBio.split(/\s+/)).length);
-
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const { showNotification } = useNotification();
 

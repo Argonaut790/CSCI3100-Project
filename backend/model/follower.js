@@ -20,4 +20,9 @@ const followerSchema = new Schema({
   },
 });
 
+followerSchema.index(
+  { followedUserId: 1, followerUserId: 1 },
+  { unique: true }
+);
+
 module.exports = mongoose.model("followers", followerSchema);

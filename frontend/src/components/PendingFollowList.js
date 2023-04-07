@@ -107,7 +107,7 @@ const PendingFollowList = ({ userId }) => {
           ))}
           {!follows.length && (
             <li key="no-follow" className="list-group-item">
-              No Pending Follower Found
+              No Pending Follower
             </li>
           )}
         </ul>

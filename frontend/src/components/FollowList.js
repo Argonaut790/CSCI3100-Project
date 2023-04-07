@@ -75,7 +75,7 @@ const FollowList = ({ userId, isFollowerList }) => {
         ))}
         {!follows.length && (
           <li key="no-follow" className="list-group-item">
-            No {title} Found
+            No {title}
           </li>
         )}
       </ul>

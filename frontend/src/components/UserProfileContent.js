@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNotification } from "../NotificationContext";
 // import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
@@ -67,16 +66,10 @@ const PersonalInfo = () => {
   const [username, setUsername] = useState("");
   const [userAvatar, setUserAvatar] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false);
-  const [isPrivateChecked, setIsPrivateChecked] = useState(isPrivate);
-  const [profileStatus, setProfileStatus] = useState(null);
 
   const [edit, setEdit] = useState(false);
   const [editedUsername, setEditedUsername] = useState(username);
-  const [editNameCount, setEditNameCount] = useState(username.length);
   const [editedBio, setEditedBio] = useState(userBio);
-  const [editBioCount, setEditBioCount] = useState(userBio.split(/\s+/).length);
-
-  const { showNotification } = useNotification();
 
   useEffect(() => {
     const fetchFollowData = async () => {
@@ -115,9 +108,6 @@ const PersonalInfo = () => {
         setUsername(res.data.username);
         setEditedUsername(res.data.username);
         setIsPrivate(res.data.isPrivate);
-        setIsPrivateChecked(res.data.isPrivate);
-        setEditNameCount(res.data.username.length);
-        setEditBioCount(res.data.bio.split(/\s+/).length);
       } else {
         console.log(res);
       }
@@ -131,7 +121,6 @@ const PersonalInfo = () => {
         );
         if (!res.error) {
           const avatarData = res.data;
-          console.log("avartarData: ", avatarData);
           const imageResponse = await axios.get(avatarData, {
             responseType: "blob",
           });
@@ -175,84 +164,15 @@ const PersonalInfo = () => {
 
   const onChangeUsername = (e) => {
     setEditedUsername(e.target.value);
-    setEditNameCount(e.target.value.length);
   };
 
   const onChangeBio = (e) => {
-    let inputValue = e.target.value;
-    // Update the state only if the limited input value is shorter than the current desc
-    if (inputValue.split(/\s+/).length <= 200) {
-      setEditedBio(inputValue);
-    }
-
-    // const descWordCount = this.state.desc.split(/\s+/).length;
-    let inputLength = inputValue.split(/\s+/).length;
-    const inputArray = inputValue.split(/\s+/);
-
-    if (inputArray[inputLength - 1] === "") {
-      inputLength--;
-    }
-
-    setEditBioCount(inputLength);
-
-    // Update the input element's height to fit its content
-    // it's not working
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
-  };
-
-  const onPaste = (e) => {
-    // Prevent the default paste behavior
-    e.preventDefault();
-
-    // Get the pasted text from the event
-    const pastedText = e.clipboardData.getData("text");
-
-    // Calculate the number of words in the current bio and the pasted text
-    const currentWordCount = editedBio.split(/\s+/).length;
-    const pastedWordCount = pastedText.split(/\s+/).length;
-
-    // Calculate the remaining words allowed in the bio
-    const remainingWords = 200 - currentWordCount;
-
-    // If the pasted text has more words than allowed, truncate it
-    const allowedPastedWords = pastedText.split(/\s+/).slice(0, remainingWords);
-    const allowedPastedText = allowedPastedWords.join(" ");
-
-    // Concatenate the current bio and the allowed pasted text
-    const newBio = editedBio + " " + allowedPastedText;
-
-    // Update the state with the new bio and its word count
-    setEditedBio(newBio);
-    setEditBioCount(newBio.split(/\s+/).length);
-
-    // Update the input element's height to fit its content
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
-  };
-
-  const refreshPage = () => {
-    //navigate(location.pathname, { replace: true });
-    window.location.reload();
+    setEditedBio(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
-    try {
-      // Update if private status is changed
-      if (isPrivate !== isPrivateChecked) {
-        await axios.patch(
-          process.env.REACT_APP_DEV_API_PATH + "/account/private/" + userId,
-          { isPrivate: isPrivateChecked }
-        );
-        setIsPrivate(isPrivateChecked);
-      }
-    } catch (err) {
-      console("Can't change private status");
-    }
-
     // Create a FormData object and append the image file to it
     const formData = new FormData();
     formData.append("image", image);
@@ -264,7 +184,7 @@ const PersonalInfo = () => {
     // Update only the new username in the backend
     try {
       await axios.patch(
-        process.env.REACT_APP_DEV_API_PATH + `/account/profile/${userId}`,
+        `http://localhost:5500/account/profile/${userId}`,
         formData,
         {
           headers: {
@@ -277,28 +197,22 @@ const PersonalInfo = () => {
       setUsername(editedUsername);
       setUserBio(editedBio);
       if (previewURL) setUserAvatar(previewURL);
+
+      // this.props.handlePostStatus(200);
       // clear input fields
+      setEditedBio(userBio);
+      setEditedUsername(username);
       setPreviewURL(null);
+      // this.props.handleTweet();
       // this.setState({ isLoading: false });
-
-      handleEdit();
-
-      showNotification("User profile has been changed!", "success");
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      refreshPage();
-      //setTimeout(() => {
-      //handleProfileStatus(200);
-      //}, 6000);
     } catch (e) {
+      // this.props.handlePostStatus(400);
       // this.setState({ isLoading: false });
       console.log(e);
       console.log("Can't Upload Image!");
-      handleEdit();
-
-      showNotification("User profile has not been changed!", "error");
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      refreshPage();
     }
+
+    handleEdit();
     setIsLoading(false);
   };
 
@@ -318,17 +232,17 @@ const PersonalInfo = () => {
             ) : (
               <>
                 {userAvatar ? (
-                  <label
-                    htmlFor="image-upload"
-                    className="cursor-pointer d-flex justify-content-center align-items-center"
+                  <div
+                    className="d-flex btn p-0 border-0 justify-content-center align-items-center rounded-circle mask-avatar"
+                    id="profile-avatar"
+                    style={{
+                      backgroundImage: `url(${userAvatar})`,
+                      filter: "none",
+                    }}
                   >
-                    <div
-                      className="d-flex btn p-0 border-0 justify-content-center align-items-center rounded-circle mask-avatar"
-                      id="profile-avatar"
-                      style={{
-                        backgroundImage: `url(${userAvatar})`,
-                        filter: "none",
-                      }}
+                    <label
+                      htmlFor="image-upload"
+                      className="cursor-pointer d-flex justify-content-center align-items-center"
                     >
                       <img
                         src={images["add.svg"]}
@@ -344,8 +258,8 @@ const PersonalInfo = () => {
                         accept="image/*"
                         onChange={handleEditAvatar}
                       />
-                    </div>
-                  </label>
+                    </label>
+                  </div>
                 ) : (
                   <div
                     className="d-flex btn p-0 border-0 justify-content-center align-items-center rounded-circle mask-avatar"
@@ -375,7 +289,7 @@ const PersonalInfo = () => {
               </>
             )}
           </div>
-          <div className="d-grid gap-3 w-60 p-4 text-muted">
+          <div className="d-grid gap-2 w-60 p-4 text-muted">
             {/* UserName and Id */}
             <div className="form-floating">
               <input
@@ -386,15 +300,12 @@ const PersonalInfo = () => {
                 placeholder="Edit UserName"
                 value={editedUsername}
                 onChange={onChangeUsername}
-                maxLength={8}
               />
-              <label htmlFor="floatingUsername">
-                Edit UserName {editNameCount}/8
-              </label>
+              <label htmlFor="floatingUsername">Edit UserName</label>
             </div>
 
             {/* bio */}
-            <div className="form-floating ">
+            <div className="form-floating">
               <input
                 type="text"
                 name="Bio"
@@ -403,25 +314,8 @@ const PersonalInfo = () => {
                 placeholder="Edit Bio"
                 value={editedBio}
                 onChange={onChangeBio}
-                onPaste={onPaste}
               />
-              <label htmlFor="floatingUsername">
-                Edit Bio {editBioCount}/200
-              </label>
-            </div>
-            {/* privacy toggle switch */}
-            <div className="d-flex flex-row">
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  checked={isPrivateChecked}
-                  onClick={() => setIsPrivateChecked(!isPrivateChecked)}
-                />
-                <span class="slider round"></span>
-              </label>
-              <div className="fw-bold text-uppercase text-light ps-3 d-flex justify-content-center align-items-center">
-                {isPrivateChecked ? "Private" : "Public"}
-              </div>
+              <label htmlFor="floatingUsername">Edit Bio</label>
             </div>
             {/* Exit Editing Button */}
             {isLoading ? (
@@ -434,11 +328,7 @@ const PersonalInfo = () => {
                 >
                   Confirm Change
                 </button>
-                <img
-                  className="spinner"
-                  src={images["doge.png"]}
-                  alt="spinner"
-                ></img>
+                <div className="spinner"></div>
               </div>
             ) : (
               <button

@@ -92,6 +92,51 @@ router.get("/stat/:userId", async (req, res) => {
   }
 });
 
+// Get most followed accounts for suggestion
+router.get("/suggestion/:userId", async (req, res) => {
+  try {
+    const follow = await Follower.aggregate([
+      {
+        $group: {
+          _id: { userId: "$followedUserId", isAccepted: "$isAccepted" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $match: { "_id.isAccepted": true },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      { $limit: 10 },
+    ]);
+    const userIds = follow.map((e) => e["_id"].userId);
+
+    // Filter followed user
+    const followedUsers = await Follower.find({
+      followerUserId: req.params.userId,
+      followedUserId: { $in: userIds },
+    });
+    const followedUserIds = followedUsers.map(
+      (follower) => follower.followedUserId
+    );
+
+    const suggestedUsers = userIds.filter(
+      (userId) =>
+        !followedUserIds.includes(userId) && userId !== req.params.userId
+    );
+
+    const users = await Account.find({
+      userId: {
+        $in: suggestedUsers,
+      },
+    });
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
 // Request follow
 router.post("/", async (req, res) => {
   try {

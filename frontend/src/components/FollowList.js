@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import UserItem from "./UserItem";
 import { useContext } from "react";
-import { FollowerContext } from "./Follow";
+import { FollowContext } from "./Follow";
 
 // Params:
 // @userId: userId of current user
@@ -13,7 +13,7 @@ const FollowList = ({ userId, isFollowerList }) => {
   const [follows, setFollows] = useState([]);
   let apiString = isFollowerList ? "/follower/" : "/followed/";
   let title = isFollowerList ? "Follower" : "Following ";
-  const { followerListUpdated } = useContext(FollowerContext);
+  const { followListUpdated } = useContext(FollowContext);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -27,7 +27,7 @@ const FollowList = ({ userId, isFollowerList }) => {
       }
     };
     fetchUserData().catch(console.error);
-  }, [userId, apiString, followerListUpdated]);
+  }, [userId, apiString, followListUpdated]);
 
   const handleRemove = async (followUserId) => {
     const followedUserId = isFollowerList ? userId : followUserId;

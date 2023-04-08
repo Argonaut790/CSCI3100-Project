@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import UserItem from "./UserItem";
 import { useContext } from "react";
-import { FollowerContext } from "./Follow";
+import { FollowContext } from "./Follow";
 
 // Params:
 // @userId: userId of current user
@@ -10,7 +10,7 @@ import { FollowerContext } from "./Follow";
 const PendingFollowList = ({ userId }) => {
   const [follows, setFollows] = useState([]);
   const [isPrivate, setIsPrivate] = useState(false);
-  const { setFollowerListUpdated } = useContext(FollowerContext);
+  const { setFollowListUpdated } = useContext(FollowContext);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -52,7 +52,7 @@ const PendingFollowList = ({ userId }) => {
       // Update pending list
       setFollows(follows.filter((follow) => follow.userId !== followerUserId));
       // Update follower list
-      setFollowerListUpdated((prevState) => !prevState);
+      setFollowListUpdated((prevState) => !prevState);
     } else {
       console.log(res);
     }

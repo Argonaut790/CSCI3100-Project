@@ -83,9 +83,9 @@ const PendingFollowList = ({ userId }) => {
       {isPrivate && (
         <ul className="list-group" id="following-div">
           <li
-            key="followingTitle"
+            key="pendingfollowTitle"
             className="list-group-item"
-            id="following-label"
+            id="pending-follow-label"
           >
             Pending Follower
           </li>
@@ -106,7 +106,7 @@ const PendingFollowList = ({ userId }) => {
             />
           ))}
           {!follows.length && (
-            <li key="no-follow" className="list-group-item">
+            <li key="no-pending-follow" className="list-group-item">
               No Pending Follower
             </li>
           )}

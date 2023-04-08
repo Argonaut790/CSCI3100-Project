@@ -94,6 +94,8 @@ const Admin = () => {
                     <td>
                       Inactive{" "}
                       <button
+                        type="button"
+                        className="btn btn-warning"
                         onClick={() => changeUserStatus(user.userId, true)}
                       >
                         Activate

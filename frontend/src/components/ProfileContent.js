@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNotification } from '../NotificationContext';
+import { useNotification } from "../NotificationContext";
 // import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
@@ -67,13 +67,14 @@ const PersonalInfo = () => {
   const [username, setUsername] = useState("");
   const [userAvatar, setUserAvatar] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [isPrivateChecked, setIsPrivateChecked] = useState(isPrivate);
   const [profileStatus, setProfileStatus] = useState(null);
 
   const [edit, setEdit] = useState(false);
   const [editedUsername, setEditedUsername] = useState(username);
   const [editNameCount, setEditNameCount] = useState(username.length);
   const [editedBio, setEditedBio] = useState(userBio);
-  const [editBioCount, setEditBioCount] = useState((userBio.split(/\s+/)).length);
+  const [editBioCount, setEditBioCount] = useState(userBio.split(/\s+/).length);
 
   const { showNotification } = useNotification();
 
@@ -114,6 +115,7 @@ const PersonalInfo = () => {
         setUsername(res.data.username);
         setEditedUsername(res.data.username);
         setIsPrivate(res.data.isPrivate);
+        setIsPrivateChecked(res.data.isPrivate);
         setEditNameCount(res.data.username.length);
         setEditBioCount(res.data.bio.split(/\s+/).length);
       } else {
@@ -234,10 +236,23 @@ const PersonalInfo = () => {
     window.location.reload();
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
+    try {
+      // Update if private status is changed
+      if (isPrivate !== isPrivateChecked) {
+        await axios.patch(
+          process.env.REACT_APP_DEV_API_PATH + "/account/private/" + userId,
+          { isPrivate: isPrivateChecked }
+        );
+        setIsPrivate(isPrivateChecked);
+      }
+    } catch (err) {
+      console("Can't change private status");
+    }
+
     // Create a FormData object and append the image file to it
     const formData = new FormData();
     formData.append("image", image);
@@ -249,7 +264,7 @@ const PersonalInfo = () => {
     // Update only the new username in the backend
     try {
       await axios.patch(
-        `http://localhost:5500/account/profile/${userId}`,
+        process.env.REACT_APP_DEV_API_PATH + `/account/profile/${userId}`,
         formData,
         {
           headers: {
@@ -268,11 +283,11 @@ const PersonalInfo = () => {
 
       handleEdit();
 
-      showNotification('User profile has been changed!', 'success');
+      showNotification("User profile has been changed!", "success");
       await new Promise((resolve) => setTimeout(resolve, 3000));
       refreshPage();
       //setTimeout(() => {
-        //handleProfileStatus(200);
+      //handleProfileStatus(200);
       //}, 6000);
     } catch (e) {
       // this.setState({ isLoading: false });
@@ -280,7 +295,7 @@ const PersonalInfo = () => {
       console.log("Can't Upload Image!");
       handleEdit();
 
-      showNotification('User profile has not been changed!', 'error');
+      showNotification("User profile has not been changed!", "error");
       await new Promise((resolve) => setTimeout(resolve, 3000));
       refreshPage();
     }
@@ -373,7 +388,9 @@ const PersonalInfo = () => {
                 onChange={onChangeUsername}
                 maxLength={8}
               />
-              <label htmlFor="floatingUsername">Edit UserName {editNameCount}/8</label>
+              <label htmlFor="floatingUsername">
+                Edit UserName {editNameCount}/8
+              </label>
             </div>
 
             {/* bio */}
@@ -388,17 +405,22 @@ const PersonalInfo = () => {
                 onChange={onChangeBio}
                 onPaste={onPaste}
               />
-              <label htmlFor="floatingUsername">Edit Bio {editBioCount}/200</label>
+              <label htmlFor="floatingUsername">
+                Edit Bio {editBioCount}/200
+              </label>
             </div>
             {/* privacy toggle switch */}
             <div className="d-flex flex-row">
               <label class="switch">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={isPrivateChecked}
+                  onClick={() => setIsPrivateChecked(!isPrivateChecked)}
+                />
                 <span class="slider round"></span>
               </label>
-              {/** TODO: Handle Privacy TO Chnage Text To Public || Private */}
               <div className="fw-bold text-uppercase text-light ps-3 d-flex justify-content-center align-items-center">
-                Public
+                {isPrivateChecked ? "Private" : "Public"}
               </div>
             </div>
             {/* Exit Editing Button */}

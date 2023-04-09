@@ -746,3 +746,24 @@ input:checked + .slider:before {
     opacity: 1;
   }
 }
+
+/* arrow animation  */
+.arrow.down {
+  animation: rotateDown 0.5s forwards;
+}
+
+@keyframes rotateDown {
+  100% {
+    transform: rotate(-180deg);
+  }
+}
+
+.arrow.up {
+  animation: rotateUp 0.5s forwards;
+}
+
+@keyframes rotateUp {
+  100% {
+    transform: rotate(0deg);
+  }
+}

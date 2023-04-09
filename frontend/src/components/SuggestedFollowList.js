@@ -3,11 +3,17 @@ import axios from "axios";
 import UserItem from "./UserItem";
 import { useContext } from "react";
 import { FollowContext } from "./Follow";
+import ImportAll from "./ImportAll";
 
 // Params:
 // @userId: userId of current user
 // Render pending follower list
-const SuggestedFollowList = ({ userId }) => {
+
+const images = ImportAll(
+  require.context("../images", false, /\.(png|jpe?g|svg)$/)
+);
+
+const SuggestedFollowList = ({ userId, openedList, setOpenedList }) => {
   const [follows, setFollows] = useState([]);
   const { setFollowListUpdated } = useContext(FollowContext);
 
@@ -45,7 +51,10 @@ const SuggestedFollowList = ({ userId }) => {
     }
   };
 
-  //TODO: get avatar from db
+  const handleOpenedList = () => {
+    setOpenedList((prevState) => [false, false, false, !prevState[3]]);
+  };
+
   return (
     <>
       {follows.length > 0 && (
@@ -56,20 +65,30 @@ const SuggestedFollowList = ({ userId }) => {
             id="followTitle-label"
           >
             Suggested
+            <img
+              src={images["angle-up.svg"]}
+              alt="angle-up"
+              className={`white-img float-end h-75 cursor-pointer arrow ${
+                openedList[3] ? "down" : "up"
+              }`}
+              onClick={() => handleOpenedList()}
+            ></img>
           </li>
-          {follows.map((follow) => (
-            <UserItem
-              userId={follow.userId}
-              username={follow.username}
-              userAvatar={follow.avatar}
-              buttons={[
-                {
-                  text: "Follow",
-                  onClick: handleFollow,
-                },
-              ]}
-            />
-          ))}
+          <div hidden={openedList[3] ? false : true}>
+            {follows.map((follow) => (
+              <UserItem
+                userId={follow.userId}
+                username={follow.username}
+                userAvatar={follow.avatar}
+                buttons={[
+                  {
+                    text: "Follow",
+                    onClick: handleFollow,
+                  },
+                ]}
+              />
+            ))}
+          </div>
         </ul>
       )}
     </>

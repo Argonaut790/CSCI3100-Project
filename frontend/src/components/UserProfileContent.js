@@ -5,6 +5,7 @@ import FetchPost from "./FetchPost";
 
 import ImportAll from "./ImportAll";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
@@ -30,7 +31,6 @@ const TopMid = () => {
 };
 
 const Content = ({ targetUserId }) => {
-  const userId = JSON.parse(localStorage.getItem("user")).userId;
   const [followedNum, setFollowedNum] = useState(0);
   const [followerNum, setFollowerNum] = useState(0);
   const [userBio, setUserBio] = useState("");
@@ -40,7 +40,14 @@ const Content = ({ targetUserId }) => {
   const [isFollowed, setIsFollowed] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
-
+  const navigate = useNavigate();
+  let userId = "";
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    userId = user.userId;
+  } else {
+    navigate("/home");
+  }
   useEffect(() => {
     const fetchFollowData = async () => {
       const res = await axios.get(

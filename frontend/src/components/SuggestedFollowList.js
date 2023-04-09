@@ -81,6 +81,7 @@ const SuggestedFollowList = ({ userId, openedList, setOpenedList }) => {
           >
             {follows.map((follow) => (
               <UserItem
+                key={"Suggested" + follow.userId}
                 userId={follow.userId}
                 username={follow.username}
                 userAvatar={follow.avatar}

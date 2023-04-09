@@ -8,7 +8,6 @@ const UserItem = ({ userId, username, userAvatar, buttons }) => {
   );
 
   // show avatar
-  console.log("userAvatar: ", userAvatar);
   let userAvatarFile = null;
   if (userAvatar) {
     userAvatarFile = userAvatar.filename;

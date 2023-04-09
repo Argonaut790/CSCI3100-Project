@@ -90,6 +90,7 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
             (follow) =>
               title === "Following" && (
                 <UserItem
+                  key={"Following" + follow.userId}
                   userId={follow.userId}
                   username={follow.username}
                   userAvatar={follow.avatar}
@@ -114,6 +115,7 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
             (follow) =>
               title === "Follower" && (
                 <UserItem
+                  key={"Follower" + follow.userId}
                   userId={follow.userId}
                   username={follow.username}
                   userAvatar={follow.avatar}

@@ -3,6 +3,19 @@ const Follower = require("../model/follower");
 const Account = require("../model/account");
 const router = express.Router();
 
+// Get matched record
+router.get("/visiable/:followerUserId/:followedUserId", async (req, res) => {
+  try {
+    const follow = await Follower.findOne({
+      followerUserId: req.params.followerUserId,
+      followedUserId: req.params.followedUserId,
+    });
+    res.status(200).json(follow);
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
 // Get followed user list with followed user info
 router.get("/followed/:userId", async (req, res) => {
   try {

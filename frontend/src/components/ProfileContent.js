@@ -49,7 +49,7 @@ const Content = () => {
       <FetchPost
         // userID={userId}
         // handleDeletePost={handleDeletePost}
-        profile={true} // this is to tell FetchPost that it is in profile page
+        userId={userId} // this is to tell FetchPost that it is in profile page
         deleteButton={deleteButton}
       />
     </div>

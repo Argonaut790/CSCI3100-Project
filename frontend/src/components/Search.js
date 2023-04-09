@@ -24,6 +24,15 @@ const Search = () => {
     if (searchString !== "") fetchResultItems().catch(console.error);
   }, [searchString]);
 
+  const GetUserAvatarURL = (avatar) => {
+    console.log("GETUSERAVATAR: " + avatar);
+    if (!avatar) {
+      return images["avatar.png"];
+    } else {
+      return `${process.env.REACT_APP_DEV_API_PATH}/account/profile/avatar/${avatar.filename}`;
+    }
+  };
+
   const SearchResults = () => {
     return (
       <div className="d-grid gap-2" id="search-result-div">
@@ -37,7 +46,7 @@ const Search = () => {
                 href={"/user?userId=" + item.userId}
               >
                 <img
-                  src={images["user_avatar.jpg"]}
+                  src={GetUserAvatarURL(item.avatar)}
                   className="float-start post-user-avatar"
                   alt="user-avatar"
                 />

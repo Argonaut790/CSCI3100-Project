@@ -1,6 +1,6 @@
 import { Component, useState } from "react";
 import { useNotification } from "../NotificationContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
@@ -75,23 +75,25 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
       <div>
-        {userAvatar ? (
-          <div>
-            <img
-              src={userAvatar}
-              className="float-start post-user-avatar"
-              alt="user-avatar"
-            />
-          </div>
-        ) : (
-          <div>
-            <img
-              src={images["avatar.png"]}
-              className="float-start post-user-avatar white-img"
-              alt="user-avatar"
-            />
-          </div>
-        )}
+        <Link to={"/user?userId=" + userId}>
+          {userAvatar ? (
+            <div>
+              <img
+                src={userAvatar}
+                className="float-start post-user-avatar"
+                alt="user-avatar"
+              />
+            </div>
+          ) : (
+            <div>
+              <img
+                src={images["avatar.png"]}
+                className="float-start post-user-avatar white-img"
+                alt="user-avatar"
+              />
+            </div>
+          )}
+        </Link>
         <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
           <div className="fw-bold">{username}</div>
           <div>#{userId}</div>
@@ -150,8 +152,8 @@ class FetchPost extends Component {
       );
       const currentTime = Date.now();
 
-      if (lastLikeTime && currentTime - lastLikeTime < 10 * 1000) {
-        alert("You can only like or unlike once every 10 seconds.");
+      if (lastLikeTime && currentTime - lastLikeTime < 3 * 1000) {
+        alert("You can only like or unlike once every 3 seconds.");
         return;
       }
 
@@ -228,8 +230,8 @@ class FetchPost extends Component {
       );
       const currentTime = Date.now();
 
-      if (lastdislikeTime && currentTime - lastdislikeTime < 10 * 1000) {
-        alert("You can only dislike or undislike once every 10 seconds.");
+      if (lastdislikeTime && currentTime - lastdislikeTime < 2 * 1000) {
+        alert("You can only dislike or undislike once every 2 seconds.");
         return;
       }
 
@@ -405,6 +407,7 @@ class FetchPost extends Component {
                 className="border-light border-opacity-50 pt-2 d-flex flex-row border-top justify-content-evenly"
                 id="post-function"
               >
+                {/* Like button */}
                 <div
                   className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
                   onClick={() => this.handleLikeClick(post._id, userId)}
@@ -419,6 +422,7 @@ class FetchPost extends Component {
                     alt="like"
                   />
                 </div>
+                {/* Dislike button */}
                 <div
                   className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center"
                   onClick={() => this.handleDislikeClick(post._id, userId)}
@@ -433,6 +437,7 @@ class FetchPost extends Component {
                     alt="like"
                   />
                 </div>
+                {/* Comment button */}
                 <div className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center">
                   <img
                     className="white-img"
@@ -440,7 +445,7 @@ class FetchPost extends Component {
                     alt="comment"
                   />
                 </div>
-
+                {/* Retweet button */}
                 <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
                   <img
                     className="white-img"

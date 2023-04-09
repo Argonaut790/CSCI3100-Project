@@ -61,6 +61,7 @@ const FollowList = ({ userId, isFollowerList }) => {
           <UserItem
             userId={follow.userId}
             username={follow.username}
+            userAvatar={follow.avatar}
             buttons={[
               {
                 text: isFollowerList ? "Remove" : "Unfollow",

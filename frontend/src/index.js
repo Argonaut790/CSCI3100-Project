@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { NotificationProvider } from './NotificationContext';
+import { NotificationProvider } from "./NotificationContext";
 import App from "./App.js";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,9 +11,9 @@ import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-      <NotificationProvider>
-          <App />
-      </NotificationProvider>
+    <NotificationProvider>
+      <App />
+    </NotificationProvider>
   </BrowserRouter>
 );
 

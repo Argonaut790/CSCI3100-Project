@@ -8,7 +8,6 @@ const UserItem = ({ userId, username, userAvatar, buttons }) => {
   );
 
   // show avatar
-  console.log("userAvatar: ", userAvatar);
   let userAvatarFile = null;
   if (userAvatar) {
     userAvatarFile = userAvatar.filename;
@@ -35,18 +34,24 @@ const UserItem = ({ userId, username, userAvatar, buttons }) => {
         <div className="d-flex align-items-md-center h-100 m-0 ps-2 pe-2 post-user-id w-75">
           <div className="fw-bold">{username}</div>
           <div>#{userId}</div>
-          {buttons.map((button) => (
-            <button
-              type="button"
-              key={userId + "-" + button.text}
-              className={`btn w-100 ${
-                button.text === "Follow" ? "btn-success" : "btn-dark"
-              }`}
-              onClick={() => button.onClick(userId)}
-            >
-              {button.text}
-            </button>
-          ))}
+          <div className="d-grid gap-2">
+            {buttons.map((button) => (
+              <button
+                type="button"
+                key={userId + "-" + button.text}
+                className={`btn w-100 ${
+                  button.text === "Follow" || button.text === "Accept"
+                    ? "btn-success"
+                    : button.text === "Reject"
+                    ? "btn-danger"
+                    : "btn-dark"
+                }`}
+                onClick={() => button.onClick(userId)}
+              >
+                {button.text}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </li>

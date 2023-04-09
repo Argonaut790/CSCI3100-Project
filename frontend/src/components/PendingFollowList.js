@@ -3,11 +3,17 @@ import axios from "axios";
 import UserItem from "./UserItem";
 import { useContext } from "react";
 import { FollowContext } from "./Follow";
+import ImportAll from "./ImportAll";
 
 // Params:
 // @userId: userId of current user
 // Render pending follower list
-const PendingFollowList = ({ userId }) => {
+
+const images = ImportAll(
+  require.context("../images", false, /\.(png|jpe?g|svg)$/)
+);
+
+const PendingFollowList = ({ userId, openedList, setOpenedList }) => {
   const [follows, setFollows] = useState([]);
   const [isPrivate, setIsPrivate] = useState(false);
   const { setFollowListUpdated } = useContext(FollowContext);
@@ -77,7 +83,10 @@ const PendingFollowList = ({ userId }) => {
     }
   };
 
-  //TODO: get avatar from db
+  const handleOpenedList = () => {
+    setOpenedList((prevState) => [false, false, !prevState[2], false]);
+  };
+
   return (
     <>
       {isPrivate && (
@@ -88,29 +97,45 @@ const PendingFollowList = ({ userId }) => {
             id="pending-follow-label"
           >
             Pending Follower
+            <img
+              src={images["angle-up.svg"]}
+              alt="angle-up"
+              className={`white-img float-end h-75 cursor-pointer arrow ${
+                openedList[2] ? "down" : "up"
+              }`}
+              onClick={() => handleOpenedList()}
+            ></img>
           </li>
-          {follows.map((follow) => (
-            <UserItem
-              userId={follow.userId}
-              username={follow.username}
-              userAvatar={follow.avatar}
-              buttons={[
-                {
-                  text: "Accept",
-                  onClick: handleAccpet,
-                },
-                {
-                  text: "Reject",
-                  onClick: handleReject,
-                },
-              ]}
-            />
-          ))}
-          {!follows.length && (
-            <li key="no-pending-follow" className="list-group-item">
-              No Pending Follower
-            </li>
-          )}
+
+          <div
+            className="overflow-auto"
+            style={{ maxHeight: "50vh" }}
+            hidden={openedList[2] ? false : true}
+          >
+            {follows.map((follow) => (
+              <UserItem
+                userId={follow.userId}
+                username={follow.username}
+                userAvatar={follow.avatar}
+                buttons={[
+                  {
+                    text: "Accept",
+                    onClick: handleAccpet,
+                  },
+                  {
+                    text: "Reject",
+                    onClick: handleReject,
+                  },
+                ]}
+              />
+            ))}
+
+            {!follows.length && (
+              <li key="no-pending-follow" className="list-group-item">
+                No Pending Follower
+              </li>
+            )}
+          </div>
         </ul>
       )}
     </>

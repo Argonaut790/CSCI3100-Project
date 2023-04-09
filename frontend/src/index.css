@@ -178,7 +178,7 @@ body {
 #following-div {
   background: #00000096;
   /* padding: 1rem; */
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: 0.2rem 0.2rem 0.7rem rgb(0 0 0 / 55%);
   border: 1px solid;
 }
@@ -744,5 +744,26 @@ input:checked + .slider:before {
   }
   100% {
     opacity: 1;
+  }
+}
+
+/* arrow animation  */
+.arrow.down {
+  animation: rotateDown 0.5s forwards;
+}
+
+@keyframes rotateDown {
+  100% {
+    transform: rotate(-180deg);
+  }
+}
+
+.arrow.up {
+  animation: rotateUp 0.5s forwards;
+}
+
+@keyframes rotateUp {
+  100% {
+    transform: rotate(0deg);
   }
 }

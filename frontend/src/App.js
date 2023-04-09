@@ -87,7 +87,6 @@ function App() {
       if (!res.error) {
         setUsername(res.data.username);
         setIsAdmin(res.data.isAdmin);
-        console.log(res.data.avatar);
         if (!res.data.avatar) {
           setUserAvatar(images["avatar.png"]);
           return;
@@ -96,17 +95,12 @@ function App() {
           process.env.REACT_APP_DEV_API_PATH +
           "/account/profile/avatar/" +
           res.data.avatar;
-        console.log("Home page's avatarURL: " + avatarURL);
         const imageResponse = await axios.get(avatarURL, {
           responseType: "blob",
         });
-        console.log("imageResponse : " + imageResponse);
         if (imageResponse) {
           const imageURL = URL.createObjectURL(imageResponse.data);
-          console.log("imageURL : " + imageURL);
           setUserAvatar(imageURL);
-        } else {
-          console.log("imageResponse : " + imageResponse + " is null");
         }
       } else {
         console.log(res);

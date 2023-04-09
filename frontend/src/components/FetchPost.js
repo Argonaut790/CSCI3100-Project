@@ -1,6 +1,6 @@
-import { Component, useState } from "react";
+import { Component } from "react";
 import { useNotification } from "../NotificationContext";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
@@ -20,7 +20,6 @@ console.log("userId is: " + userId);
 
 const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
   const { showNotification } = useNotification();
-  const navigate = useNavigate();
 
   const handleDeletePost = async (postId) => {
     if (window.confirm("Do you want to delete this post?")) {

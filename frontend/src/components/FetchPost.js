@@ -1,6 +1,6 @@
 import { Component, useState } from "react";
 import { useNotification } from "../NotificationContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
@@ -75,23 +75,25 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
       <div>
-        {userAvatar ? (
-          <div>
-            <img
-              src={userAvatar}
-              className="float-start post-user-avatar"
-              alt="user-avatar"
-            />
-          </div>
-        ) : (
-          <div>
-            <img
-              src={images["avatar.png"]}
-              className="float-start post-user-avatar white-img"
-              alt="user-avatar"
-            />
-          </div>
-        )}
+        <Link to={"/user?userId=" + userId}>
+          {userAvatar ? (
+            <div>
+              <img
+                src={userAvatar}
+                className="float-start post-user-avatar"
+                alt="user-avatar"
+              />
+            </div>
+          ) : (
+            <div>
+              <img
+                src={images["avatar.png"]}
+                className="float-start post-user-avatar white-img"
+                alt="user-avatar"
+              />
+            </div>
+          )}
+        </Link>
         <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
           <div className="fw-bold">{username}</div>
           <div>#{userId}</div>
@@ -228,8 +230,8 @@ class FetchPost extends Component {
       );
       const currentTime = Date.now();
 
-      if (lastdislikeTime && currentTime - lastdislikeTime < 10 * 1000) {
-        alert("You can only dislike or undislike once every 10 seconds.");
+      if (lastdislikeTime && currentTime - lastdislikeTime < 2 * 1000) {
+        alert("You can only dislike or undislike once every 2 seconds.");
         return;
       }
 

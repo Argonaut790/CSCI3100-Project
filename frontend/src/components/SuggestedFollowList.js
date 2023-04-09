@@ -61,6 +61,7 @@ const SuggestedFollowList = ({ userId }) => {
             <UserItem
               userId={follow.userId}
               username={follow.username}
+              userAvatar={follow.avatar}
               buttons={[
                 {
                   text: "Follow",

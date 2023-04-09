@@ -294,6 +294,7 @@ router.get("/:userId", async (req, res) => {
       isPrivate: user.isPrivate,
       isAdmin: user.isAdmin,
       isGoogleSign: user.isGoogleSign,
+      backgroundOpacity: user.backgroundOpacity,
     });
   } catch (err) {
     res.status(401).json({ message: err });
@@ -305,7 +306,13 @@ router.patch("/profile/:userId", async (req, res) => {
   try {
     await Account.updateOne(
       { userId: req.params.userId },
-      { $set: { bio: req.body.bio, username: req.body.username } }
+      {
+        $set: {
+          bio: req.body.bio,
+          username: req.body.username,
+          backgroundOpacity: req.body.backgroundOpacity,
+        },
+      }
     );
 
     // Send the response here

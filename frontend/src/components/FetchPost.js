@@ -1,6 +1,6 @@
 import { Component, useState } from "react";
-import { useNotification } from '../NotificationContext';
-import { useNavigate } from 'react-router-dom';
+import { useNotification } from "../NotificationContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
@@ -18,8 +18,7 @@ const userId = localStorage.getItem("user")
 // print the userId in console
 console.log("userId is: " + userId);
 
-const UserID = ({ postId, userId, username, deleteButton, userAvatar}) => {
-
+const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
   const { showNotification } = useNotification();
   const navigate = useNavigate();
 
@@ -27,23 +26,22 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar}) => {
     if (window.confirm("Do you want to delete this post?")) {
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
+          process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
         );
         console.log("Post deleted successfully!");
 
         // Use a timeout to delay showing the message after the page has reloaded
-        showNotification('Post has been deleted!', 'success');
+        showNotification("Post has been deleted!", "success");
         await new Promise((resolve) => setTimeout(resolve, 3000));
         window.location.reload(); // refresh the page
         //handleDeleteStatus(200);
         // Wait for 5 seconds before refreshing the page
         //await new Promise((resolve) => setTimeout(resolve, 3000));
-
       } catch (error) {
         console.error("Error deleting post:", error);
 
         // Use a timeout to delay showing the message after the page has reloaded
-        showNotification('Post has not been deleted!', 'error');
+        showNotification("Post has not been deleted!", "error");
         await new Promise((resolve) => setTimeout(resolve, 3000));
         window.location.reload(); // refresh the page
       }
@@ -296,13 +294,13 @@ class FetchPost extends Component {
   // don't fetch the pictures again if the user scroll back to the top
   fetchPosts = async () => {
     const { page } = this.state;
-    const { profile } = this.props;
+    const targetUserId = this.props.userId ? this.props.userId : "";
     try {
       this.setState({ isLoading: true });
 
       const response = await axios.get(
         process.env.REACT_APP_DEV_API_PATH +
-          `/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
+          `/tweet?limit=10&page=${page}&userId=${targetUserId}`
       );
       const posts = response.data;
 

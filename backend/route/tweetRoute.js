@@ -96,10 +96,9 @@ router.get("/", async (req, res) => {
     const page = parseInt(req.query.page) || 0; //10 post each page
     const skip = limit * page; //bias, skipping how many posts
     const userId = req.query.userId;
-    const profile = req.query.profile;
 
     //if userId is not null, then we will only get the posts that belong to the user
-    const query = userId && profile == "true" ? { userId } : {};
+    const query = userId ? { userId } : {};
     //get all posts
     const posts = await Post.find(query)
       .sort({ timestamp: -1 })

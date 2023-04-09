@@ -18,7 +18,7 @@ import SignUp from "./components/SignUp";
 import Admin from "./components/Admin";
 import UserProfile from "./components/UserProfile";
 import ResetPassword from "./components/ResetPassword";
-import Notification from './components/Notification';
+import Notification from "./components/Notification";
 
 const images = ImportAll(
   require.context("./images", false, /\.(png|jpe?g|svg)$/)
@@ -30,9 +30,9 @@ const TopLeft = () => {
 
   const handleIconClick = () => {
     if (location.pathname === "/home" || location.pathname === "/") {
-        window.location.reload();
+      window.location.reload();
     } else {
-        navigate("/home");
+      navigate("/home");
     }
   };
 
@@ -88,6 +88,10 @@ function App() {
         setUsername(res.data.username);
         setIsAdmin(res.data.isAdmin);
         console.log(res.data.avatar);
+        if (!res.data.avatar) {
+          setUserAvatar(images["avatar.png"]);
+          return;
+        }
         const avatarURL =
           process.env.REACT_APP_DEV_API_PATH +
           "/account/profile/avatar/" +
@@ -238,9 +242,9 @@ function App() {
     };
 
     return (
-        <Link to={to} onClick={handleClick} {...rest}>
-          {children}
-        </Link>
+      <Link to={to} onClick={handleClick} {...rest}>
+        {children}
+      </Link>
     );
   };
 

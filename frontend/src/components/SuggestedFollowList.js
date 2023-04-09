@@ -51,9 +51,9 @@ const SuggestedFollowList = ({ userId }) => {
       {follows.length > 0 && (
         <ul className="list-group" id="following-div">
           <li
-            key="followingTitle"
+            key="suggestedFollowTitle"
             className="list-group-item"
-            id="following-label"
+            id="followTitle-label"
           >
             Suggested
           </li>

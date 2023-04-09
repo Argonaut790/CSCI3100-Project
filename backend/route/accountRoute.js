@@ -300,6 +300,23 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+// Update user profile
+router.patch("/profile/:userId", async (req, res) => {
+  try {
+    await Account.updateOne(
+      { userId: req.params.userId },
+      { $set: { bio: req.body.bio, username: req.body.username } }
+    );
+
+    // Send the response here
+    res.status(200).json({
+      message: "Profile updated",
+    });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
 // Get user profile avatar by Id
 router.get("/profile/:userId", async (req, res) => {
   try {
@@ -316,6 +333,7 @@ router.get("/profile/:userId", async (req, res) => {
   }
 });
 
+// Get avatar
 router.get("/profile/avatar/:filename", async (req, res) => {
   try {
     // connect to mongo upload collection bucket,
@@ -341,34 +359,24 @@ router.get("/profile/avatar/:filename", async (req, res) => {
   }
 });
 
-// Upload profile avatar, bio
-router.patch("/profile/:userId", upload.single("image"), async (req, res) => {
-  try {
-    const image = req.file || null;
-    const username = req.body.username; //username
-    const bio = req.body.bio; //bio
+// Update profile avatar
+router.patch(
+  "/profile/avatar/:userId",
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const image = req.file || null;
 
-    const user = await Account.findOne({
-      userId: req.params.userId,
-    });
-
-    if (!image) {
-      // In case there is no image, update only the bio
-      const updatedAccount = await Account.updateOne(
-        { userId: req.params.userId },
-        { $set: { bio: bio, username: username } }
-      );
-
-      // Send the response here
-      res.status(200).json({
-        message: "Profile updated",
-        updatedAccount,
+      const user = await Account.findOne({
+        userId: req.params.userId,
       });
-    } else {
-      if (user.avatar && user.avatar.filename) {
+
+      if (image && user.avatar && user.avatar.filename) {
         // If the user has an old avatar, delete it
         const bucket = new GridFSBucket(conn.db, { bucketName: "accounts" });
-        const oldAvatar = await bucket.find({ filename: user.avatar.filename }).toArray();
+        const oldAvatar = await bucket
+          .find({ filename: user.avatar.filename })
+          .toArray();
         if (oldAvatar.length > 0) {
           await bucket.delete(oldAvatar[0]._id);
         }
@@ -418,7 +426,7 @@ router.patch("/profile/:userId", upload.single("image"), async (req, res) => {
         // Update the user's bio and avatar in DB
         const updatedAccount = await Account.updateOne(
           { userId: req.params.userId },
-          { $set: { bio: bio, avatar: imageObj, username: username } }
+          { $set: { avatar: imageObj } }
         );
 
         // Send the response here
@@ -435,11 +443,11 @@ router.patch("/profile/:userId", upload.single("image"), async (req, res) => {
 
       uploadStream.write(resizedImageBuffer);
       uploadStream.end();
+    } catch (err) {
+      res.status(401).json({ message: err });
     }
-  } catch (err) {
-    res.status(401).json({ message: err });
   }
-});
+);
 
 // Get user by Id
 router.get("/profile/:userId", async (req, res) => {

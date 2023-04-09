@@ -49,7 +49,7 @@ const Content = () => {
       <FetchPost
         // userID={userId}
         // handleDeletePost={handleDeletePost}
-        profile={true} // this is to tell FetchPost that it is in profile page
+        userId={userId} // this is to tell FetchPost that it is in profile page
         deleteButton={deleteButton}
       />
     </div>
@@ -240,8 +240,9 @@ const PersonalInfo = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    // Update only the new username in the backend
     try {
-      // Update if private status is changed
+      // Update privacy setting if it is changed
       if (isPrivate !== isPrivateChecked) {
         await axios.patch(
           process.env.REACT_APP_DEV_API_PATH + "/account/private/" + userId,
@@ -249,40 +250,47 @@ const PersonalInfo = () => {
         );
         setIsPrivate(isPrivateChecked);
       }
-    } catch (err) {
-      console("Can't change private status");
-    }
+      // Update username & bio if they are changed
+      if (editedBio !== userBio || editedUsername !== username) {
+        const updatedprofile = {
+          username: editedUsername,
+          bio: editedBio,
+        };
+        await axios.patch(
+          process.env.REACT_APP_DEV_API_PATH + "/account/profile/" + userId,
+          updatedprofile
+        );
+        // Update the state for username and userBio
+        setUsername(editedUsername);
+        setUserBio(editedBio);
+      }
 
-    // Create a FormData object and append the image file to it
-    const formData = new FormData();
-    formData.append("image", image);
+      // Update avatar if it is changed
+      if (image) {
+        // Create a FormData object and append the image file to it
+        const formData = new FormData();
+        formData.append("image", image);
+        await axios.patch(
+          process.env.REACT_APP_DEV_API_PATH +
+            "/account/profile/avatar/" +
+            userId,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
 
-    // Append the username and bio to the FormData object
-    formData.append("username", editedUsername);
-    formData.append("bio", editedBio);
-
-    // Update only the new username in the backend
-    try {
-      await axios.patch(
-        process.env.REACT_APP_DEV_API_PATH + `/account/profile/${userId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
       console.log("Patch successfully!");
-      // Update the state for username and userBio
-      setUsername(editedUsername);
-      setUserBio(editedBio);
+
       if (previewURL) setUserAvatar(previewURL);
       // clear input fields
       setPreviewURL(null);
       // this.setState({ isLoading: false });
 
       handleEdit();
-
       showNotification("User profile has been changed!", "success");
       await new Promise((resolve) => setTimeout(resolve, 3000));
       refreshPage();
@@ -411,13 +419,13 @@ const PersonalInfo = () => {
             </div>
             {/* privacy toggle switch */}
             <div className="d-flex flex-row">
-              <label class="switch">
+              <label className="switch">
                 <input
                   type="checkbox"
                   checked={isPrivateChecked}
-                  onClick={() => setIsPrivateChecked(!isPrivateChecked)}
+                  onChange={() => setIsPrivateChecked(!isPrivateChecked)}
                 />
-                <span class="slider round"></span>
+                <span className="slider round"></span>
               </label>
               <div className="fw-bold text-uppercase text-light ps-3 d-flex justify-content-center align-items-center">
                 {isPrivateChecked ? "Private" : "Public"}

@@ -60,6 +60,10 @@ const AccountSchema = new Schema({
     type: String,
     default: Date.now(),
   },
+  backgroundOpacity: {
+    type: Number,
+    default: 0.1,
+  },
 });
 
 module.exports = mongoose.model("accounts", AccountSchema);

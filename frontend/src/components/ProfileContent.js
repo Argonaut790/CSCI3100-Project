@@ -68,6 +68,7 @@ const PersonalInfo = () => {
   const [userAvatar, setUserAvatar] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false);
   const [isPrivateChecked, setIsPrivateChecked] = useState(isPrivate);
+  const [opacity, setOpacity] = useState(0.1);
   const [profileStatus, setProfileStatus] = useState(null);
 
   const [edit, setEdit] = useState(false);
@@ -75,6 +76,7 @@ const PersonalInfo = () => {
   const [editNameCount, setEditNameCount] = useState(username.length);
   const [editedBio, setEditedBio] = useState(userBio);
   const [editBioCount, setEditBioCount] = useState(userBio.split(/\s+/).length);
+  const [editedOpacity, setEditedOpacity] = useState(opacity);
 
   const { showNotification } = useNotification();
 
@@ -116,6 +118,8 @@ const PersonalInfo = () => {
         setEditedUsername(res.data.username);
         setIsPrivate(res.data.isPrivate);
         setIsPrivateChecked(res.data.isPrivate);
+        setOpacity(res.data.backgroundOpacity);
+        setEditedOpacity(res.data.backgroundOpacity);
         setEditNameCount(res.data.username.length);
         setEditBioCount(res.data.bio.split(/\s+/).length);
       } else {
@@ -231,6 +235,10 @@ const PersonalInfo = () => {
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
+  const onChangeOpacity = (e) => {
+    setEditedOpacity(e.target.value);
+  };
+
   const refreshPage = () => {
     //navigate(location.pathname, { replace: true });
     window.location.reload();
@@ -250,11 +258,16 @@ const PersonalInfo = () => {
         );
         setIsPrivate(isPrivateChecked);
       }
-      // Update username & bio if they are changed
-      if (editedBio !== userBio || editedUsername !== username) {
+      // Update username & bio & opacity if they are changed
+      if (
+        editedBio !== userBio ||
+        editedUsername !== username ||
+        editedOpacity !== opacity
+      ) {
         const updatedprofile = {
           username: editedUsername,
           bio: editedBio,
+          backgroundOpacity: editedOpacity,
         };
         await axios.patch(
           process.env.REACT_APP_DEV_API_PATH + "/account/profile/" + userId,
@@ -263,6 +276,7 @@ const PersonalInfo = () => {
         // Update the state for username and userBio
         setUsername(editedUsername);
         setUserBio(editedBio);
+        setOpacity(editedOpacity);
       }
 
       // Update avatar if it is changed
@@ -430,6 +444,18 @@ const PersonalInfo = () => {
               <div className="fw-bold text-uppercase text-light ps-3 d-flex justify-content-center align-items-center">
                 {isPrivateChecked ? "Private" : "Public"}
               </div>
+            </div>
+            <div>
+              <div>Background Opacity</div>
+              <input
+                className="opacity-slider"
+                type="range"
+                min="0.1"
+                max="1"
+                step="0.05"
+                value={editedOpacity}
+                onChange={onChangeOpacity}
+              />
             </div>
             {/* Exit Editing Button */}
             {isLoading ? (

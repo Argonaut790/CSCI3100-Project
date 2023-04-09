@@ -62,6 +62,7 @@ function App() {
   const [username, setUsername] = useState("");
   const [isAdmin, setIsAdmin] = useState("");
   const [userAvatar, setUserAvatar] = useState(null);
+  const [opacity, setOpacity] = useState(0.1);
   const maskBackgroundRef = createRef();
 
   let location = useLocation();
@@ -87,6 +88,8 @@ function App() {
       if (!res.error) {
         setUsername(res.data.username);
         setIsAdmin(res.data.isAdmin);
+        setOpacity(res.data.backgroundOpacity);
+        console.log("Opacity : " + opacity);
         if (!res.data.avatar) {
           setUserAvatar(images["avatar.png"]);
           return;
@@ -283,7 +286,12 @@ function App() {
   };
 
   return (
-    <div className="mask-background" ref={maskBackgroundRef}>
+    <div
+      className="mask-background"
+      ref={maskBackgroundRef}
+      style={{ backgroundColor: `rgba(0, 0, 0, ${parseFloat(opacity)})` }}
+      id="mask-background"
+    >
       <ScrollContext.Provider value={maskBackgroundRef}>
         {/* Routes */}
         {/* user interface */}
@@ -350,6 +358,7 @@ function App() {
                 <div className="row d-flex m-0" id="nav">
                   <NavLinks user={userId} handleTweet={handleTweet} />
                 </div>
+
                 {loggedIn && <User />}
               </div>
             </div>

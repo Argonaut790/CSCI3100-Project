@@ -150,8 +150,8 @@ class FetchPost extends Component {
       );
       const currentTime = Date.now();
 
-      if (lastLikeTime && currentTime - lastLikeTime < 10 * 1000) {
-        alert("You can only like or unlike once every 10 seconds.");
+      if (lastLikeTime && currentTime - lastLikeTime < 3 * 1000) {
+        alert("You can only like or unlike once every 3 seconds.");
         return;
       }
 
@@ -405,6 +405,7 @@ class FetchPost extends Component {
                 className="border-light border-opacity-50 pt-2 d-flex flex-row border-top justify-content-evenly"
                 id="post-function"
               >
+                {/* Like button */}
                 <div
                   className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
                   onClick={() => this.handleLikeClick(post._id, userId)}
@@ -419,6 +420,7 @@ class FetchPost extends Component {
                     alt="like"
                   />
                 </div>
+                {/* Dislike button */}
                 <div
                   className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center"
                   onClick={() => this.handleDislikeClick(post._id, userId)}
@@ -433,6 +435,7 @@ class FetchPost extends Component {
                     alt="like"
                   />
                 </div>
+                {/* Comment button */}
                 <div className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center">
                   <img
                     className="white-img"
@@ -440,7 +443,7 @@ class FetchPost extends Component {
                     alt="comment"
                   />
                 </div>
-
+                {/* Retweet button */}
                 <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
                   <img
                     className="white-img"

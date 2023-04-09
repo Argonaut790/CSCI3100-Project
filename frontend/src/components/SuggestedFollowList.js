@@ -74,7 +74,11 @@ const SuggestedFollowList = ({ userId, openedList, setOpenedList }) => {
               onClick={() => handleOpenedList()}
             ></img>
           </li>
-          <div hidden={openedList[3] ? false : true}>
+          <div
+            className="overflow-auto"
+            style={{ maxHeight: "50vh" }}
+            hidden={openedList[3] ? false : true}
+          >
             {follows.map((follow) => (
               <UserItem
                 userId={follow.userId}

@@ -73,12 +73,12 @@ const SignUp = () => {
     <div id="signUp" className="signUpContainer d-grid gap-2 p-3" key="signUp">
       <h2>New to Rettiwt?</h2>
 
-      <button type="button" className="btn btn-light" onClick={handleSignUp}>
-        Sign Up with Email
-      </button>
-
       <button type="button" className="btn btn-light" onClick={handleLogIn}>
         Already have an account?
+      </button>
+
+      <button type="button" className="btn btn-light" onClick={handleSignUp}>
+        Sign Up with Email
       </button>
 
       <div>

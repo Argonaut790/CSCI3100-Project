@@ -52,7 +52,7 @@ const Admin = () => {
 
   return (
     <div className="col-lg-9 mask-background text-light">
-      <a href="/admin" className="btn btn-danger my-2">
+      <a href="/admin" className="btn btn-dark my-2">
         Reload Data
       </a>
       <h1> Users </h1>

@@ -107,7 +107,11 @@ const PendingFollowList = ({ userId, openedList, setOpenedList }) => {
             ></img>
           </li>
 
-          <div hidden={openedList[2] ? false : true}>
+          <div
+            className="overflow-auto"
+            style={{ maxHeight: "50vh" }}
+            hidden={openedList[2] ? false : true}
+          >
             {follows.map((follow) => (
               <UserItem
                 userId={follow.userId}

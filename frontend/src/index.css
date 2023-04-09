@@ -178,7 +178,7 @@ body {
 #following-div {
   background: #00000096;
   /* padding: 1rem; */
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: 0.2rem 0.2rem 0.7rem rgb(0 0 0 / 55%);
   border: 1px solid;
 }

@@ -81,7 +81,11 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
         </li>
 
         {/* Following List */}
-        <div hidden={openedList[0] ? false : true}>
+        <div
+          className="overflow-auto"
+          style={{ maxHeight: "50vh" }}
+          hidden={openedList[0] ? false : true}
+        >
           {follows.map(
             (follow) =>
               title === "Following" && (
@@ -101,7 +105,11 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
         </div>
 
         {/* Follower List */}
-        <div hidden={openedList[1] ? false : true}>
+        <div
+          className="overflow-auto h-100"
+          style={{ maxHeight: "50vh" }}
+          hidden={openedList[1] ? false : true}
+        >
           {follows.map(
             (follow) =>
               title === "Follower" && (

@@ -6,7 +6,7 @@ import axios from "axios";
 import ImportAll from "./ImportAll";
 // import DeleteButtonContext from "./DeleteButtonContext";
 import moment from "moment";
-import CommentList from './commentList';
+import CommentList from "./commentList";
 
 const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
@@ -298,10 +298,12 @@ class FetchPost extends Component {
 
   fetchComments = async (postId) => {
     try {
-      console.log('Fetching comments for postId:', postId);
-      const response = await axios.get(process.env.REACT_APP_DEV_API_PATH + "/comment/comments" + postId);
+      console.log("Fetching comments for postId:", postId);
+      const response = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/comment/" + postId
+      );
       const comments = response.data;
-      console.log('Fetched comments:', response.data);
+      console.log("Fetched comments:", response.data);
 
       this.setState({ comments });
     } catch (error) {
@@ -347,10 +349,10 @@ class FetchPost extends Component {
   handleRetweet = async (postId, userId) => {
     try {
       const response = await axios.post(
-          process.env.REACT_APP_DEV_API_PATH + "/tweet/retweet" + postId,
-          {
-            userId,
-          }
+        process.env.REACT_APP_DEV_API_PATH + "/tweet/retweet" + postId,
+        {
+          userId,
+        }
       );
 
       console.log("Retweeted successfully:", response.data);
@@ -476,10 +478,10 @@ class FetchPost extends Component {
               >
                 {/* Like button */}
                 <div
-                    className={`btn rounded-0 px-5 w-30 d-flex justify-content-center border-0 like-animation ${
-                        this.state.likedPosts.includes(post._id) ? "liked" : ""
-                    }`}
-                    onClick={() => this.handleLikeClick(post._id, userId)}
+                  className={`btn rounded-0 px-5 w-30 d-flex justify-content-center border-0 like-animation ${
+                    this.state.likedPosts.includes(post._id) ? "liked" : ""
+                  }`}
+                  onClick={() => this.handleLikeClick(post._id, userId)}
                 >
                   <img
                     className="white-img"
@@ -493,10 +495,12 @@ class FetchPost extends Component {
                 </div>
                 {/* Dislike button */}
                 <div
-                    className={`btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center dislike-animation ${
-                        this.state.dislikedPosts.includes(post._id) ? "disliked" : ""
-                    }`}
-                    onClick={() => this.handleDislikeClick(post._id, userId)}
+                  className={`btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center dislike-animation ${
+                    this.state.dislikedPosts.includes(post._id)
+                      ? "disliked"
+                      : ""
+                  }`}
+                  onClick={() => this.handleDislikeClick(post._id, userId)}
                 >
                   <img
                     className="white-img"
@@ -520,7 +524,10 @@ class FetchPost extends Component {
                   />
                 </div>
                 {this.state.showCommentInput && (
-                  <div className="overlay" onClick={() => this.handleCommentClick(post._id)}>
+                  <div
+                    className="overlay"
+                    onClick={() => this.handleCommentClick(post._id)}
+                  >
                     <div
                       className="comment-container"
                       onClick={(e) => e.stopPropagation()}
@@ -553,13 +560,13 @@ class FetchPost extends Component {
                 )}
                 {/* Retweet button */}
                 <div
-                    className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
-                    onClick={() => this.handleRetweet(post._id, userId)} // Add onClick event handler for retweet button
+                  className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
+                  onClick={() => this.handleRetweet(post._id, userId)} // Add onClick event handler for retweet button
                 >
                   <img
-                      className="white-img"
-                      src={images["arrows-retweet.svg"]}
-                      alt="retweet"
+                    className="white-img"
+                    src={images["arrows-retweet.svg"]}
+                    alt="retweet"
                   />
                 </div>
               </div>

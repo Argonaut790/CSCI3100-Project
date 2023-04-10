@@ -1,5 +1,6 @@
 const express = require("express");
 const Comment = require("../model/comment");
+const Account = require("../model/account");
 const router = express.Router();
 
 // Post comment
@@ -33,25 +34,55 @@ router.delete("/:postId/:userId", async (req, res) => {
 });
 
 // Get comments by post
-router.get("/comments/:postId", async (req, res) => {
+// router.get("/comments/:postId", async (req, res) => {
+//   try {
+//     const comments = await Comment.find({
+//       postId: req.body.postId,
+//     }).populate("userId", "username avatar"); // Add populate to fetch user data
+
+//     // Map comments to include user data and avatar URL
+//     const commentsWithUserData = comments.map((comment) => {
+//       const user = comment.userId;
+//       const avatarURL = user.avatar.filename
+//         ? `http://${req.headers.host}/account/profile/avatar/${user.avatar.filename}`
+//         : null;
+
+//       return {
+//         ...comment._doc,
+//         username: user.username,
+//         avatarURL: avatarURL,
+//       };
+//     });
+
+//     res.status(200).json(commentsWithUserData);
+//   } catch (err) {
+//     res.status(401).json(err);
+//   }
+// });
+// Get comments by post
+router.get("/:postId", async (req, res) => {
   try {
     const comments = await Comment.find({
-      postId: req.body.postId,
-    }).populate("userId", "username avatar"); // Add populate to fetch user data
-
+      postId: req.params.postId,
+    });
     // Map comments to include user data and avatar URL
-    const commentsWithUserData = comments.map((comment) => {
-      const user = comment.userId;
-      const avatarURL = user.avatar.filename
-          ? `http://${req.headers.host}/account/profile/avatar/${user.avatar.filename}`
+    const commentsWithUserData = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await Account.findOne({ userId: comment.userId });
+        const username = user ? user.username : "";
+        const userAvatar = user.avatar.filename || null;
+        const avatarURL = userAvatar
+          ? `http://${req.headers.host}/account/profile/avatar/${userAvatar}`
           : null;
 
-      return {
-        ...comment._doc,
-        username: user.username,
-        avatarURL: avatarURL,
-      };
-    });
+        return {
+          comment: comment.comment,
+          timestamp: comment.timestamp,
+          username: username,
+          avatarURL: avatarURL,
+        };
+      })
+    );
 
     res.status(200).json(commentsWithUserData);
   } catch (err) {

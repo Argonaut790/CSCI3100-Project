@@ -6,6 +6,7 @@ import axios, { post } from "axios";
 import ImportAll from "./ImportAll";
 // import DeleteButtonContext from "./DeleteButtonContext";
 import moment from "moment";
+import Retweet from "./Retweet";
 
 const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
@@ -205,6 +206,7 @@ class FetchPost extends Component {
       commentText: "",
       commentTextCount: 0,
       showCommentInput: false,
+      retweetHandled: false,
     };
     // this.postListRef = createRef();
   }
@@ -401,12 +403,12 @@ class FetchPost extends Component {
     }
   };
 
+  //Comment part
   handleCommentClick = (post) => {
     this.setState((prevState) => ({
       selectedPost: post,
       showCommentInput: !prevState.showCommentInput,
     }));
-    console.log("Post: " + this.state.showCommentInput);
   };
 
   handleCommentChange = (e) => {
@@ -455,6 +457,14 @@ class FetchPost extends Component {
     }
 
     this.setState({ commentText: "", showCommentInput: false });
+  };
+
+  //Retweet part
+  handleRetweetClick = (post) => {
+    this.setState((prevState) => ({
+      selectedPost: post,
+      retweetHandled: !prevState.retweetHandled,
+    }));
   };
 
   // don't fetch the pictures again if the user scroll back to the top
@@ -771,13 +781,25 @@ class FetchPost extends Component {
                   </div>
                 )}
                 {/* Retweet button */}
-                <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
+                <div
+                  onClick={() => this.handleRetweetClick(post)}
+                  className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
+                >
                   <img
                     className="white-img"
                     src={images["arrows-retweet.svg"]}
                     alt="retweet"
                   />
                 </div>
+                {/* display retweet section  */}
+                {this.state.retweetHandled && (
+                  <div
+                    className="overlay"
+                    onClick={() => this.handleRetweetClick(post)}
+                  >
+                    <Retweet handleRetweetClick={this.handleRetweetClick} />
+                  </div>
+                )}
               </div>
             </div>
           ))}

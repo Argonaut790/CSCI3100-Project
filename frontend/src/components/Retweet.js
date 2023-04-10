@@ -84,10 +84,6 @@ class Tweet extends Component {
     if (this.state.desc.split(/\s+/).length + words.length === MAXLENGTH + 1)
       sliced = true;
 
-    // console.log(this.state.desc.split(/\s+/));
-    // console.log(this.state.desc.split(/\s+/));
-    // console.log("sliced " + sliced);
-
     // Prepend the leading spaces to the first word in the array
     if (leadingSpaces) {
       words[0] = leadingSpacesStr + words[0];
@@ -120,27 +116,6 @@ class Tweet extends Component {
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (
-  //     this.state.previewURL !== prevState.previewURL &&
-  //     this.state.previewURL
-  //   ) {
-  //     const imageElement = document.getElementById("preview");
-
-  //     if (this.state.cropper) {
-  //       this.state.cropper.destroy();
-  //     }
-
-  //     const cropper = new Cropper(imageElement, {
-  //       aspectRatio: 1,
-  //       viewMode: 1,
-  //       autoCropArea: 1,
-  //     });
-
-  //     this.setState({ cropper });
-  //   }
-  // }
-
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === "file" ? target.files[0] : target.value;
@@ -156,74 +131,8 @@ class Tweet extends Component {
       const previewURL = URL.createObjectURL(value);
       console.log(previewURL);
       this.setState({ previewURL });
-      // this.setState({ previewURL }, () => {
-      //   // Initialize Cropper when an image is selected
-      //   const imageElement = document.getElementById("preview");
-      //   if (this.state.cropper) {
-      //     this.state.cropper.destroy();
-      //   }
-
-      //   imageElement.onload = () => {
-      //     const cropper = new Cropper(imageElement, {
-      //       aspectRatio: 1,
-      //       viewMode: 1,
-      //       autoCropArea: 1,
-      //     });
-
-      //     this.setState({ cropper });
-      //   };
-      // });
     }
   }
-
-  // async handleSubmit(e) {
-  //   e.preventDefault();
-
-  //   // Check if the cropper instance is not null
-  //   if (this.state.cropper) {
-  //     console.log("Cropper Passed Successfully");
-  //     console.log(this.state.cropper);
-  //     // Get the cropped image as a Blob
-  //     this.state.cropper.getCroppedCanvas().toBlob(async (blob) => {
-  //       const { desc } = this.state;
-
-  //       // Create a FormData object and append the image file to it
-  //       const formData = new FormData();
-  //       formData.append("image", blob);
-
-  //       // Add the description and tags fields to the formData object
-  //       formData.append("desc", desc);
-
-  //       console.log(formData);
-  //       console.log(formData.get("image"));
-  //       console.log(formData.get("desc"));
-
-  //       try {
-  //         await axios.post(process.env.REACT_APP_DEV_API_PATH + "/tweet", formData, {
-  //           headers: {
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         });
-
-  //         console.log("Tweet submitted:", {
-  //           desc: this.state.desc,
-  //         });
-
-  //         console.log("POST SUCCESSFULLY");
-
-  //         // clear input fields and destroy the cropper instance
-  //         this.setState({ image: null, desc: "", previewURL: null });
-  //         this.state.cropper.destroy();
-  //         this.setState({ cropper: null });
-  //       } catch (e) {
-  //         console.log(e);
-  //         console.log("Can't Upload Image!");
-  //       }
-  //     });
-  //   } else {
-  //     console.log("Cropper instance is null, cannot get cropped image.");
-  //   }
-  // }
 
   async handleSubmit(e) {
     e.preventDefault();
@@ -264,7 +173,7 @@ class Tweet extends Component {
   }
 
   handleClose() {
-    this.props.handleTweet();
+    this.props.handleRetweetClick();
   }
 
   render() {
@@ -389,11 +298,7 @@ class Tweet extends Component {
                     className=" px-3 d-flex justify-content-center align-items-center"
                     // style={{ aspectRatio: "3/4" }}
                   >
-                    <img
-                      className="spinner"
-                      src={images["doge.png"]}
-                      alt="spinner"
-                    ></img>
+                    <div className="spinner"></div>
                   </div>
                 )}
               </div>

@@ -33,20 +33,34 @@ router.delete("/:postId/:userId", async (req, res) => {
 });
 
 // Get comments by post
-router.get("/stat/", async (req, res) => {
+router.get("/comments/:postId", async (req, res) => {
   try {
     const comments = await Comment.find({
       postId: req.body.postId,
+    }).populate("userId", "username avatar"); // Add populate to fetch user data
+
+    // Map comments to include user data and avatar URL
+    const commentsWithUserData = comments.map((comment) => {
+      const user = comment.userId;
+      const avatarURL = user.avatar.filename
+          ? `http://${req.headers.host}/account/profile/avatar/${user.avatar.filename}`
+          : null;
+
+      return {
+        ...comment._doc,
+        username: user.username,
+        avatarURL: avatarURL,
+      };
     });
 
-    res.status(200).json(comments);
+    res.status(200).json(commentsWithUserData);
   } catch (err) {
     res.status(401).json(err);
   }
 });
 
 // Count comment by post
-router.get("/stat/", async (req, res) => {
+router.get("/counts/", async (req, res) => {
   try {
     const commentNum = await Comment.count({
       postId: req.body.postId,

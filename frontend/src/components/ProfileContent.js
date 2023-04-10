@@ -4,6 +4,7 @@ import { useNotification } from "../NotificationContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
 
+import { useLocation } from 'react-router-dom';
 import ImportAll from "./ImportAll";
 import axios from "axios";
 
@@ -324,6 +325,13 @@ const PersonalInfo = () => {
     }
     setIsLoading(false);
   };
+
+  const PersonalInfo = () => {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const profileUserId = searchParams.get('userId');
+
+  }
 
   return (
     <div id="profile-mask" className="d-flex flex-column shadow py-4">

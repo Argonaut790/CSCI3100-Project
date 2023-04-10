@@ -887,6 +887,7 @@ input:checked + .slider:before {
   background-color: #b3dffc;
 }
 
+<<<<<<< Updated upstream
 #comment-post-div {
   aspect-ratio: 1/1;
 }
@@ -910,3 +911,22 @@ input:checked + .slider:before {
 #comment-submit {
   width: 1.5rem;
 }
+=======
+/* for liking and disliking animation */
+.like-animation {
+  transition: transform 0.2s ease-in-out;
+}
+
+.dislike-animation {
+  transition: transform 0.2s ease-in-out;
+}
+
+.liked {
+  transform: scale(1.05);
+}
+
+.disliked {
+  transform: scale(1.05);
+}
+
+>>>>>>> Stashed changes

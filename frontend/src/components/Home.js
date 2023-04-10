@@ -1,13 +1,19 @@
 import HomeContent from "./HomeContent";
 import Search from "./Search";
 import Follow from "./Follow";
+import { useEffect } from "react";
 
 //function needs to be Capital Letter in the first
-const Home = ({ userId }) => {
+const Home = ({ userId, maskBackgroundRef }) => {
+  // useEffect(() => {
+  //   if (maskBackgroundRef.current) {
+  //     console.log("maskBackgroundRef in Home:", maskBackgroundRef);
+  //   }
+  // }, [maskBackgroundRef]);
   return (
     <>
       <div className="col-lg-6" id="content">
-        <HomeContent />
+        <HomeContent maskBackgroundRef={maskBackgroundRef} />
       </div>
       <div className="col-lg-3 vh-100" id="explore">
         <div className="container-fluid p-0 d-grid gap-3 mt-4" id="rhs">

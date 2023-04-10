@@ -121,14 +121,31 @@ class FetchPost extends Component {
     // this.postListRef = createRef();
   }
 
-  async componentDidMount() {
-    window.addEventListener("scroll", this.handleScroll);
+  componentDidMount() {
+    const { profile, maskBackgroundRef } = this.props;
+    const { current } = maskBackgroundRef;
+    console.dir(this.props);
+    console.log("maskBackgroundRef in FetchPost: " + current);
+
+    try {
+      current.addEventListener("scroll", this.handleScroll);
+      console.log("current: " + current);
+      console.log("Success");
+    } catch (error) {
+      console.log(error);
+    }
+
     this.fetchPosts();
   }
 
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.handleScroll);
-  }
+  // componentWillUnmount() {
+  //   const { profile, maskBackgroundRef } = this.props;
+  //   const { current } = maskBackgroundRef;
+
+  //   if (maskBackgroundRef && maskBackgroundRef.current) {
+  //     current.removeEventListener("scroll", this.handleScroll);
+  //   }
+  // }
 
   /*  Module: handleLickClick and handleDislikeClick
    *   Version: 3.0 (3/4/2023)
@@ -391,21 +408,25 @@ class FetchPost extends Component {
     this.setState({ isLoading: false });
   };
 
-  // handleScroll = () => {
-  //   const { isLoading, hasMore } = this.state;
-  //   if (isLoading || !hasMore || !this.postListRef.current) return;
+  handleScroll = () => {
+    const { profile, maskBackgroundRef } = this.props;
+    const { current } = maskBackgroundRef;
 
-  //   const { scrollTop, scrollHeight, clientHeight } = this.postListRef.current;
+    const { isLoading, hasMore } = this.state;
+    console.log("handleScroll");
+    if (isLoading || !hasMore) return;
 
-  //   console.log("scrollTop:", scrollTop);
-  //   console.log("scrollHeight:", scrollHeight);
-  //   console.log("clientHeight:", clientHeight);
+    const { scrollTop, scrollHeight, clientHeight } = current;
 
-  //   if (scrollTop + clientHeight >= scrollHeight) {
-  //     console.log("Fetching more posts...");
-  //     this.fetchPosts();
-  //   }
-  // };
+    console.log("scrollTop:", scrollTop);
+    console.log("scrollHeight:", scrollHeight);
+    console.log("clientHeight:", clientHeight);
+
+    if (scrollTop + clientHeight >= scrollHeight) {
+      console.log("Fetching more posts...");
+      this.fetchPosts();
+    }
+  };
 
   render() {
     const { posts, isLoading } = this.state;

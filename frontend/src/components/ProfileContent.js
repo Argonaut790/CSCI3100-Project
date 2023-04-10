@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNotification } from '../NotificationContext';
+import { useNotification } from "../NotificationContext";
 // import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
@@ -49,7 +49,7 @@ const Content = () => {
       <FetchPost
         // userID={userId}
         // handleDeletePost={handleDeletePost}
-        profile={true} // this is to tell FetchPost that it is in profile page
+        userId={userId} // this is to tell FetchPost that it is in profile page
         deleteButton={deleteButton}
       />
     </div>
@@ -67,13 +67,16 @@ const PersonalInfo = () => {
   const [username, setUsername] = useState("");
   const [userAvatar, setUserAvatar] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [isPrivateChecked, setIsPrivateChecked] = useState(isPrivate);
+  const [opacity, setOpacity] = useState(0.1);
   const [profileStatus, setProfileStatus] = useState(null);
 
   const [edit, setEdit] = useState(false);
   const [editedUsername, setEditedUsername] = useState(username);
   const [editNameCount, setEditNameCount] = useState(username.length);
   const [editedBio, setEditedBio] = useState(userBio);
-  const [editBioCount, setEditBioCount] = useState((userBio.split(/\s+/)).length);
+  const [editBioCount, setEditBioCount] = useState(userBio.split(/\s+/).length);
+  const [editedOpacity, setEditedOpacity] = useState(opacity);
 
   const { showNotification } = useNotification();
 
@@ -114,6 +117,9 @@ const PersonalInfo = () => {
         setUsername(res.data.username);
         setEditedUsername(res.data.username);
         setIsPrivate(res.data.isPrivate);
+        setIsPrivateChecked(res.data.isPrivate);
+        setOpacity(res.data.backgroundOpacity);
+        setEditedOpacity(res.data.backgroundOpacity);
         setEditNameCount(res.data.username.length);
         setEditBioCount(res.data.bio.split(/\s+/).length);
       } else {
@@ -229,50 +235,81 @@ const PersonalInfo = () => {
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
+  const onChangeOpacity = (e) => {
+    setEditedOpacity(e.target.value);
+  };
+
   const refreshPage = () => {
     //navigate(location.pathname, { replace: true });
     window.location.reload();
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Create a FormData object and append the image file to it
-    const formData = new FormData();
-    formData.append("image", image);
-
-    // Append the username and bio to the FormData object
-    formData.append("username", editedUsername);
-    formData.append("bio", editedBio);
 
     // Update only the new username in the backend
     try {
-      await axios.patch(
-        `http://localhost:5500/account/profile/${userId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      // Update privacy setting if it is changed
+      if (isPrivate !== isPrivateChecked) {
+        await axios.patch(
+          process.env.REACT_APP_DEV_API_PATH + "/account/private/" + userId,
+          { isPrivate: isPrivateChecked }
+        );
+        setIsPrivate(isPrivateChecked);
+      }
+      // Update username & bio & opacity if they are changed
+      if (
+        editedBio !== userBio ||
+        editedUsername !== username ||
+        editedOpacity !== opacity
+      ) {
+        const updatedprofile = {
+          username: editedUsername,
+          bio: editedBio,
+          backgroundOpacity: editedOpacity,
+        };
+        await axios.patch(
+          process.env.REACT_APP_DEV_API_PATH + "/account/profile/" + userId,
+          updatedprofile
+        );
+        // Update the state for username and userBio
+        setUsername(editedUsername);
+        setUserBio(editedBio);
+        setOpacity(editedOpacity);
+      }
+
+      // Update avatar if it is changed
+      if (image) {
+        // Create a FormData object and append the image file to it
+        const formData = new FormData();
+        formData.append("image", image);
+        await axios.patch(
+          process.env.REACT_APP_DEV_API_PATH +
+            "/account/profile/avatar/" +
+            userId,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
+
       console.log("Patch successfully!");
-      // Update the state for username and userBio
-      setUsername(editedUsername);
-      setUserBio(editedBio);
+
       if (previewURL) setUserAvatar(previewURL);
       // clear input fields
       setPreviewURL(null);
       // this.setState({ isLoading: false });
 
       handleEdit();
-
-      showNotification('User profile has been changed!', 'success');
+      showNotification("User profile has been changed!", "success");
       await new Promise((resolve) => setTimeout(resolve, 3000));
       refreshPage();
       //setTimeout(() => {
-        //handleProfileStatus(200);
+      //handleProfileStatus(200);
       //}, 6000);
     } catch (e) {
       // this.setState({ isLoading: false });
@@ -280,7 +317,7 @@ const PersonalInfo = () => {
       console.log("Can't Upload Image!");
       handleEdit();
 
-      showNotification('User profile has not been changed!', 'error');
+      showNotification("User profile has not been changed!", "error");
       await new Promise((resolve) => setTimeout(resolve, 3000));
       refreshPage();
     }
@@ -373,7 +410,9 @@ const PersonalInfo = () => {
                 onChange={onChangeUsername}
                 maxLength={8}
               />
-              <label htmlFor="floatingUsername">Edit UserName {editNameCount}/8</label>
+              <label htmlFor="floatingUsername">
+                Edit UserName {editNameCount}/8
+              </label>
             </div>
 
             {/* bio */}
@@ -388,18 +427,35 @@ const PersonalInfo = () => {
                 onChange={onChangeBio}
                 onPaste={onPaste}
               />
-              <label htmlFor="floatingUsername">Edit Bio {editBioCount}/200</label>
+              <label htmlFor="floatingUsername">
+                Edit Bio {editBioCount}/200
+              </label>
             </div>
             {/* privacy toggle switch */}
             <div className="d-flex flex-row">
-              <label class="switch">
-                <input type="checkbox" />
-                <span class="slider round"></span>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={isPrivateChecked}
+                  onChange={() => setIsPrivateChecked(!isPrivateChecked)}
+                />
+                <span className="slider round"></span>
               </label>
-              {/** TODO: Handle Privacy TO Chnage Text To Public || Private */}
               <div className="fw-bold text-uppercase text-light ps-3 d-flex justify-content-center align-items-center">
-                Public
+                {isPrivateChecked ? "Private" : "Public"}
               </div>
+            </div>
+            <div>
+              <div>Background Opacity</div>
+              <input
+                className="opacity-slider"
+                type="range"
+                min="0.1"
+                max="1"
+                step="0.05"
+                value={editedOpacity}
+                onChange={onChangeOpacity}
+              />
             </div>
             {/* Exit Editing Button */}
             {isLoading ? (

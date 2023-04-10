@@ -18,7 +18,7 @@ import SignUp from "./components/SignUp";
 import Admin from "./components/Admin";
 import UserProfile from "./components/UserProfile";
 import ResetPassword from "./components/ResetPassword";
-import Notification from './components/Notification';
+import Notification from "./components/Notification";
 
 const images = ImportAll(
   require.context("./images", false, /\.(png|jpe?g|svg)$/)
@@ -30,9 +30,9 @@ const TopLeft = () => {
 
   const handleIconClick = () => {
     if (location.pathname === "/home" || location.pathname === "/") {
-        window.location.reload();
+      window.location.reload();
     } else {
-        navigate("/home");
+      navigate("/home");
     }
   };
 
@@ -62,6 +62,7 @@ function App() {
   const [username, setUsername] = useState("");
   const [isAdmin, setIsAdmin] = useState("");
   const [userAvatar, setUserAvatar] = useState(null);
+  const [opacity, setOpacity] = useState(0.1);
   const maskBackgroundRef = createRef();
 
   let location = useLocation();
@@ -87,22 +88,22 @@ function App() {
       if (!res.error) {
         setUsername(res.data.username);
         setIsAdmin(res.data.isAdmin);
-        console.log(res.data.avatar);
+        setOpacity(res.data.backgroundOpacity);
+        console.log("Opacity : " + opacity);
+        if (!res.data.avatar) {
+          setUserAvatar(images["avatar.png"]);
+          return;
+        }
         const avatarURL =
           process.env.REACT_APP_DEV_API_PATH +
           "/account/profile/avatar/" +
           res.data.avatar;
-        console.log("Home page's avatarURL: " + avatarURL);
         const imageResponse = await axios.get(avatarURL, {
           responseType: "blob",
         });
-        console.log("imageResponse : " + imageResponse);
         if (imageResponse) {
           const imageURL = URL.createObjectURL(imageResponse.data);
-          console.log("imageURL : " + imageURL);
           setUserAvatar(imageURL);
-        } else {
-          console.log("imageResponse : " + imageResponse + " is null");
         }
       } else {
         console.log(res);
@@ -238,9 +239,9 @@ function App() {
     };
 
     return (
-        <Link to={to} onClick={handleClick} {...rest}>
-          {children}
-        </Link>
+      <Link to={to} onClick={handleClick} {...rest}>
+        {children}
+      </Link>
     );
   };
 
@@ -285,7 +286,12 @@ function App() {
   };
 
   return (
-    <div className="mask-background" ref={maskBackgroundRef}>
+    <div
+      className="mask-background"
+      ref={maskBackgroundRef}
+      style={{ backgroundColor: `rgba(0, 0, 0, ${parseFloat(opacity)})` }}
+      id="mask-background"
+    >
       <ScrollContext.Provider value={maskBackgroundRef}>
         {/* Routes */}
         {/* user interface */}
@@ -352,6 +358,7 @@ function App() {
                 <div className="row d-flex m-0" id="nav">
                   <NavLinks user={userId} handleTweet={handleTweet} />
                 </div>
+
                 {loggedIn && <User />}
               </div>
             </div>

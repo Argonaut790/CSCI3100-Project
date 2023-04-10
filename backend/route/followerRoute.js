@@ -3,6 +3,19 @@ const Follower = require("../model/follower");
 const Account = require("../model/account");
 const router = express.Router();
 
+// Get matched record
+router.get("/visiable/:followerUserId/:followedUserId", async (req, res) => {
+  try {
+    const follow = await Follower.findOne({
+      followerUserId: req.params.followerUserId,
+      followedUserId: req.params.followedUserId,
+    });
+    res.status(200).json(follow);
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
 // Get followed user list with followed user info
 router.get("/followed/:userId", async (req, res) => {
   try {
@@ -87,6 +100,51 @@ router.get("/stat/:userId", async (req, res) => {
       followerNum: followerNum,
       pendingNum: pendingNum,
     });
+  } catch (err) {
+    res.status(401).json({ message: err });
+  }
+});
+
+// Get most followed accounts for suggestion
+router.get("/suggestion/:userId", async (req, res) => {
+  try {
+    const follow = await Follower.aggregate([
+      {
+        $group: {
+          _id: { userId: "$followedUserId", isAccepted: "$isAccepted" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $match: { "_id.isAccepted": true },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      { $limit: 10 },
+    ]);
+    const userIds = follow.map((e) => e["_id"].userId);
+
+    // Filter followed user
+    const followedUsers = await Follower.find({
+      followerUserId: req.params.userId,
+      followedUserId: { $in: userIds },
+    });
+    const followedUserIds = followedUsers.map(
+      (follower) => follower.followedUserId
+    );
+
+    const suggestedUsers = userIds.filter(
+      (userId) =>
+        !followedUserIds.includes(userId) && userId !== req.params.userId
+    );
+
+    const users = await Account.find({
+      userId: {
+        $in: suggestedUsers,
+      },
+    });
+    res.status(200).json(users);
   } catch (err) {
     res.status(401).json({ message: err });
   }

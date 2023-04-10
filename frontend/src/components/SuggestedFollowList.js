@@ -13,29 +13,16 @@ const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
-const PendingFollowList = ({ userId, openedList, setOpenedList }) => {
+const SuggestedFollowList = ({ userId, openedList, setOpenedList }) => {
   const [follows, setFollows] = useState([]);
-  const [isPrivate, setIsPrivate] = useState(false);
   const { setFollowListUpdated } = useContext(FollowContext);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const res = await axios.get(
-        process.env.REACT_APP_DEV_API_PATH + "/account/" + userId
-      );
-      if (!res.error) {
-        setIsPrivate(res.data.isPrivate);
-      } else {
-        console.log(res);
-      }
-    };
-    fetchUserData().catch(console.error);
-
     const fetchFollowData = async () => {
       const res = await axios.get(
-        process.env.REACT_APP_DEV_API_PATH + "/follow/pending/" + userId
+        process.env.REACT_APP_DEV_API_PATH + "/follow/suggestion/" + userId
       );
-      if (!res.error) {
+      if (!res.error && res.data) {
         setFollows(res.data);
       } else {
         console.log(res);
@@ -44,19 +31,19 @@ const PendingFollowList = ({ userId, openedList, setOpenedList }) => {
     fetchFollowData().catch(console.error);
   }, [userId]);
 
-  const handleAccpet = async (followerUserId) => {
+  const handleFollow = async (followedUserId) => {
     const followData = {
-      followedUserId: userId,
-      followerUserId: followerUserId,
+      followedUserId: followedUserId,
+      followerUserId: userId,
     };
     console.log(followData);
-    const res = await axios.patch(
+    const res = await axios.post(
       process.env.REACT_APP_DEV_API_PATH + "/follow/",
       followData
     );
     if (!res.error) {
-      // Update pending list
-      setFollows(follows.filter((follow) => follow.userId !== followerUserId));
+      // Update current list
+      setFollows(follows.filter((follow) => follow.userId !== followedUserId));
       // Update follower list
       setFollowListUpdated((prevState) => !prevState);
     } else {
@@ -64,77 +51,48 @@ const PendingFollowList = ({ userId, openedList, setOpenedList }) => {
     }
   };
 
-  const handleReject = async (followerUserId) => {
-    const followedUserId = userId;
-    const res = await axios.delete(
-      process.env.REACT_APP_DEV_API_PATH + "/follow/",
-      {
-        params: {
-          followedUserId,
-          followerUserId,
-        },
-      }
-    );
-    if (!res.error) {
-      // Update pending list
-      setFollows(follows.filter((follow) => follow.userId !== followerUserId));
-    } else {
-      console.log(res);
-    }
-  };
-
   const handleOpenedList = () => {
-    setOpenedList((prevState) => [false, false, !prevState[2], false]);
+    setOpenedList((prevState) => [false, false, false, !prevState[3]]);
   };
 
   return (
     <>
-      {isPrivate && (
+      {follows.length > 0 && (
         <ul className="list-group" id="following-div">
           <li
-            key="pendingfollowTitle"
+            key="suggestedFollowTitle"
             className="list-group-item"
-            id="pending-follow-label"
+            id="followTitle-label"
           >
-            Pending Follower
+            Suggested
             <img
               src={images["angle-up.svg"]}
               alt="angle-up"
               className={`white-img float-end h-75 cursor-pointer arrow ${
-                openedList[2] ? "down" : "up"
+                openedList[3] ? "down" : "up"
               }`}
               onClick={() => handleOpenedList()}
             ></img>
           </li>
-
           <div
             className="overflow-auto"
             style={{ maxHeight: "50vh" }}
-            hidden={openedList[2] ? false : true}
+            hidden={openedList[3] ? false : true}
           >
             {follows.map((follow) => (
               <UserItem
+                key={"Suggested" + follow.userId}
                 userId={follow.userId}
                 username={follow.username}
                 userAvatar={follow.avatar}
                 buttons={[
                   {
-                    text: "Accept",
-                    onClick: handleAccpet,
-                  },
-                  {
-                    text: "Reject",
-                    onClick: handleReject,
+                    text: "Follow",
+                    onClick: handleFollow,
                   },
                 ]}
               />
             ))}
-
-            {!follows.length && (
-              <li key="no-pending-follow" className="list-group-item">
-                No Pending Follower
-              </li>
-            )}
           </div>
         </ul>
       )}
@@ -142,4 +100,4 @@ const PendingFollowList = ({ userId, openedList, setOpenedList }) => {
   );
 };
 
-export default PendingFollowList;
+export default SuggestedFollowList;

@@ -2,18 +2,24 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import UserItem from "./UserItem";
 import { useContext } from "react";
-import { FollowerContext } from "./Follow";
+import { FollowContext } from "./Follow";
+import ImportAll from "./ImportAll";
 
 // Params:
 // @userId: userId of current user
 // @isFollowerList: true if want to render follower list, false if want to render followed list
 
 // Render followed user / follower list
-const FollowList = ({ userId, isFollowerList }) => {
+
+const images = ImportAll(
+  require.context("../images", false, /\.(png|jpe?g|svg)$/)
+);
+
+const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
   const [follows, setFollows] = useState([]);
   let apiString = isFollowerList ? "/follower/" : "/followed/";
-  let title = isFollowerList ? "Follower" : "Following ";
-  const { followerListUpdated } = useContext(FollowerContext);
+  let title = isFollowerList ? "Follower" : "Following";
+  const { followListUpdated } = useContext(FollowContext);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -27,7 +33,7 @@ const FollowList = ({ userId, isFollowerList }) => {
       }
     };
     fetchUserData().catch(console.error);
-  }, [userId, apiString, followerListUpdated]);
+  }, [userId, apiString, followListUpdated]);
 
   const handleRemove = async (followUserId) => {
     const followedUserId = isFollowerList ? userId : followUserId;
@@ -51,33 +57,84 @@ const FollowList = ({ userId, isFollowerList }) => {
     }
   };
 
+  const handleOpenedList = (title) => {
+    if (title === "Following") {
+      setOpenedList((prevState) => [!prevState[0], false, false, false]);
+    } else {
+      setOpenedList((prevState) => [false, !prevState[1], false, false]);
+    }
+  };
+
   return (
     <>
       <ul className="list-group" id="following-div">
-        <li
-          key="followingTitle"
-          className="list-group-item"
-          id="following-label"
-        >
+        <li key="followTitle" className="list-group-item" id="follow-label">
           {title}
+          <img
+            src={images["angle-up.svg"]}
+            alt="angle-up"
+            className={`white-img float-end h-75 cursor-pointer arrow ${
+              openedList[isFollowerList ? 1 : 0] ? "down" : "up"
+            }`}
+            onClick={() => handleOpenedList(title)}
+          ></img>
         </li>
-        {follows.map((follow) => (
-          <UserItem
-            userId={follow.userId}
-            username={follow.username}
-            buttons={[
-              {
-                text: isFollowerList ? "Remove" : "Unfollow",
-                onClick: handleRemove,
-              },
-            ]}
-          />
-        ))}
-        {!follows.length && (
-          <li key="no-follow" className="list-group-item">
-            No {title} Found
-          </li>
-        )}
+
+        {/* Following List */}
+        <div
+          className="overflow-auto"
+          style={{ maxHeight: "50vh" }}
+          hidden={openedList[0] ? false : true}
+        >
+          {follows.map(
+            (follow) =>
+              title === "Following" && (
+                <UserItem
+                  key={"Following" + follow.userId}
+                  userId={follow.userId}
+                  username={follow.username}
+                  userAvatar={follow.avatar}
+                  buttons={[
+                    {
+                      text: isFollowerList ? "Remove" : "Unfollow",
+                      onClick: handleRemove,
+                    },
+                  ]}
+                />
+              )
+          )}
+        </div>
+
+        {/* Follower List */}
+        <div
+          className="overflow-auto h-100"
+          style={{ maxHeight: "50vh" }}
+          hidden={openedList[1] ? false : true}
+        >
+          {follows.map(
+            (follow) =>
+              title === "Follower" && (
+                <UserItem
+                  key={"Follower" + follow.userId}
+                  userId={follow.userId}
+                  username={follow.username}
+                  userAvatar={follow.avatar}
+                  buttons={[
+                    {
+                      text: isFollowerList ? "Remove" : "Unfollow",
+                      onClick: handleRemove,
+                    },
+                  ]}
+                />
+              )
+          )}
+
+          {!follows.length && (
+            <li key="no-follow" className="list-group-item">
+              No {title}
+            </li>
+          )}
+        </div>
       </ul>
     </>
   );

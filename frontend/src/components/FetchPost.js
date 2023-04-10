@@ -1,7 +1,7 @@
-import { Component, useState } from "react";
-import { useNotification } from '../NotificationContext';
-import { useNavigate } from 'react-router-dom';
-import axios, {post} from "axios";
+import { Component } from "react";
+import { useNotification } from "../NotificationContext";
+import { Link } from "react-router-dom";
+import axios, { post } from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
 // import DeleteButtonContext from "./DeleteButtonContext";
@@ -18,32 +18,29 @@ const userId = localStorage.getItem("user")
 // print the userId in console
 console.log("userId is: " + userId);
 
-const UserID = ({ postId, userId, username, deleteButton, userAvatar}) => {
-
+const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
   const { showNotification } = useNotification();
-  const navigate = useNavigate();
 
   const handleDeletePost = async (postId) => {
     if (window.confirm("Do you want to delete this post?")) {
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
+          process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
         );
         console.log("Post deleted successfully!");
 
         // Use a timeout to delay showing the message after the page has reloaded
-        showNotification('Post has been deleted!', 'success');
+        showNotification("Post has been deleted!", "success");
         await new Promise((resolve) => setTimeout(resolve, 3000));
         window.location.reload(); // refresh the page
         //handleDeleteStatus(200);
         // Wait for 5 seconds before refreshing the page
         //await new Promise((resolve) => setTimeout(resolve, 3000));
-
       } catch (error) {
         console.error("Error deleting post:", error);
 
         // Use a timeout to delay showing the message after the page has reloaded
-        showNotification('Post has not been deleted!', 'error');
+        showNotification("Post has not been deleted!", "error");
         await new Promise((resolve) => setTimeout(resolve, 3000));
         window.location.reload(); // refresh the page
       }
@@ -77,23 +74,25 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar}) => {
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
       <div>
-        {userAvatar ? (
-          <div>
-            <img
-              src={userAvatar}
-              className="float-start post-user-avatar"
-              alt="user-avatar"
-            />
-          </div>
-        ) : (
-          <div>
-            <img
-              src={images["avatar.png"]}
-              className="float-start post-user-avatar white-img"
-              alt="user-avatar"
-            />
-          </div>
-        )}
+        <Link to={"/user?userId=" + userId}>
+          {userAvatar ? (
+            <div>
+              <img
+                src={userAvatar}
+                className="float-start post-user-avatar"
+                alt="user-avatar"
+              />
+            </div>
+          ) : (
+            <div>
+              <img
+                src={images["avatar.png"]}
+                className="float-start post-user-avatar white-img"
+                alt="user-avatar"
+              />
+            </div>
+          )}
+        </Link>
         <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
           <div className="fw-bold">{username}</div>
           <div>#{userId}</div>
@@ -154,8 +153,8 @@ class FetchPost extends Component {
       );
       const currentTime = Date.now();
 
-      if (lastLikeTime && currentTime - lastLikeTime < 10 * 1000) {
-        alert("You can only like or unlike once every 10 seconds.");
+      if (lastLikeTime && currentTime - lastLikeTime < 3 * 1000) {
+        alert("You can only like or unlike once every 3 seconds.");
         return;
       }
 
@@ -232,8 +231,8 @@ class FetchPost extends Component {
       );
       const currentTime = Date.now();
 
-      if (lastdislikeTime && currentTime - lastdislikeTime < 10 * 1000) {
-        alert("You can only dislike or undislike once every 10 seconds.");
+      if (lastdislikeTime && currentTime - lastdislikeTime < 2 * 1000) {
+        alert("You can only dislike or undislike once every 2 seconds.");
         return;
       }
 
@@ -308,11 +307,14 @@ class FetchPost extends Component {
   submitComment = async (postId, userId) => {
     try {
       // Replace this with the actual API endpoint for submitting a comment
-      const response = await axios.post(process.env.REACT_APP_DEV_API_PATH + "/submitComment", {
-        postId,
-        userId,
-        comment: this.state.commentText,
-      });
+      const response = await axios.post(
+        process.env.REACT_APP_DEV_API_PATH + "/submitComment",
+        {
+          postId,
+          userId,
+          comment: this.state.commentText,
+        }
+      );
 
       console.log("Comment submitted:", response.data);
     } catch (error) {
@@ -325,13 +327,13 @@ class FetchPost extends Component {
   // don't fetch the pictures again if the user scroll back to the top
   fetchPosts = async () => {
     const { page } = this.state;
-    const { profile } = this.props;
+    const targetUserId = this.props.userId ? this.props.userId : "";
     try {
       this.setState({ isLoading: true });
 
       const response = await axios.get(
         process.env.REACT_APP_DEV_API_PATH +
-          `/tweet?limit=10&page=${page}&userId=${userId}&profile=${profile}`
+          `/tweet?limit=10&page=${page}&userId=${targetUserId}`
       );
       const posts = response.data;
 
@@ -436,6 +438,7 @@ class FetchPost extends Component {
                 className="border-light border-opacity-50 pt-2 d-flex flex-row border-top justify-content-evenly"
                 id="post-function"
               >
+                {/* Like button */}
                 <div
                   className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
                   onClick={() => this.handleLikeClick(post._id, userId)}
@@ -450,6 +453,7 @@ class FetchPost extends Component {
                     alt="like"
                   />
                 </div>
+                {/* Dislike button */}
                 <div
                   className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center"
                   onClick={() => this.handleDislikeClick(post._id, userId)}
@@ -464,8 +468,10 @@ class FetchPost extends Component {
                     alt="like"
                   />
                 </div>
-                <div className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center"
-                     onClick={this.handleCommentClick}
+                {/* Comment button */}
+                <div
+                  className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center"
+                  onClick={this.handleCommentClick}
                 >
                   <img
                     className="white-img"
@@ -474,33 +480,37 @@ class FetchPost extends Component {
                   />
                 </div>
                 {this.state.showCommentInput && (
-                    <div className="overlay" onClick={this.handleCommentClick}>
-                      <div className="comment-container" onClick={(e) => e.stopPropagation()}>
-                        <div className="comment-left">
-                          {/* Display post information */}
+                  <div className="overlay" onClick={this.handleCommentClick}>
+                    <div
+                      className="comment-container"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="comment-left">
+                        {/* Display post information */}
+                      </div>
+                      <div className="comment-right">
+                        <div className="comment-list">
+                          {/* Display previous comments */}
                         </div>
-                        <div className="comment-right">
-                          <div className="comment-list">
-                            {/* Display previous comments */}
-                          </div>
-                          <div className="comment-input-section">
-                            <input
-                                type="text"
-                                value={this.state.commentText}
-                                onChange={this.handleCommentChange}
-                                placeholder="Write your comment here..."
-                            />
-                            <button
-                                onClick={() => this.submitComment(post._id, userId)}
-                                disabled={!this.state.commentText.trim()}
-                            >
-                              Submit Comment
-                            </button>
-                          </div>
+                        <div className="comment-input-section">
+                          <input
+                            type="text"
+                            value={this.state.commentText}
+                            onChange={this.handleCommentChange}
+                            placeholder="Write your comment here..."
+                          />
+                          <button
+                            onClick={() => this.submitComment(post._id, userId)}
+                            disabled={!this.state.commentText.trim()}
+                          >
+                            Submit Comment
+                          </button>
                         </div>
                       </div>
                     </div>
+                  </div>
                 )}
+                {/* Retweet button */}
                 <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
                   <img
                     className="white-img"
@@ -525,7 +535,6 @@ class FetchPost extends Component {
           )}
         </div>
       </div>
-
     );
   }
 }

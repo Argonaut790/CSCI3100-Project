@@ -38,7 +38,7 @@ body {
 }
 
 #sign-up-div {
-  background-image: url("./images/blob-scene-haikei.svg");
+  background-image: url('./images/blob-scene-haikei.svg');
   background-size: cover;
   padding: 3rem;
   border-radius: 20px;
@@ -292,7 +292,7 @@ img {
 
 .mask-avatar {
   backface-visibility: initial;
-  background-image: url("./images/avatar.png");
+  background-image: url('./images/avatar.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -301,7 +301,7 @@ img {
 }
 
 .mask-avatar::before {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   top: 0;
@@ -468,7 +468,7 @@ img {
 }
 
 .layer1 {
-  background-image: url("./images/stacked-waves-haikei.svg");
+  background-image: url('./images/stacked-waves-haikei.svg');
 }
 
 @keyframes dash {
@@ -697,7 +697,7 @@ img {
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 26px;
   width: 26px;
   left: 4px;
@@ -784,7 +784,7 @@ input:checked + .slider:before {
 }
 
 .opacity-slider::before {
-  content: "";
+  content: '';
   height: 4px;
   width: 4px;
   border-radius: 50%;
@@ -909,4 +909,21 @@ input:checked + .slider:before {
 
 #comment-submit {
   width: 1.5rem;
+}
+
+#post-function .btn {
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: box-shadow, transform;
+  transition-property: box-shadow, transform;
+}
+
+#post-function .btn:hover,
+#post-function .btn:focus,
+#post-function .btn:active {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }

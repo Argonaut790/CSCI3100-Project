@@ -1,12 +1,17 @@
-// import { Component } from "react";
 // import axios from "axios";
-
+import { useEffect } from "react";
 import ProfileContent from "./ProfileContent";
 import Search from "./Search";
 import Follow from "./Follow";
 
 //function needs to be Capital Letter in the first
-const Profile = ({ userId }) => {
+const Profile = ({ userId, maskBackgroundRef }) => {
+  useEffect(() => {
+    if (maskBackgroundRef.current) {
+      maskBackgroundRef.current.scrollTo(0, 0);
+    }
+  }, [maskBackgroundRef]);
+
   return (
     <>
       <div className="col-lg-6" id="content">

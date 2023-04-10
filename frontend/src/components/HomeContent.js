@@ -1,11 +1,12 @@
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
+import { useEffect } from "react";
 
-const HomeContent = () => {
+const HomeContent = ({ maskBackgroundRef }) => {
   return (
     <>
       <TopMid />
-      <Content />
+      <Content maskBackgroundRef={maskBackgroundRef} />
     </>
   );
 };
@@ -20,10 +21,14 @@ const TopMid = () => {
   );
 };
 
-const Content = () => {
+const Content = ({ maskBackgroundRef }) => {
+  // useEffect(() => {
+  //   console.log("maskBackgroundRef in Content:", maskBackgroundRef);
+  // }, [maskBackgroundRef]);
+
   return (
     <div className="container-fluid p-0" id="mid-center">
-      <FetchPost profile={false} />
+      <FetchPost profile={false} maskBackgroundRef={maskBackgroundRef} />
     </div>
   );
 };

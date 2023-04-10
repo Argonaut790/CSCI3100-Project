@@ -194,7 +194,6 @@ router.get("/stat/:userId", async (req, res) => {
     const postNum = await Post.find({ userId: req.params.userId }).count({
       sent_at: null,
     });
-    console.log(postNum);
     res.status(200).json({
       postNum: postNum,
     });

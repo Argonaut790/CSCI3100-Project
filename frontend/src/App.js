@@ -63,7 +63,8 @@ function App() {
   const [isAdmin, setIsAdmin] = useState("");
   const [userAvatar, setUserAvatar] = useState(null);
   const [opacity, setOpacity] = useState(0.1);
-  const maskBackgroundRef = useRef(null);
+
+  const maskBackgroundRef = useRef();
 
   let location = useLocation();
 
@@ -363,8 +364,18 @@ function App() {
               </div>
             </div>
             <Routes>
-              <Route path="/" element={<Home userId={userId} />} />
-              <Route path="/home" element={<Home userId={userId} />} />
+              <Route
+                path="/"
+                element={
+                  <Home userId={userId} maskBackgroundRef={maskBackgroundRef} />
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <Home userId={userId} maskBackgroundRef={maskBackgroundRef} />
+                }
+              />
               {/* <Route
               path="/Homepage/:id"
               render={(props) => <PostLogon {...props} user={user} />}

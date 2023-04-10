@@ -817,36 +817,33 @@ input:checked + .slider:before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: #00000024;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 2;
 }
 
 .comment-container {
-  background-color: white;
-  display: flex;
-  max-width: 900px;
-  width: 100%;
-  height: 80%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  overflow: hidden;
+  background-color: #2b2b2b;
+  width: 70%;
+  aspect-ratio: 16/9;
+  box-shadow: 0 0 0.7rem rgb(0 0 0 / 20%);
+  border-radius: 10px;
+  /* overflow: hidden; */
 }
 
 .comment-left {
-  width: 50%;
-  padding: 20px;
+  aspect-ratio: 1/1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-right: 1px solid #f0f0f0;
+  width: 70%;
 }
 
 .comment-right {
-  width: 50%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -858,20 +855,23 @@ input:checked + .slider:before {
   max-height: calc(100% - 60px);
 }
 
-.comment-input-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* .comment-input-section {
   padding: 10px 20px;
-  border-top: 1px solid #f0f0f0;
-}
+} */
 
-.comment-input-section input {
+.comment-input-section textarea {
   flex: 1;
-  margin-right: 10px;
-  border: 1px solid #f0f0f0;
-  border-radius: 5px;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: transparent;
+  /* margin-right: 10px; */
+  /* border: 1px solid #f0f0f0; */
+  /* border-radius: 5px; */
   padding: 5px 10px;
+  outline: none;
+  resize: none;
+  max-height: 200px;
+  overflow-y: scroll;
+  width: 100%;
 }
 
 .comment-input-section button {
@@ -885,4 +885,28 @@ input:checked + .slider:before {
 
 .comment-input-section button:disabled {
   background-color: #b3dffc;
+}
+
+#comment-post-div {
+  aspect-ratio: 1/1;
+}
+
+#comment-post {
+  aspect-ratio: 1/1;
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  object-position: center;
+}
+
+#comment-input-div {
+  width: 85%;
+}
+
+#comment-submit-div {
+  width: 15%;
+}
+
+#comment-submit {
+  width: 1.5rem;
 }

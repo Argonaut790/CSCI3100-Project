@@ -6,6 +6,7 @@ import axios, { post } from "axios";
 import ImportAll from "./ImportAll";
 // import DeleteButtonContext from "./DeleteButtonContext";
 import moment from "moment";
+import Retweet from "./Retweet";
 
 const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
@@ -103,6 +104,94 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
   );
 };
 
+const CommentUserID = ({ postId, userId, username, userAvatar, timestamp }) => {
+  return (
+    <div className="overflow-hidden p-2 d-flex flex-row justify-content-between">
+      <div className="d-flex flex-row justify-content-between w-100">
+        <div>
+          <Link to={"/user?userId=" + userId}>
+            {userAvatar ? (
+              <div>
+                <img
+                  src={userAvatar}
+                  className="float-start post-user-avatar"
+                  alt="user-avatar"
+                />
+              </div>
+            ) : (
+              <div>
+                <img
+                  src={images["avatar.png"]}
+                  className="float-start post-user-avatar white-img"
+                  alt="user-avatar"
+                />
+              </div>
+            )}
+          </Link>
+          <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+            <div className="fw-bold">{username}</div>
+            <div>#{userId}</div>
+          </div>
+        </div>
+        <div>
+          <div>{moment(timestamp).format("MMMM Do")}</div>
+          <div>{moment(timestamp).format("h:mm a")}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Comment = ({
+  comment,
+  postId,
+  userId,
+  username,
+  userAvatar,
+  timestamp,
+}) => {
+  return (
+    <div className="p-2">
+      <div className="rounded border border-light border-opacity-50 overflow-hidden p-2 d-flex flex-column justify-content-between">
+        <div className="p-2 d-flex flex-row justify-content-between w-100">
+          <div className="w-75">
+            <Link to={"/user?userId=" + userId}>
+              {userAvatar ? (
+                <div>
+                  <img
+                    src={userAvatar}
+                    className="float-start post-user-avatar"
+                    alt="user-avatar"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <img
+                    src={images["avatar.png"]}
+                    className="float-start post-user-avatar white-img"
+                    alt="user-avatar"
+                  />
+                </div>
+              )}
+            </Link>
+            <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+              <div className="fw-bold">{username}</div>
+              <div>#{userId}</div>
+            </div>
+          </div>
+          <div className="w-25">
+            <div>{moment(timestamp).format("MMMM Do")}</div>
+            <div>{moment(timestamp).format("h:mm a")}</div>
+          </div>
+        </div>
+        <div className="p-2 border-top border-light border-opacity-25">
+          {comment}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 class FetchPost extends Component {
   constructor() {
     super();
@@ -117,12 +206,13 @@ class FetchPost extends Component {
       commentText: "",
       commentTextCount: 0,
       showCommentInput: false,
+      retweetHandled: false,
     };
     // this.postListRef = createRef();
   }
 
-  componentDidMount() {
-    const { profile, maskBackgroundRef } = this.props;
+  async componentDidMount() {
+    const { profile, maskBackgroundRef } = await this.props;
     const { current } = maskBackgroundRef;
     console.dir(this.props);
     console.log("maskBackgroundRef in FetchPost: " + current);
@@ -313,12 +403,12 @@ class FetchPost extends Component {
     }
   };
 
+  //Comment part
   handleCommentClick = (post) => {
     this.setState((prevState) => ({
       selectedPost: post,
       showCommentInput: !prevState.showCommentInput,
     }));
-    console.log("Post: " + this.state.showCommentInput);
   };
 
   handleCommentChange = (e) => {
@@ -369,6 +459,14 @@ class FetchPost extends Component {
     this.setState({ commentText: "", showCommentInput: false });
   };
 
+  //Retweet part
+  handleRetweetClick = (post) => {
+    this.setState((prevState) => ({
+      selectedPost: post,
+      retweetHandled: !prevState.retweetHandled,
+    }));
+  };
+
   // don't fetch the pictures again if the user scroll back to the top
   fetchPosts = async () => {
     const { page } = this.state;
@@ -413,17 +511,17 @@ class FetchPost extends Component {
     const { current } = maskBackgroundRef;
 
     const { isLoading, hasMore } = this.state;
-    console.log("handleScroll");
+    // console.log("handleScroll");
     if (isLoading || !hasMore) return;
 
     const { scrollTop, scrollHeight, clientHeight } = current;
 
-    console.log("scrollTop:", scrollTop);
-    console.log("scrollHeight:", scrollHeight);
-    console.log("clientHeight:", clientHeight);
+    // console.log("scrollTop:", scrollTop);
+    // console.log("scrollHeight:", scrollHeight);
+    // console.log("clientHeight:", clientHeight);
 
     if (scrollTop + clientHeight >= scrollHeight) {
-      console.log("Fetching more posts...");
+      // console.log("Fetching more posts...");
       this.fetchPosts();
     }
   };
@@ -560,10 +658,81 @@ class FetchPost extends Component {
                         </div>
                       </div>
                       <div className="comment-right">
-                        <div className="comment-list">
-                          {/* Display previous comments */}
+                        <div style={{ height: "90%" }}>
+                          <div
+                            style={{ height: "20%" }}
+                            className="overflow-hidden d-grid border-bottom border-light border-opacity-50"
+                          >
+                            <CommentUserID
+                              postId={this.state.selectedPost._id}
+                              userId={this.state.selectedPost.userId}
+                              username={this.state.selectedPost.username}
+                              userAvatar={this.state.selectedPost.avatarURL}
+                              timestamp={this.state.selectedPost.timestamp}
+                            />
+                            <div className="p-2 ">
+                              {this.state.selectedPost.desc}
+                            </div>
+                          </div>
+                          <div
+                            className="comment-list overflow-y-scroll p-3"
+                            style={{ height: "80%" }}
+                          >
+                            {/* Display previous comments */}
+                            <Comment
+                              comment="hello hello hello hello hello hello hello hello hello hello hello hello "
+                              postId={this.state.selectedPost._id}
+                              userId={this.state.selectedPost.userId}
+                              username={this.state.selectedPost.username}
+                              userAvatar={this.state.selectedPost.avatarURL}
+                              timestamp={this.state.selectedPost.timestamp}
+                            />
+                            <Comment
+                              comment="hello hello hello hello hello hello hello hello hello hello hello hello "
+                              postId={this.state.selectedPost._id}
+                              userId={this.state.selectedPost.userId}
+                              username={this.state.selectedPost.username}
+                              userAvatar={this.state.selectedPost.avatarURL}
+                              timestamp={this.state.selectedPost.timestamp}
+                            />
+                            <Comment
+                              comment="hello hello hello hello hello hello hello hello hello hello hello hello "
+                              postId={this.state.selectedPost._id}
+                              userId={this.state.selectedPost.userId}
+                              username={this.state.selectedPost.username}
+                              userAvatar={this.state.selectedPost.avatarURL}
+                              timestamp={this.state.selectedPost.timestamp}
+                            />
+                            <Comment
+                              comment="hello hello hello hello hello hello hello hello hello hello hello hello "
+                              postId={this.state.selectedPost._id}
+                              userId={this.state.selectedPost.userId}
+                              username={this.state.selectedPost.username}
+                              userAvatar={this.state.selectedPost.avatarURL}
+                              timestamp={this.state.selectedPost.timestamp}
+                            />
+                            <Comment
+                              comment="hello hello hello hello hello hello hello hello hello hello hello hello "
+                              postId={this.state.selectedPost._id}
+                              userId={this.state.selectedPost.userId}
+                              username={this.state.selectedPost.username}
+                              userAvatar={this.state.selectedPost.avatarURL}
+                              timestamp={this.state.selectedPost.timestamp}
+                            />
+                            <Comment
+                              comment="hello hello hello hello hello hello hello hello hello hello hello hello "
+                              postId={this.state.selectedPost._id}
+                              userId={this.state.selectedPost.userId}
+                              username={this.state.selectedPost.username}
+                              userAvatar={this.state.selectedPost.avatarURL}
+                              timestamp={this.state.selectedPost.timestamp}
+                            />
+                          </div>
                         </div>
-                        <div className="w-100 p-3 comment-input-section border-top border-light border-opacity-50 d-flex justify-content-evenly align-items-center">
+                        <div
+                          style={{ height: "10%" }}
+                          className="w-100 p-3 comment-input-section border-top border-light border-opacity-50 d-flex justify-content-evenly align-items-center"
+                        >
                           {/* comment field  */}
 
                           {/* <input
@@ -612,13 +781,25 @@ class FetchPost extends Component {
                   </div>
                 )}
                 {/* Retweet button */}
-                <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
+                <div
+                  onClick={() => this.handleRetweetClick(post)}
+                  className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
+                >
                   <img
                     className="white-img"
                     src={images["arrows-retweet.svg"]}
                     alt="retweet"
                   />
                 </div>
+                {/* display retweet section  */}
+                {this.state.retweetHandled && (
+                  <div
+                    className="overlay"
+                    onClick={() => this.handleRetweetClick(post)}
+                  >
+                    <Retweet handleRetweetClick={this.handleRetweetClick} />
+                  </div>
+                )}
               </div>
             </div>
           ))}

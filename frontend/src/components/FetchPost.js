@@ -109,45 +109,26 @@ class FetchPost extends Component {
     super();
     this.state = {
       posts: [],
-      selectedPost: null,
       isLoading: false,
       page: 0,
       hasMore: true,
       likedPosts: JSON.parse(localStorage.getItem("likedPosts")) || [],
       dislikedPosts: JSON.parse(localStorage.getItem("dislikedPosts")) || [],
       commentText: "",
-      commentTextCount: 0,
       showCommentInput: false,
       comments: [],
     };
     // this.postListRef = createRef();
   }
 
-  componentDidMount() {
-    const { profile, maskBackgroundRef } = this.props;
-    const { current } = maskBackgroundRef;
-    console.dir(this.props);
-    console.log("maskBackgroundRef in FetchPost: " + current);
-
-    try {
-      current.addEventListener("scroll", this.handleScroll);
-      console.log("current: " + current);
-      console.log("Success");
-    } catch (error) {
-      console.log(error);
-    }
-
+  async componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
     this.fetchPosts();
   }
 
-  // componentWillUnmount() {
-  //   const { profile, maskBackgroundRef } = this.props;
-  //   const { current } = maskBackgroundRef;
-
-  //   if (maskBackgroundRef && maskBackgroundRef.current) {
-  //     current.removeEventListener("scroll", this.handleScroll);
-  //   }
-  // }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
 
   /*  Module: handleLickClick and handleDislikeClick
    *   Version: 3.0 (3/4/2023)
@@ -315,9 +296,6 @@ class FetchPost extends Component {
     }
   };
 
-<<<<<<< Updated upstream
-  handleCommentClick = (post) => {
-=======
   fetchComments = async (postId) => {
     try {
       console.log('Fetching comments for postId:', postId);
@@ -335,40 +313,13 @@ class FetchPost extends Component {
     // Fetch comments for the clicked post
     this.fetchComments(postId);
 
->>>>>>> Stashed changes
     this.setState((prevState) => ({
-      selectedPost: post,
       showCommentInput: !prevState.showCommentInput,
     }));
-    console.log("Post: " + this.state.showCommentInput);
   };
 
-  handleCommentChange = (e) => {
-    // Get the input value
-    let inputValue = e.target.value;
-
-    // Update the state only if the limited input value is shorter than the current desc
-    if (inputValue.split(/\s+/).length <= 200) {
-      this.setState({ commentText: e.target.value });
-    }
-
-    // const descWordCount = this.state.desc.split(/\s+/).length;
-    let inputLength = inputValue.split(/\s+/).length;
-    const inputArray = inputValue.split(/\s+/);
-
-    if (inputArray[inputLength - 1] === "") {
-      inputLength--;
-    }
-
-    this.setState({ commentTextCount: inputLength });
-
-    // Update the input element's height to fit its content
-    // it's not working
-    e.target.style.height = "auto";
-    e.target.style.height =
-      e.target.scrollHeight > 200 ? "200px" : e.target.scrollHeight + "px";
-    e.target.style.overflowY =
-      e.target.scrollHeight > 200 ? "scroll" : "hidden";
+  handleCommentChange = (event) => {
+    this.setState({ commentText: event.target.value });
   };
 
   submitComment = async (postId, userId) => {
@@ -448,25 +399,21 @@ class FetchPost extends Component {
     this.setState({ isLoading: false });
   };
 
-  handleScroll = () => {
-    const { profile, maskBackgroundRef } = this.props;
-    const { current } = maskBackgroundRef;
+  // handleScroll = () => {
+  //   const { isLoading, hasMore } = this.state;
+  //   if (isLoading || !hasMore || !this.postListRef.current) return;
 
-    const { isLoading, hasMore } = this.state;
-    console.log("handleScroll");
-    if (isLoading || !hasMore) return;
+  //   const { scrollTop, scrollHeight, clientHeight } = this.postListRef.current;
 
-    const { scrollTop, scrollHeight, clientHeight } = current;
+  //   console.log("scrollTop:", scrollTop);
+  //   console.log("scrollHeight:", scrollHeight);
+  //   console.log("clientHeight:", clientHeight);
 
-    console.log("scrollTop:", scrollTop);
-    console.log("scrollHeight:", scrollHeight);
-    console.log("clientHeight:", clientHeight);
-
-    if (scrollTop + clientHeight >= scrollHeight) {
-      console.log("Fetching more posts...");
-      this.fetchPosts();
-    }
-  };
+  //   if (scrollTop + clientHeight >= scrollHeight) {
+  //     console.log("Fetching more posts...");
+  //     this.fetchPosts();
+  //   }
+  // };
 
   render() {
     const { posts, isLoading } = this.state;
@@ -564,7 +511,7 @@ class FetchPost extends Component {
                 {/* Comment button */}
                 <div
                   className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center"
-                  onClick={() => this.handleCommentClick(post)}
+                  onClick={this.handleCommentClick}
                 >
                   <img
                     className="white-img"
@@ -572,89 +519,33 @@ class FetchPost extends Component {
                     alt="comment"
                   />
                 </div>
-                {/* display comment section  */}
                 {this.state.showCommentInput && (
-<<<<<<< Updated upstream
-                  <div
-                    className="overlay"
-                    onClick={() => this.handleCommentClick(post)}
-                  >
-=======
                   <div className="overlay" onClick={() => this.handleCommentClick(post._id)}>
->>>>>>> Stashed changes
                     <div
-                      className="comment-container d-flex "
+                      className="comment-container"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="comment-left border-end border-light border-opacity-50">
-                        <div
-                          id="comment-post-div"
-                          className="h-100 d-flex justify-content-center align-items-center"
-                        >
-                          {/* post image  */}
-                          <img
-                            src={this.state.selectedPost.imageUrl}
-                            className="post-image"
-                            alt={this.state.selectedPost.desc}
-                            style={{ display: "none" }}
-                            ref={(el) => (this[`commentImage${index}`] = el)}
-                            // onload success
-                            onLoad={() => {
-                              this[`spinner${index}`].style.display = "none";
-                              this[`commentImage${index}`].style.display =
-                                "block";
-                            }}
-                          ></img>
-                        </div>
+                      <div className="comment-left">
+                        {/* Display post information */}
                       </div>
                       <div className="comment-right">
                         <div className="comment-list">
                           {/* Display previous comments */}
                           <CommentList comments={this.state.comments} />
                         </div>
-                        <div className="w-100 p-3 comment-input-section border-top border-light border-opacity-50 d-flex justify-content-evenly align-items-center">
-                          {/* comment field  */}
-
-                          {/* <input
+                        <div className="comment-input-section">
+                          <input
                             type="text"
                             value={this.state.commentText}
                             onChange={this.handleCommentChange}
                             placeholder="Write your comment here..."
-                          /> */}
-
-                          <div className="form-floating" id="comment-input-div">
-                            <textarea
-                              name="Comment"
-                              className="text-light border border-0 border-bottom"
-                              id="floatingComment"
-                              placeholder="Comment"
-                              rows="1"
-                              value={this.commentText}
-                              onChange={this.handleCommentChange}
-                            />
-                            {/* <label htmlFor="floatingUsername">Comment</label> */}
-                          </div>
-
-                          {/* submit button  */}
-                          {/* <button
+                          />
+                          <button
                             onClick={() => this.submitComment(post._id, userId)}
                             disabled={!this.state.commentText.trim()}
                           >
                             Submit Comment
-                          </button> */}
-                          <div
-                            className="d-flex justify-content-center align-items-center"
-                            id="comment-submit-div"
-                          >
-                            <img
-                              src={images["comment.svg"]}
-                              className="white-img"
-                              id="comment-submit"
-                              alt="comment-submit"
-                              onClick={this.submitComment}
-                              style={{ cursor: "pointer" }}
-                            />
-                          </div>
+                          </button>
                         </div>
                       </div>
                     </div>

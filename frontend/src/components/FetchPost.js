@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { useNotification } from "../NotificationContext";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios, { post } from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
 // import DeleteButtonContext from "./DeleteButtonContext";
@@ -113,6 +113,8 @@ class FetchPost extends Component {
       hasMore: true,
       likedPosts: JSON.parse(localStorage.getItem("likedPosts")) || [],
       dislikedPosts: JSON.parse(localStorage.getItem("dislikedPosts")) || [],
+      commentText: "",
+      showCommentInput: false,
     };
     // this.postListRef = createRef();
   }
@@ -292,6 +294,36 @@ class FetchPost extends Component {
     }
   };
 
+  handleCommentClick = () => {
+    this.setState((prevState) => ({
+      showCommentInput: !prevState.showCommentInput,
+    }));
+  };
+
+  handleCommentChange = (event) => {
+    this.setState({ commentText: event.target.value });
+  };
+
+  submitComment = async (postId, userId) => {
+    try {
+      // Replace this with the actual API endpoint for submitting a comment
+      const response = await axios.post(
+        process.env.REACT_APP_DEV_API_PATH + "/submitComment",
+        {
+          postId,
+          userId,
+          comment: this.state.commentText,
+        }
+      );
+
+      console.log("Comment submitted:", response.data);
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    }
+
+    this.setState({ commentText: "", showCommentInput: false });
+  };
+
   // don't fetch the pictures again if the user scroll back to the top
   fetchPosts = async () => {
     const { page } = this.state;
@@ -437,13 +469,47 @@ class FetchPost extends Component {
                   />
                 </div>
                 {/* Comment button */}
-                <div className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center">
+                <div
+                  className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center"
+                  onClick={this.handleCommentClick}
+                >
                   <img
                     className="white-img"
                     src={images["comment-alt.svg"]}
                     alt="comment"
                   />
                 </div>
+                {this.state.showCommentInput && (
+                  <div className="overlay" onClick={this.handleCommentClick}>
+                    <div
+                      className="comment-container"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="comment-left">
+                        {/* Display post information */}
+                      </div>
+                      <div className="comment-right">
+                        <div className="comment-list">
+                          {/* Display previous comments */}
+                        </div>
+                        <div className="comment-input-section">
+                          <input
+                            type="text"
+                            value={this.state.commentText}
+                            onChange={this.handleCommentChange}
+                            placeholder="Write your comment here..."
+                          />
+                          <button
+                            onClick={() => this.submitComment(post._id, userId)}
+                            disabled={!this.state.commentText.trim()}
+                          >
+                            Submit Comment
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {/* Retweet button */}
                 <div className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0">
                   <img

@@ -1,5 +1,6 @@
 const express = require("express");
 const Comment = require("../model/comment");
+const Account = require("../model/account");
 const router = express.Router();
 
 // Post comment
@@ -33,20 +34,39 @@ router.delete("/:postId/:userId", async (req, res) => {
 });
 
 // Get comments by post
-router.get("/stat/", async (req, res) => {
+router.get("/:postId", async (req, res) => {
   try {
     const comments = await Comment.find({
-      postId: req.body.postId,
+      //auto-generated postId
+      postId: req.params.postId,
     });
+    // Map comments to include user data and avatar URL
+    const commentsWithUserData = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await Account.findOne({ userId: comment.userId });
+        const username = user ? user.username : "";
+        const userAvatar = user.avatar.filename || null;
+        const avatarURL = userAvatar
+          ? `http://${req.headers.host}/account/profile/avatar/${userAvatar}`
+          : null;
 
-    res.status(200).json(comments);
+        return {
+          comment: comment.comment,
+          timestamp: comment.timestamp,
+          username: username,
+          avatarURL: avatarURL,
+        };
+      })
+    );
+
+    res.status(200).json(commentsWithUserData);
   } catch (err) {
     res.status(401).json(err);
   }
 });
 
 // Count comment by post
-router.get("/stat/", async (req, res) => {
+router.get("/counts/", async (req, res) => {
   try {
     const commentNum = await Comment.count({
       postId: req.body.postId,

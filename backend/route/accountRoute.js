@@ -483,7 +483,7 @@ router.get("/profile/:userId", async (req, res) => {
 });
 
 // Fuzzy Search username & userId
-router.get("/search/:searchString", async (req, res) => {
+router.get("/search/:userId/:searchString", async (req, res) => {
   try {
     // Validate and sanitize search string
     const sanitizedQuery = validator.escape(req.params.searchString + "");
@@ -495,8 +495,13 @@ router.get("/search/:searchString", async (req, res) => {
     const users = await Account.find({
       $or: [{ username: { $regex: pattern } }, { userId: { $regex: pattern } }],
     });
-    //TODO: select useful fields only
-    res.status(200).json(users);
+
+    // Skip user's own profile
+    const usersResult = users.filter(
+      (user) => user.userId != req.params.userId
+    );
+
+    res.status(200).json(usersResult);
   } catch (err) {
     res.status(401).json({ message: err });
   }

@@ -409,7 +409,10 @@ function App() {
               )}
               {/* {loggedIn && <Route path="/tweet" element={<Tweet />} />} */}
               <Route path="/confirm" element={<AccountConfirm />} />
-              <Route path="/user" element={<UserProfile />}></Route>
+              <Route
+                path="/user"
+                element={<UserProfile userId={userId} />}
+              ></Route>
               <Route path="/reset-password" element={<ResetPassword />} />
             </Routes>
           </div>

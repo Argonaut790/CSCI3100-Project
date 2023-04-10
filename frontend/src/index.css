@@ -918,3 +918,12 @@ input:checked + .slider:before {
 #comment-submit {
   width: 1.5rem;
 }
+
+#reset-pw-mask {
+  width: 100vw;
+  z-index: 2;
+  position: absolute;
+  background-color: #00000070;
+  top: 0;
+  left: 0;
+}

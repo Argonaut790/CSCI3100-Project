@@ -3,12 +3,18 @@
 
 import UserProfileContent from "./UserProfileContent";
 import Search from "./Search";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 //function needs to be Capital Letter in the first
-const UserProfile = () => {
+const UserProfile = ({ userId }) => {
   const [searchParams] = useSearchParams();
   const targetUserId = searchParams.get("userId");
+  const navigate = useNavigate();
+
+  // Redirect to profile page when searching own profile
+  if (userId === targetUserId) {
+    navigate("/profile");
+  }
   return (
     <>
       <div className="col-lg-6" id="content">
@@ -16,7 +22,7 @@ const UserProfile = () => {
       </div>
       <div className="col-lg-3 vh-100" id="explore">
         <div className="container-fluid p-0 mt-4" id="rhs">
-          <Search />
+          <Search userId={userId} />
         </div>
       </div>
     </>

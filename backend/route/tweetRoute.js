@@ -129,6 +129,34 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get post by id include comments
+router.get("/post/:postId", async (req, res) => {
+  try {
+    const post = await Post.findOne({ postId: req.params.postId });
+    const user = await Account.findOne({ userId: post.userId });
+    // find comment in comment collection and sort by timestamp
+
+    // const comments = await Comment.find({ postId: req.params.postId }).sort({
+    //   timestamp: -1,
+    // });
+
+    const username = user ? user.username : "";
+    const imageUrl = `http://${req.headers.host}/tweet/image/${post.image.filename}`;
+
+    const userAvatar = user.avatar.filename || null;
+    let avatarURL = null;
+    if (userAvatar) {
+      avatarURL = `http://${req.headers.host}/account/profile/avatar/${userAvatar}`;
+    } else {
+      avatarURL = null;
+    }
+
+    return { ...post._doc, imageUrl, username, avatarURL };
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Serve an image
 
 // Abstraction here: Cause we used GridFSBucket to store the image into multiples chunck

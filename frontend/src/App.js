@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useState, createRef } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import {
   Routes,
   Route,
@@ -63,7 +63,7 @@ function App() {
   const [isAdmin, setIsAdmin] = useState("");
   const [userAvatar, setUserAvatar] = useState(null);
   const [opacity, setOpacity] = useState(0.1);
-  const maskBackgroundRef = createRef();
+  const maskBackgroundRef = useRef(null);
 
   let location = useLocation();
 
@@ -110,7 +110,7 @@ function App() {
       }
     };
     fetchUserData().catch(console.error);
-  }, [userId, location]);
+  }, [userId, location, opacity]);
 
   const handleLogout = useCallback(() => {
     setUserId("");
@@ -371,7 +371,15 @@ function App() {
             /> */}
               {/* {loggedIn && <Route path="/chat" element={<Chat />} />} */}
               {loggedIn && (
-                <Route path="/profile" element={<Profile userId={userId} />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <Profile
+                      userId={userId}
+                      maskBackgroundRef={maskBackgroundRef}
+                    />
+                  }
+                />
               )}
               {loggedIn && isAdmin && (
                 <Route path="/admin" element={<Admin />} />

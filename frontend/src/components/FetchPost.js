@@ -108,12 +108,14 @@ class FetchPost extends Component {
     super();
     this.state = {
       posts: [],
+      selectedPost: null,
       isLoading: false,
       page: 0,
       hasMore: true,
       likedPosts: JSON.parse(localStorage.getItem("likedPosts")) || [],
       dislikedPosts: JSON.parse(localStorage.getItem("dislikedPosts")) || [],
       commentText: "",
+      commentTextCount: 0,
       showCommentInput: false,
     };
     // this.postListRef = createRef();
@@ -294,14 +296,40 @@ class FetchPost extends Component {
     }
   };
 
-  handleCommentClick = () => {
+  handleCommentClick = (post) => {
     this.setState((prevState) => ({
+      selectedPost: post,
       showCommentInput: !prevState.showCommentInput,
     }));
+    console.log("Post: " + this.state.showCommentInput);
   };
 
-  handleCommentChange = (event) => {
-    this.setState({ commentText: event.target.value });
+  handleCommentChange = (e) => {
+    // Get the input value
+    let inputValue = e.target.value;
+
+    // Update the state only if the limited input value is shorter than the current desc
+    if (inputValue.split(/\s+/).length <= 200) {
+      this.setState({ commentText: e.target.value });
+    }
+
+    // const descWordCount = this.state.desc.split(/\s+/).length;
+    let inputLength = inputValue.split(/\s+/).length;
+    const inputArray = inputValue.split(/\s+/);
+
+    if (inputArray[inputLength - 1] === "") {
+      inputLength--;
+    }
+
+    this.setState({ commentTextCount: inputLength });
+
+    // Update the input element's height to fit its content
+    // it's not working
+    e.target.style.height = "auto";
+    e.target.style.height =
+      e.target.scrollHeight > 200 ? "200px" : e.target.scrollHeight + "px";
+    e.target.style.overflowY =
+      e.target.scrollHeight > 200 ? "scroll" : "hidden";
   };
 
   submitComment = async (postId, userId) => {
@@ -471,7 +499,7 @@ class FetchPost extends Component {
                 {/* Comment button */}
                 <div
                   className="btn rounded-0 px-5 border-light border-opacity-50 border-top-0 border-bottom-0 w-30 d-flex justify-content-center"
-                  onClick={this.handleCommentClick}
+                  onClick={() => this.handleCommentClick(post)}
                 >
                   <img
                     className="white-img"
@@ -479,32 +507,84 @@ class FetchPost extends Component {
                     alt="comment"
                   />
                 </div>
+                {/* display comment section  */}
                 {this.state.showCommentInput && (
-                  <div className="overlay" onClick={this.handleCommentClick}>
+                  <div
+                    className="overlay"
+                    onClick={() => this.handleCommentClick(post)}
+                  >
                     <div
-                      className="comment-container"
+                      className="comment-container d-flex "
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="comment-left">
-                        {/* Display post information */}
+                      <div className="comment-left border-end border-light border-opacity-50">
+                        <div
+                          id="comment-post-div"
+                          className="h-100 d-flex justify-content-center align-items-center"
+                        >
+                          {/* post image  */}
+                          <img
+                            src={this.state.selectedPost.imageUrl}
+                            className="post-image"
+                            alt={this.state.selectedPost.desc}
+                            style={{ display: "none" }}
+                            ref={(el) => (this[`commentImage${index}`] = el)}
+                            // onload success
+                            onLoad={() => {
+                              this[`spinner${index}`].style.display = "none";
+                              this[`commentImage${index}`].style.display =
+                                "block";
+                            }}
+                          ></img>
+                        </div>
                       </div>
                       <div className="comment-right">
                         <div className="comment-list">
                           {/* Display previous comments */}
                         </div>
-                        <div className="comment-input-section">
-                          <input
+                        <div className="w-100 p-3 comment-input-section border-top border-light border-opacity-50 d-flex justify-content-evenly align-items-center">
+                          {/* comment field  */}
+
+                          {/* <input
                             type="text"
                             value={this.state.commentText}
                             onChange={this.handleCommentChange}
                             placeholder="Write your comment here..."
-                          />
-                          <button
+                          /> */}
+
+                          <div className="form-floating" id="comment-input-div">
+                            <textarea
+                              name="Comment"
+                              className="text-light border border-0 border-bottom"
+                              id="floatingComment"
+                              placeholder="Comment"
+                              rows="1"
+                              value={this.commentText}
+                              onChange={this.handleCommentChange}
+                            />
+                            {/* <label htmlFor="floatingUsername">Comment</label> */}
+                          </div>
+
+                          {/* submit button  */}
+                          {/* <button
                             onClick={() => this.submitComment(post._id, userId)}
                             disabled={!this.state.commentText.trim()}
                           >
                             Submit Comment
-                          </button>
+                          </button> */}
+                          <div
+                            className="d-flex justify-content-center align-items-center"
+                            id="comment-submit-div"
+                          >
+                            <img
+                              src={images["comment.svg"]}
+                              className="white-img"
+                              id="comment-submit"
+                              alt="comment-submit"
+                              onClick={this.submitComment}
+                              style={{ cursor: "pointer" }}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>

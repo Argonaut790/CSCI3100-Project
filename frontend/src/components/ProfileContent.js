@@ -41,7 +41,7 @@ const Content = () => {
   // Get userId from localStorage
   const userId = JSON.parse(localStorage.getItem("user")).userId;
   // print the userId in console
-  console.log(userId);
+  // console.log(userId);
 
   return (
     <div className="container-fluid p-0" id="mid-center">
@@ -135,7 +135,7 @@ const PersonalInfo = () => {
         );
         if (!res.error) {
           const avatarData = res.data;
-          console.log("avartarData: ", avatarData);
+          // console.log("avartarData: ", avatarData);
           const imageResponse = await axios.get(avatarData, {
             responseType: "blob",
           });
@@ -205,35 +205,35 @@ const PersonalInfo = () => {
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
-  const onPaste = (e) => {
-    // Prevent the default paste behavior
-    e.preventDefault();
+  // const onPaste = (e) => {
+  //   // Prevent the default paste behavior
+  //   e.preventDefault();
 
-    // Get the pasted text from the event
-    const pastedText = e.clipboardData.getData("text");
+  //   // Get the pasted text from the event
+  //   const pastedText = e.clipboardData.getData("text");
 
-    // Calculate the number of words in the current bio and the pasted text
-    const currentWordCount = editedBio.split(/\s+/).length;
-    const pastedWordCount = pastedText.split(/\s+/).length;
+  //   // Calculate the number of words in the current bio and the pasted text
+  //   const currentWordCount = editedBio.split(/\s+/).length;
+  //   const pastedWordCount = pastedText.split(/\s+/).length;
 
-    // Calculate the remaining words allowed in the bio
-    const remainingWords = 200 - currentWordCount;
+  //   // Calculate the remaining words allowed in the bio
+  //   const remainingWords = 200 - currentWordCount;
 
-    // If the pasted text has more words than allowed, truncate it
-    const allowedPastedWords = pastedText.split(/\s+/).slice(0, remainingWords);
-    const allowedPastedText = allowedPastedWords.join(" ");
+  //   // If the pasted text has more words than allowed, truncate it
+  //   const allowedPastedWords = pastedText.split(/\s+/).slice(0, remainingWords);
+  //   const allowedPastedText = allowedPastedWords.join(" ");
 
-    // Concatenate the current bio and the allowed pasted text
-    const newBio = editedBio + " " + allowedPastedText;
+  //   // Concatenate the current bio and the allowed pasted text
+  //   const newBio = editedBio + " " + allowedPastedText;
 
-    // Update the state with the new bio and its word count
-    setEditedBio(newBio);
-    setEditBioCount(newBio.split(/\s+/).length);
+  //   // Update the state with the new bio and its word count
+  //   setEditedBio(newBio);
+  //   setEditBioCount(newBio.split(/\s+/).length);
 
-    // Update the input element's height to fit its content
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
-  };
+  //   // Update the input element's height to fit its content
+  //   e.target.style.height = "auto";
+  //   e.target.style.height = `${e.target.scrollHeight}px`;
+  // };
 
   const onChangeOpacity = (e) => {
     setEditedOpacity(e.target.value);
@@ -417,15 +417,15 @@ const PersonalInfo = () => {
 
             {/* bio */}
             <div className="form-floating ">
-              <input
+              <textarea
                 type="text"
                 name="Bio"
-                className="form-control floating"
+                className="overflow-hidden form-control floating"
                 id="floatingUsername"
                 placeholder="Edit Bio"
                 value={editedBio}
                 onChange={onChangeBio}
-                onPaste={onPaste}
+                style={{ resize: "none", height: "fit-content" }}
               />
               <label htmlFor="floatingUsername">
                 Edit Bio {editBioCount}/200

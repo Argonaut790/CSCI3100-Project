@@ -58,11 +58,13 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
   };
 
   const handleOpenedList = (title) => {
+    console.log("previous: " + openedList);
     if (title === "Following") {
       setOpenedList((prevState) => [!prevState[0], false, false, false]);
     } else {
       setOpenedList((prevState) => [false, !prevState[1], false, false]);
     }
+    console.log("after: " + openedList);
   };
 
   return (
@@ -79,12 +81,11 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
             onClick={() => handleOpenedList(title)}
           ></img>
         </li>
-
         {/* Following List */}
         <div
           className="overflow-auto"
           style={{ maxHeight: "50vh" }}
-          hidden={openedList[0] ? false : true}
+          hidden={isFollowerList || !openedList[0]}
         >
           {follows.map(
             (follow) =>
@@ -103,13 +104,17 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
                 />
               )
           )}
+          {openedList[0] && !openedList[1] && !follows.length && (
+            <li key="no-follow" className="list-group-item">
+              No {title}
+            </li>
+          )}
         </div>
-
         {/* Follower List */}
         <div
           className="overflow-auto h-100"
           style={{ maxHeight: "50vh" }}
-          hidden={openedList[1] ? false : true}
+          hidden={!isFollowerList || !openedList[1]}
         >
           {follows.map(
             (follow) =>
@@ -129,7 +134,7 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
               )
           )}
 
-          {!follows.length && (
+          {!openedList[0] && openedList[1] && !follows.length && (
             <li key="no-follow" className="list-group-item">
               No {title}
             </li>

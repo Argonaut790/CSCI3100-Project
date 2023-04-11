@@ -75,6 +75,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       },
       desc: desc,
       userId: req.body.userId,
+      retweetedPostId: req.body.retweetedPostId || null,
     });
 
     post.save().then(() => {

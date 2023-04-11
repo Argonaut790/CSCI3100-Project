@@ -46,7 +46,7 @@ const ResetPassword = () => {
         }
         setTimeout(() => {
           navigate("/home");
-        }, 2500);
+        }, 1500);
       });
     setPassword("");
     setConfirmPassword("");
@@ -98,7 +98,7 @@ const ResetPassword = () => {
   return (
     <div
       className="mask-background d-flex justify-content-center align-items-center"
-      id="sign-up-mask"
+      id="reset-pw-mask"
     >
       <div
         className="col-lg-4 d-flex justify-content-center align-items-center"

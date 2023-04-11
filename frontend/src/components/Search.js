@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 //function needs to be Capital Letter in the first
-const Search = () => {
+const Search = ({ userId }) => {
   const [searchString, setSearchString] = useState("");
   const [resultItems, setResultItems] = useState([]);
 
@@ -13,7 +13,8 @@ const Search = () => {
   useEffect(() => {
     const fetchResultItems = async () => {
       const res = await axios.get(
-        process.env.REACT_APP_DEV_API_PATH + "/account/search/" + searchString
+        process.env.REACT_APP_DEV_API_PATH +
+          `/account/search/${userId}/${searchString}`
       );
       if (!res.error) {
         setResultItems(res.data);
@@ -22,10 +23,9 @@ const Search = () => {
       }
     };
     if (searchString !== "") fetchResultItems().catch(console.error);
-  }, [searchString]);
+  }, [searchString, userId]);
 
   const GetUserAvatarURL = (avatar) => {
-    console.log("GETUSERAVATAR: " + avatar);
     if (!avatar) {
       return images["avatar.png"];
     } else {

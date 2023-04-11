@@ -86,6 +86,24 @@ router.post("/", upload.single("image"), async (req, res) => {
   uploadStream.end();
 });
 
+// Retweet post
+router.post("/retweet", async (req, res) => {
+  const { desc, userId, retweetedPostId } = req.body;
+  console.log(desc + " " + userId + " " + retweetedPostId);
+  try {
+    const retweetPost = new Post({
+      desc: desc,
+      userId: userId,
+      retweetedPostId: retweetedPostId,
+    });
+
+    const savedRetweetPost = await retweetPost.save();
+    res.status(200).json(savedRetweetPost);
+  } catch (err) {
+    res.status(401).json(err);
+  }
+});
+
 // Get all posts data
 
 // Abstraction: once we get from localhost:5500/tweet,

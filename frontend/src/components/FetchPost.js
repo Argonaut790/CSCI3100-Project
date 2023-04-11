@@ -479,7 +479,7 @@ class FetchPost extends Component {
   };
 
   //Retweet part
-  handleRetweetClick = (post) => {
+  handleRetweet = (post) => {
     this.setState((prevState) => ({
       selectedPost: post,
       retweetHandled: !prevState.retweetHandled,
@@ -810,7 +810,7 @@ class FetchPost extends Component {
                 {/* Retweet button */}
                 <div
                   onClick={() => {
-                    this.handleRetweetClick(post);
+                    this.handleRetweet(post);
                   }}
                   className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
                 >
@@ -828,17 +828,17 @@ class FetchPost extends Component {
                       // onClick={() => {
                       //   console.log(this.state.selectedPost._id);
                       //   console.log(post._id);
-                      //   this.handleRetweetClick(post);
+                      //   this.handleRetweet(post);
                       // }}
                     >
                       <Retweet
-                        handleRetweetClick={this.handleRetweetClick}
+                        handleRetweet={this.handleRetweet}
                         // handleTweet={handleTweet}
                         // handlePostStatus={handlePostStatus}
                         userId={userId}
                         username={username}
                         userAvatar={userAvatar}
-                        retweetPost={this.state.selectedPost}
+                        selectedPost={this.state.selectedPost}
                       />
                     </div>
                   )}

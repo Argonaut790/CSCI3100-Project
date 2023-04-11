@@ -278,6 +278,16 @@ const PersonalInfo = () => {
         setUsername(editedUsername);
         setUserBio(editedBio);
         setOpacity(editedOpacity);
+
+        try {
+          // localStorage.removeItem("userAvatar");
+          localStorage.setItem(
+            "username",
+            JSON.stringify({ username: editedUsername })
+          );
+        } catch (e) {
+          console.log(e);
+        }
       }
 
       // Update avatar if it is changed
@@ -285,7 +295,7 @@ const PersonalInfo = () => {
         // Create a FormData object and append the image file to it
         const formData = new FormData();
         formData.append("image", image);
-        await axios.patch(
+        const res = await axios.patch(
           process.env.REACT_APP_DEV_API_PATH +
             "/account/profile/avatar/" +
             userId,
@@ -296,6 +306,16 @@ const PersonalInfo = () => {
             },
           }
         );
+        // console.dir(res);
+        try {
+          // localStorage.removeItem("userAvatar");
+          localStorage.setItem(
+            "userAvatar",
+            JSON.stringify({ userAvatar: res.data.imageObj })
+          );
+        } catch (e) {
+          console.log(e);
+        }
       }
 
       console.log("Patch successfully!");

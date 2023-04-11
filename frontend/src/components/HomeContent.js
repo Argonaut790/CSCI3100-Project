@@ -1,6 +1,12 @@
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
 import { useEffect } from "react";
+import axios from "axios";
+import ImportAll from "./ImportAll";
+
+const images = ImportAll(
+  require.context("../images", false, /\.(png|jpe?g|svg)$/)
+);
 
 const HomeContent = ({ maskBackgroundRef }) => {
   return (
@@ -22,10 +28,6 @@ const TopMid = () => {
 };
 
 const Content = ({ maskBackgroundRef }) => {
-  // useEffect(() => {
-  //   console.log("maskBackgroundRef in Content:", maskBackgroundRef);
-  // }, [maskBackgroundRef]);
-
   return (
     <div className="container-fluid p-0" id="mid-center">
       <FetchPost profile={false} maskBackgroundRef={maskBackgroundRef} />

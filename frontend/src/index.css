@@ -5,6 +5,15 @@ body {
   overflow: hidden;
 }
 
+a {
+  color: unset;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #c844ff;
+}
+
 #root {
   height: 100vh;
 }
@@ -850,7 +859,6 @@ input:checked + .slider:before {
 }
 
 .comment-list {
-  overflow-y: auto;
   padding: 20px;
   max-height: calc(100% - 60px);
 }

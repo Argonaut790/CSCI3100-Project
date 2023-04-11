@@ -38,18 +38,20 @@ const TopLeft = () => {
 
   return (
     <div
-      className="row h3 head d-flex flex-row align-items-center justify-content-center"
+      className="pe-auto row h3 head d-flex flex-row align-items-center justify-content-center"
       id="top-left"
+      onClick={handleIconClick}
     >
       <img
         src={images["doge.png"]}
         className="mr-1"
         id="icon"
         alt="icon"
-        onClick={handleIconClick}
         style={{ cursor: "pointer" }}
       />
-      <div id="rettiwt">Rettiwt</div>
+      <div className="user-select-none" id="rettiwt">
+        Rettiwt
+      </div>
     </div>
   );
 };
@@ -88,9 +90,13 @@ function App() {
       );
       if (!res.error) {
         setUsername(res.data.username);
+        localStorage.setItem(
+          "username",
+          JSON.stringify({ username: res.data.username })
+        );
         setIsAdmin(res.data.isAdmin);
         setOpacity(res.data.backgroundOpacity);
-        console.log("Opacity : " + opacity);
+        // console.log("Opacity : " + opacity);
         if (!res.data.avatar) {
           setUserAvatar(images["avatar.png"]);
           return;
@@ -105,6 +111,10 @@ function App() {
         if (imageResponse) {
           const imageURL = URL.createObjectURL(imageResponse.data);
           setUserAvatar(imageURL);
+          localStorage.setItem(
+            "userAvatar",
+            JSON.stringify({ userAvatar: imageURL })
+          );
         }
       } else {
         console.log(res);
@@ -117,6 +127,8 @@ function App() {
     setUserId("");
     setLoggedIn(false);
     localStorage.removeItem("user");
+    localStorage.removeItem("username");
+    localStorage.removeItem("userAvatar");
   }, []);
 
   const handleTweet = () => {

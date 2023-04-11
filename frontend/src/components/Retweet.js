@@ -4,6 +4,7 @@ import axios from "axios";
 // import "cropperjs/dist/cropper.min.css";
 
 import ImportAll from "./ImportAll";
+import moment from "moment";
 
 const MAXLENGTH = 200;
 
@@ -11,7 +12,7 @@ const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
-class Tweet extends Component {
+class Retweet extends Component {
   constructor(props) {
     super(props);
 
@@ -21,12 +22,39 @@ class Tweet extends Component {
       wordCount: 0,
       previewURL: null,
       isLoading: false,
+      selectedPost: this.props.selectedPost,
+      userAvatar: images["avatar.png"],
+      userId: "defaultUserId",
+      username: "defaultUsername",
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
+
+  componentDidMount = () => {
+    // Get userId from localStorage
+    if (localStorage.getItem("user"))
+      this.setState({
+        userId: JSON.parse(localStorage.getItem("user")).userId,
+      });
+
+    // Get username from localStorage
+    if (localStorage.getItem("username"))
+      this.setState({
+        username: JSON.parse(localStorage.getItem("username")).username,
+      });
+
+    // Get userAvatar from localStorage
+    if (localStorage.getItem("userAvatar"))
+      this.setState({
+        userAvatar: JSON.parse(localStorage.getItem("userAvatar")).userAvatar,
+      });
+
+    console.log("selectedPost: " + this.state.selectedPost);
+    console.dir(this.state.selectedPost);
+  };
 
   onDescriptionChange = (e) => {
     let inputValue = e.target.value;
@@ -138,42 +166,33 @@ class Tweet extends Component {
     e.preventDefault();
 
     this.setState({ isLoading: true });
-    const { desc, image } = this.state;
-
-    // Create a FormData object and append the image file to it
-    const formData = new FormData();
-    formData.append("image", image);
-
-    // Add the description field to the formData object
-    formData.append("desc", desc);
-    formData.append("userId", this.props.userId);
+    const { desc, userId, selectedPost } = this.state;
 
     try {
-      await axios.post(
-        process.env.REACT_APP_DEV_API_PATH + "/tweet",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.post(process.env.REACT_APP_DEV_API_PATH + "/tweet/retweet", {
+        desc,
+        userId,
+        retweetedPostId: selectedPost.postId,
+      });
+      console.log("Retweet Success!");
+      // this.props.handlePostStatus(200);
 
-      this.props.handlePostStatus(200);
       // clear input fields
-      this.setState({ image: null, desc: "", previewURL: null });
-      this.props.handleTweet();
+      this.setState({ desc: "", selectedPost: null });
+      this.props.handleRetweet();
       this.setState({ isLoading: false });
+      // showNotification("POST SUCCESSFULLY", "success");
     } catch (e) {
-      this.props.handlePostStatus(400);
+      // this.props.handlePostStatus(400);
       this.setState({ isLoading: false });
       console.log(e);
       console.log("Can't Upload Image!");
+      // showNotification("POST FAILED SUCCESSFULLY", "error");
     }
   }
 
   handleClose() {
-    this.props.handleRetweetClick();
+    this.props.handleRetweet();
   }
 
   render() {
@@ -198,71 +217,108 @@ class Tweet extends Component {
                 className="text-break tweet-mask d-flex justify-content-center align-items-center"
                 id="tweet-div"
               >
-                <div className="w-100">
+                <div className="w-100 d-grid gap-3">
                   {/* User Info */}
                   <div className="post-user-info p-0 d-flex flex-row justify-content-between">
                     <div>
                       <img
-                        src={this.props.userAvatar}
+                        src={this.state.userAvatar}
                         className="float-start post-user-avatar"
                         alt="user-avatar"
                       />
                       <div className="d-flex align-items-md-center h-100 m-0 post-user-id">
-                        <div className="fw-bold">{this.props.username}</div>
-                        <div>#{this.props.userId}</div>
+                        <div className="fw-bold">{this.state.username}</div>
+                        <div>#{this.state.userId}</div>
                       </div>
                     </div>
                     <div
                       type="button"
                       className="btn btn-close"
                       id="upload-close-btn"
-                      onClick={this.handleClose}
+                      onClick={this.props.handleRetweet}
                       style={{ backgroundColor: "#c844ff" }}
                     ></div>
                   </div>
-                  {/* Upload part */}
+                  {/* Retweet's post */}
                   <div
-                    className="container-fluid p-0 m-0 d-flex flex-column justify-content-center align-items-center m-0"
-                    id="upload-container"
+                    className="d-flex flex-row rounded "
+                    style={{
+                      boxShadow: "0 0 0.7rem rgb(0 0 0 / 100%)",
+                      aspectRatio: "4/3",
+                    }}
                   >
-                    <label
-                      htmlFor="image-upload"
-                      className="row w-100 m-0 d-flex flex-column justify-content-center align-items-center tweet-mask h3 post-image"
-                      id="upload-image-section"
+                    <div
+                      style={{ width: "75%" }}
+                      className="d-flex justify-content-center align-items-center border-end border-white border-opacity-50"
                     >
-                      {this.state.previewURL ? (
-                        <img
-                          src={this.state.previewURL}
-                          // className="white-img"
-                          id="preview"
-                          alt="preview"
-                        />
-                      ) : (
-                        <>
-                          <img
-                            src={images["upload.png"]}
-                            className="white-img"
-                            id="upload"
-                            alt="upload icon"
-                          />
-                          <div>Click here to Upload an image</div>
-                          <input
-                            type="file"
-                            className="cursor-pointer"
-                            id="image-upload"
-                            name="image"
-                            accept="image/*"
-                            onChange={this.handleInputChange}
-                          />
-                        </>
-                      )}
-                    </label>
+                      {/* Retweet Post Image  */}
+                      <img
+                        src={this.state.selectedPost.imageUrl}
+                        alt="Retweeted Post"
+                        className="w-100 rounded-start"
+                        style={{
+                          boxShadow: "0 0 0.7rem rgb(0 0 0 / 100%)",
+                          aspectRatio: "1/1",
+                        }}
+                      ></img>
+                    </div>
+
+                    <div
+                      className="d-flex flex-column"
+                      style={{ width: "25%" }}
+                    >
+                      {/* Retweeted Post's User Info */}
+                      <div className="p-1 d-grid gap-1 border-bottom border-light border-opacity-50">
+                        <div className="d-flex flex-row ">
+                          <div>
+                            {/* User Avatar */}
+                            <img
+                              src={
+                                this.state.selectedPost.avatarURL
+                                  ? this.state.selectedPost.avatarURL
+                                  : images["avatar.png"]
+                              }
+                              alt="Retweeted Post's User Avatar"
+                              className="float-start post-user-avatar"
+                              style={{ height: "2.5rem" }}
+                            ></img>
+                          </div>
+                          {/* User Name and ID */}
+                          <div className="d-grid">
+                            <div className="fw-bold">
+                              {this.state.selectedPost.username}
+                            </div>
+                            <div className="">
+                              #{this.state.selectedPost.userId}
+                            </div>
+                          </div>
+                        </div>
+                        {/* Post Time */}
+                        <div className="text-muted fs-6">
+                          <div>
+                            {moment(this.state.selectedPost.timestamp).format(
+                              "MMMM Do"
+                            )}
+                          </div>
+                          <div>
+                            {moment(this.state.selectedPost.timestamp).format(
+                              "h:mm a"
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      {/* Retweeted Post's Description */}
+                      <div className="word-break p-1 overflow-y-scroll word-break">
+                        {this.state.selectedPost.desc}
+                      </div>
+                    </div>
                   </div>
+                  {/* New Description */}
                   <div className="p-0" id="post-description">
                     <div className="h4 m-0" style={{ padding: "0 0.75rem" }}>
-                      UserName
+                      {this.state.username}
                     </div>
-                    <div className="form-floating h4">
+                    <div className="form-floating h4 text-muted">
                       <textarea
                         className="form-control"
                         placeholder="Description"
@@ -310,4 +366,4 @@ class Tweet extends Component {
   }
 }
 
-export default Tweet;
+export default Retweet;

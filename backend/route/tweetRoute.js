@@ -86,6 +86,24 @@ router.post("/", upload.single("image"), async (req, res) => {
   uploadStream.end();
 });
 
+// Retweet post
+router.post("/retweet", async (req, res) => {
+  const { desc, userId, retweetedPostId } = req.body;
+  console.log(desc + " " + userId + " " + retweetedPostId);
+  try {
+    const retweetPost = new Post({
+      desc: desc,
+      userId: userId,
+      retweetedPostId: retweetedPostId,
+    });
+
+    const savedRetweetPost = await retweetPost.save();
+    res.status(200).json(savedRetweetPost);
+  } catch (err) {
+    res.status(401).json(err);
+  }
+});
+
 // Get all posts data
 
 // Abstraction: once we get from localhost:5500/tweet,
@@ -139,7 +157,6 @@ router.get("/post/:postId", async (req, res) => {
     // const comments = await Comment.find({ postId: req.params.postId }).sort({
     //   timestamp: -1,
     // });
-
     const username = user ? user.username : "";
     const imageUrl = `http://${req.headers.host}/tweet/image/${post.image.filename}`;
 
@@ -150,8 +167,7 @@ router.get("/post/:postId", async (req, res) => {
     } else {
       avatarURL = null;
     }
-
-    return { ...post._doc, imageUrl, username, avatarURL };
+    res.status(200).json({ ...post._doc, imageUrl, username, avatarURL });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

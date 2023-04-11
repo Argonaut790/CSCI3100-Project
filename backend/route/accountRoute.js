@@ -54,6 +54,19 @@ router.post("/login", async (req, res) => {
           .send(
             "Your email is used in Google Sign in. Please continue with Google."
           );
+      } else if (!user.avatar) {
+        const accessToken = generateAccessToken(user.email);
+        const refreshToken = jwt.sign(user.email, process.env.REFRESH_TOEKN);
+        refreshTokens.push(refreshToken);
+        res.status(200).json({
+          userId: user.userId,
+          username: user.username,
+          isAdmin: user.isAdmin,
+          isPrivate: user.isPrivate,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          userAvatar: null,
+        });
       } else {
         // Login successfully
         const accessToken = generateAccessToken(user.email);
@@ -66,6 +79,7 @@ router.post("/login", async (req, res) => {
           isPrivate: user.isPrivate,
           accessToken: accessToken,
           refreshToken: refreshToken,
+          userAvatar: user.avatar,
         });
       }
     } else {

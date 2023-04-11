@@ -11,7 +11,7 @@ const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
-class Tweet extends Component {
+class Retweet extends Component {
   constructor(props) {
     super(props);
 
@@ -21,6 +21,7 @@ class Tweet extends Component {
       wordCount: 0,
       previewURL: null,
       isLoading: false,
+      selectedPost: this.props.retweetPost,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -220,44 +221,8 @@ class Tweet extends Component {
                       style={{ backgroundColor: "#c844ff" }}
                     ></div>
                   </div>
-                  {/* Upload part */}
-                  <div
-                    className="container-fluid p-0 m-0 d-flex flex-column justify-content-center align-items-center m-0"
-                    id="upload-container"
-                  >
-                    <label
-                      htmlFor="image-upload"
-                      className="row w-100 m-0 d-flex flex-column justify-content-center align-items-center tweet-mask h3 post-image"
-                      id="upload-image-section"
-                    >
-                      {this.state.previewURL ? (
-                        <img
-                          src={this.state.previewURL}
-                          // className="white-img"
-                          id="preview"
-                          alt="preview"
-                        />
-                      ) : (
-                        <>
-                          <img
-                            src={images["upload.png"]}
-                            className="white-img"
-                            id="upload"
-                            alt="upload icon"
-                          />
-                          <div>Click here to Upload an image</div>
-                          <input
-                            type="file"
-                            className="cursor-pointer"
-                            id="image-upload"
-                            name="image"
-                            accept="image/*"
-                            onChange={this.handleInputChange}
-                          />
-                        </>
-                      )}
-                    </label>
-                  </div>
+                  {/* Retweet's post */}
+                  <div style={{ height: "20rem" }}>Retweet Post's info</div>
                   <div className="p-0" id="post-description">
                     <div className="h4 m-0" style={{ padding: "0 0.75rem" }}>
                       UserName
@@ -310,4 +275,4 @@ class Tweet extends Component {
   }
 }
 
-export default Tweet;
+export default Retweet;

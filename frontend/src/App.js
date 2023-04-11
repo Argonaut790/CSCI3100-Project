@@ -92,7 +92,7 @@ function App() {
         setUsername(res.data.username);
         setIsAdmin(res.data.isAdmin);
         setOpacity(res.data.backgroundOpacity);
-        console.log("Opacity : " + opacity);
+        // console.log("Opacity : " + opacity);
         if (!res.data.avatar) {
           setUserAvatar(images["avatar.png"]);
           return;

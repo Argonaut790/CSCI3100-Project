@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { useNotification } from "../NotificationContext";
 import { Link } from "react-router-dom";
-import axios, { post } from "axios";
+import axios from "axios";
 // import ScrollContext from "./ScrollContext";
 import ImportAll from "./ImportAll";
 // import DeleteButtonContext from "./DeleteButtonContext";
@@ -17,7 +17,7 @@ const userId = localStorage.getItem("user")
   ? JSON.parse(localStorage.getItem("user")).userId
   : "defaultUserId";
 // print the userId in console
-console.log("userId is: " + userId);
+// console.log("userId is: " + userId);
 
 const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
   const { showNotification } = useNotification();
@@ -28,7 +28,7 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
         await axios.delete(
           process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
         );
-        console.log("Post deleted successfully!");
+        // console.log("Post deleted successfully!");
 
         // Use a timeout to delay showing the message after the page has reloaded
         showNotification("Post has been deleted!", "success");
@@ -215,20 +215,51 @@ class FetchPost extends Component {
       commentTextCount: 0,
       showCommentInput: false,
       retweetHandled: false,
+      username: null,
+      userAvatar: null,
     };
     // this.postListRef = createRef();
   }
 
   async componentDidMount() {
-    const { profile, maskBackgroundRef } = await this.props;
+    const { maskBackgroundRef } = await this.props;
     const { current } = maskBackgroundRef;
-    console.dir(this.props);
-    console.log("maskBackgroundRef in FetchPost: " + current);
+    // console.dir(this.props);
+    // console.log("maskBackgroundRef in FetchPost: " + current);
+
+    // Fetch user data
+    const fetchUserData = async () => {
+      const res = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/account/" + userId
+      );
+      if (!res.error) {
+        this.setState({ username: res.data.username });
+        // console.log("Opacity : " + opacity);
+        if (!res.data.avatar) {
+          this.setState({ userAvatar: images["avatar.png"] });
+          return;
+        }
+        const avatarURL =
+          process.env.REACT_APP_DEV_API_PATH +
+          "/account/profile/avatar/" +
+          res.data.avatar;
+        const imageResponse = await axios.get(avatarURL, {
+          responseType: "blob",
+        });
+        if (imageResponse) {
+          const imageURL = URL.createObjectURL(imageResponse.data);
+          this.setState({ userAvatar: imageURL });
+        }
+      } else {
+        console.log(res);
+      }
+    };
+    fetchUserData().catch(console.error);
 
     try {
       current.addEventListener("scroll", this.handleScroll);
-      console.log("current: " + current);
-      console.log("Success");
+      // console.log("current: " + current);
+      // console.log("Success");
     } catch (error) {
       console.log(error);
     }
@@ -515,7 +546,7 @@ class FetchPost extends Component {
   };
 
   handleScroll = () => {
-    const { profile, maskBackgroundRef } = this.props;
+    const { maskBackgroundRef } = this.props;
     const { current } = maskBackgroundRef;
 
     const { isLoading, hasMore } = this.state;
@@ -798,7 +829,9 @@ class FetchPost extends Component {
                 )}
                 {/* Retweet button */}
                 <div
-                  onClick={() => this.handleRetweetClick(post)}
+                  onClick={() => {
+                    this.handleRetweetClick(post);
+                  }}
                   className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
                 >
                   <img
@@ -808,14 +841,27 @@ class FetchPost extends Component {
                   />
                 </div>
                 {/* display retweet section  */}
-                {this.state.retweetHandled && (
-                  <div
-                    className="overlay"
-                    onClick={() => this.handleRetweetClick(post)}
-                  >
-                    <Retweet handleRetweetClick={this.handleRetweetClick} />
-                  </div>
-                )}
+                {this.state.retweetHandled &&
+                  this.state.selectedPost._id === post._id && (
+                    <div
+                      className="overlay"
+                      onClick={() => {
+                        console.log(this.state.selectedPost._id);
+                        console.log(post._id);
+                        this.handleRetweetClick(post);
+                      }}
+                    >
+                      <Retweet
+                        handleRetweetClick={this.handleRetweetClick}
+                        // handleTweet={handleTweet}
+                        // handlePostStatus={handlePostStatus}
+                        userId={userId}
+                        username={this.state.username}
+                        userAvatar={this.state.userAvatar}
+                        retweetPost={this.state.selectedPost}
+                      />
+                    </div>
+                  )}
               </div>
             </div>
           ))}

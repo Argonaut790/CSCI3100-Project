@@ -351,9 +351,9 @@ class Tweet extends Component {
                   </div>
                   <div className="p-0" id="post-description">
                     <div className="h4 m-0" style={{ padding: "0 0.75rem" }}>
-                      UserName
+                      {this.props.username}
                     </div>
-                    <div className="form-floating h4">
+                    <div className="form-floating h4 text-muted">
                       <textarea
                         className="form-control"
                         placeholder="Description"

@@ -83,6 +83,10 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
                 className="float-start post-user-avatar"
                 alt="user-avatar"
               />
+              <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+                <div className="fw-bold">{username}</div>
+                <div>#{userId}</div>
+              </div>
             </div>
           ) : (
             <div>
@@ -91,13 +95,13 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
                 className="float-start post-user-avatar white-img"
                 alt="user-avatar"
               />
+              <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+                <div className="fw-bold">{username}</div>
+                <div>#{userId}</div>
+              </div>
             </div>
           )}
         </Link>
-        <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
-          <div className="fw-bold">{username}</div>
-          <div>#{userId}</div>
-        </div>
       </div>
       {deleteButton && <div>{deleteButtonDiv}</div>}
     </div>
@@ -107,36 +111,37 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
 const CommentUserID = ({ postId, userId, username, userAvatar, timestamp }) => {
   return (
     <div className="overflow-hidden p-2 d-flex flex-row justify-content-between">
-      <div className="d-flex flex-row justify-content-between w-100">
-        <div>
-          <Link to={"/user?userId=" + userId}>
-            {userAvatar ? (
-              <div>
-                <img
-                  src={userAvatar}
-                  className="float-start post-user-avatar"
-                  alt="user-avatar"
-                />
-              </div>
-            ) : (
-              <div>
-                <img
-                  src={images["avatar.png"]}
-                  className="float-start post-user-avatar white-img"
-                  alt="user-avatar"
-                />
-              </div>
-            )}
-          </Link>
-          <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
-            <div className="fw-bold">{username}</div>
-            <div>#{userId}</div>
+      <Link to={"/user?userId=" + userId}>
+        {userAvatar ? (
+          <div className="d-flex pe-2">
+            <img
+              src={userAvatar}
+              className="float-start post-user-avatar"
+              alt="user-avatar"
+            />
+            <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+              <div className="fw-bold">{username}</div>
+              <div>#{userId}</div>
+            </div>
           </div>
-        </div>
-        <div>
-          <div>{moment(timestamp).format("MMMM Do")}</div>
-          <div>{moment(timestamp).format("h:mm a")}</div>
-        </div>
+        ) : (
+          <div className="d-flex pe-2 ">
+            <img
+              src={images["avatar.png"]}
+              className="float-start post-user-avatar white-img"
+              alt="user-avatar"
+            />
+            <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+              <div className="fw-bold">{username}</div>
+              <div>#{userId}</div>
+            </div>
+          </div>
+        )}
+      </Link>
+
+      <div className="">
+        <div>{moment(timestamp).format("MMMM Do")}</div>
+        <div>{moment(timestamp).format("h:mm a")}</div>
       </div>
     </div>
   );
@@ -153,38 +158,41 @@ const Comment = ({
   return (
     <div className="p-2">
       <div className="rounded border border-light border-opacity-50 overflow-hidden p-2 d-flex flex-column justify-content-between">
-        <div className="p-2 d-flex flex-row justify-content-between w-100">
-          <div className="w-75">
-            <Link to={"/user?userId=" + userId}>
-              {userAvatar ? (
-                <div>
-                  <img
-                    src={userAvatar}
-                    className="float-start post-user-avatar"
-                    alt="user-avatar"
-                  />
+        <div className="overflow-hidden p-2 d-flex flex-row justify-content-between">
+          <Link to={"/user?userId=" + userId}>
+            {userAvatar ? (
+              <div className="d-flex pe-2">
+                <img
+                  src={userAvatar}
+                  className="float-start post-user-avatar"
+                  alt="user-avatar"
+                />
+                <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+                  <div className="fw-bold">{username}</div>
+                  <div>#{userId}</div>
                 </div>
-              ) : (
-                <div>
-                  <img
-                    src={images["avatar.png"]}
-                    className="float-start post-user-avatar white-img"
-                    alt="user-avatar"
-                  />
+              </div>
+            ) : (
+              <div className="d-flex pe-2">
+                <img
+                  src={images["avatar.png"]}
+                  className="float-start post-user-avatar white-img"
+                  alt="user-avatar"
+                />
+                <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
+                  <div className="fw-bold">{username}</div>
+                  <div>#{userId}</div>
                 </div>
-              )}
-            </Link>
-            <div className="d-flex flex-cloumn align-items-md-center h-100 m-0 post-user-id">
-              <div className="fw-bold">{username}</div>
-              <div>#{userId}</div>
-            </div>
-          </div>
-          <div className="w-25">
+              </div>
+            )}
+          </Link>
+
+          <div className="">
             <div>{moment(timestamp).format("MMMM Do")}</div>
             <div>{moment(timestamp).format("h:mm a")}</div>
           </div>
         </div>
-        <div className="p-2 border-top border-light border-opacity-25">
+        <div className="p-2 border-top border-light border-opacity-25 text-break">
           {comment}
         </div>
       </div>
@@ -579,7 +587,7 @@ class FetchPost extends Component {
                   </div>
                   <div>{moment(post.timestamp).format("MMMM Do, h:mm a")}</div>
                 </div>
-                <p>{post.desc}</p>
+                <p className="text-break">{post.desc}</p>
               </div>
               <div
                 className="border-light border-opacity-50 pt-2 d-flex flex-row border-top justify-content-evenly"
@@ -646,7 +654,12 @@ class FetchPost extends Component {
                             src={this.state.selectedPost.imageUrl}
                             className="post-image"
                             alt={this.state.selectedPost.desc}
-                            style={{ display: "none" }}
+                            style={{
+                              display: "none",
+                              borderRadius: "unset",
+                              boxShadow:
+                                "10px 0 8px -4px rgb(0, 0, 0, 0.7), -10px 0 8px -4px rgb(0, 0, 0, 0.7)",
+                            }}
                             ref={(el) => (this[`commentImage${index}`] = el)}
                             // onload success
                             onLoad={() => {
@@ -658,9 +671,12 @@ class FetchPost extends Component {
                         </div>
                       </div>
                       <div className="comment-right">
-                        <div style={{ height: "90%" }}>
+                        <div
+                          className="overflow-y-scroll"
+                          style={{ height: "90%" }}
+                        >
                           <div
-                            style={{ height: "20%" }}
+                            // style={{ height: "20%" }}
                             className="overflow-hidden d-grid border-bottom border-light border-opacity-50"
                           >
                             <CommentUserID
@@ -670,13 +686,13 @@ class FetchPost extends Component {
                               userAvatar={this.state.selectedPost.avatarURL}
                               timestamp={this.state.selectedPost.timestamp}
                             />
-                            <div className="p-2 ">
+                            <div className="p-2 text-break">
                               {this.state.selectedPost.desc}
                             </div>
                           </div>
                           <div
-                            className="comment-list overflow-y-scroll p-3"
-                            style={{ height: "80%" }}
+                            className="comment-list p-3"
+                            // style={{ height: "80%" }}
                           >
                             {/* Display previous comments */}
                             <Comment

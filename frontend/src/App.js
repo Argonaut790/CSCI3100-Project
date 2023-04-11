@@ -38,18 +38,20 @@ const TopLeft = () => {
 
   return (
     <div
-      className="row h3 head d-flex flex-row align-items-center justify-content-center"
+      className="pe-auto row h3 head d-flex flex-row align-items-center justify-content-center"
       id="top-left"
+      onClick={handleIconClick}
     >
       <img
         src={images["doge.png"]}
         className="mr-1"
         id="icon"
         alt="icon"
-        onClick={handleIconClick}
         style={{ cursor: "pointer" }}
       />
-      <div id="rettiwt">Rettiwt</div>
+      <div className="user-select-none" id="rettiwt">
+        Rettiwt
+      </div>
     </div>
   );
 };

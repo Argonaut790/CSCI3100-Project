@@ -22,12 +22,35 @@ class Retweet extends Component {
       previewURL: null,
       isLoading: false,
       selectedPost: this.props.retweetPost,
+      userAvatar: images["avatar.png"],
+      userId: "defaultUserId",
+      username: "defaultUsername",
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
+
+  componentDidMount = () => {
+    // Get userId from localStorage
+    if (localStorage.getItem("user"))
+      this.setState({
+        userId: JSON.parse(localStorage.getItem("user")).userId,
+      });
+
+    // Get username from localStorage
+    if (localStorage.getItem("username"))
+      this.setState({
+        username: JSON.parse(localStorage.getItem("username")).username,
+      });
+
+    // Get userAvatar from localStorage
+    if (localStorage.getItem("userAvatar"))
+      this.setState({
+        userAvatar: JSON.parse(localStorage.getItem("userAvatar")).userAvatar,
+      });
+  };
 
   onDescriptionChange = (e) => {
     let inputValue = e.target.value;
@@ -204,20 +227,20 @@ class Retweet extends Component {
                   <div className="post-user-info p-0 d-flex flex-row justify-content-between">
                     <div>
                       <img
-                        src={this.props.userAvatar}
+                        src={this.state.userAvatar}
                         className="float-start post-user-avatar"
                         alt="user-avatar"
                       />
                       <div className="d-flex align-items-md-center h-100 m-0 post-user-id">
-                        <div className="fw-bold">{this.props.username}</div>
-                        <div>#{this.props.userId}</div>
+                        <div className="fw-bold">{this.state.username}</div>
+                        <div>#{this.state.userId}</div>
                       </div>
                     </div>
                     <div
                       type="button"
                       className="btn btn-close"
                       id="upload-close-btn"
-                      onClick={this.handleClose}
+                      onClick={this.props.handleRetweetClick}
                       style={{ backgroundColor: "#c844ff" }}
                     ></div>
                   </div>

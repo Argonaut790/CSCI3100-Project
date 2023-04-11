@@ -16,6 +16,17 @@ const images = ImportAll(
 const userId = localStorage.getItem("user")
   ? JSON.parse(localStorage.getItem("user")).userId
   : "defaultUserId";
+
+// Get userId from localStorage
+const username = localStorage.getItem("username")
+  ? JSON.parse(localStorage.getItem("username")).username
+  : "defaultUsername";
+
+// Get userId from localStorage
+const userAvatar = localStorage.getItem("userAvatar")
+  ? JSON.parse(localStorage.getItem("userAvatar")).userAvatar
+  : images["avatar.png"];
+
 // print the userId in console
 // console.log("userId is: " + userId);
 
@@ -215,8 +226,6 @@ class FetchPost extends Component {
       commentTextCount: 0,
       showCommentInput: false,
       retweetHandled: false,
-      username: null,
-      userAvatar: null,
     };
     // this.postListRef = createRef();
   }
@@ -226,35 +235,6 @@ class FetchPost extends Component {
     const { current } = maskBackgroundRef;
     // console.dir(this.props);
     // console.log("maskBackgroundRef in FetchPost: " + current);
-
-    // Fetch user data
-    const fetchUserData = async () => {
-      const res = await axios.get(
-        process.env.REACT_APP_DEV_API_PATH + "/account/" + userId
-      );
-      if (!res.error) {
-        this.setState({ username: res.data.username });
-        // console.log("Opacity : " + opacity);
-        if (!res.data.avatar) {
-          this.setState({ userAvatar: images["avatar.png"] });
-          return;
-        }
-        const avatarURL =
-          process.env.REACT_APP_DEV_API_PATH +
-          "/account/profile/avatar/" +
-          res.data.avatar;
-        const imageResponse = await axios.get(avatarURL, {
-          responseType: "blob",
-        });
-        if (imageResponse) {
-          const imageURL = URL.createObjectURL(imageResponse.data);
-          this.setState({ userAvatar: imageURL });
-        }
-      } else {
-        console.log(res);
-      }
-    };
-    fetchUserData().catch(console.error);
 
     try {
       current.addEventListener("scroll", this.handleScroll);
@@ -845,19 +825,19 @@ class FetchPost extends Component {
                   this.state.selectedPost._id === post._id && (
                     <div
                       className="overlay"
-                      onClick={() => {
-                        console.log(this.state.selectedPost._id);
-                        console.log(post._id);
-                        this.handleRetweetClick(post);
-                      }}
+                      // onClick={() => {
+                      //   console.log(this.state.selectedPost._id);
+                      //   console.log(post._id);
+                      //   this.handleRetweetClick(post);
+                      // }}
                     >
                       <Retweet
                         handleRetweetClick={this.handleRetweetClick}
                         // handleTweet={handleTweet}
                         // handlePostStatus={handlePostStatus}
                         userId={userId}
-                        username={this.state.username}
-                        userAvatar={this.state.userAvatar}
+                        username={username}
+                        userAvatar={userAvatar}
                         retweetPost={this.state.selectedPost}
                       />
                     </div>

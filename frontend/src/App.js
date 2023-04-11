@@ -90,6 +90,10 @@ function App() {
       );
       if (!res.error) {
         setUsername(res.data.username);
+        localStorage.setItem(
+          "username",
+          JSON.stringify({ username: res.data.username })
+        );
         setIsAdmin(res.data.isAdmin);
         setOpacity(res.data.backgroundOpacity);
         // console.log("Opacity : " + opacity);
@@ -107,6 +111,10 @@ function App() {
         if (imageResponse) {
           const imageURL = URL.createObjectURL(imageResponse.data);
           setUserAvatar(imageURL);
+          localStorage.setItem(
+            "userAvatar",
+            JSON.stringify({ userAvatar: imageURL })
+          );
         }
       } else {
         console.log(res);
@@ -119,6 +127,8 @@ function App() {
     setUserId("");
     setLoggedIn(false);
     localStorage.removeItem("user");
+    localStorage.removeItem("username");
+    localStorage.removeItem("userAvatar");
   }, []);
 
   const handleTweet = () => {

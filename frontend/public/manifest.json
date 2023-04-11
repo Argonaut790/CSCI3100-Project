@@ -4,18 +4,18 @@
   "icons": [
     {
       "src": "doge.png",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "100x115",
       "type": "image/x-icon"
     },
     {
       "src": "doge.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "100x115"
     },
     {
       "src": "doge.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "100x115"
     }
   ],
   "start_url": ".",

@@ -25,6 +25,7 @@ const LoginModal = ({ setShowModal, setShowForgotPasswordModal }) => {
             "user",
             JSON.stringify({ userId: res.data.userId })
           );
+
           navigate("/");
         }
       })

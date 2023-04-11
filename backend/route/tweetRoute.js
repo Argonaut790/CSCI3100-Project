@@ -174,6 +174,33 @@ router.get("/post/:postId", async (req, res) => {
   }
 });
 
+// Get posts info without image
+router.get("/info/", async (req, res) => {
+  try {
+    //get all posts
+    const posts = await Post.find().sort({ timestamp: -1 });
+
+    // getting username and passing image url to fetch the whole chunks not 1 by 1
+    const postInfo = await Promise.all(
+      posts.map(async (post) => {
+        const user = await Account.findOne({ userId: post.userId });
+        const username = user ? user.username : "";
+        return {
+          id: post._id,
+          postId: post.postId,
+          desc: post.desc,
+          retweetId: post.retweetedPostId,
+          username: username,
+          timestamp: post.timestamp,
+        };
+      })
+    );
+    res.json(postInfo);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Serve an image
 
 // Abstraction here: Cause we used GridFSBucket to store the image into multiples chunck

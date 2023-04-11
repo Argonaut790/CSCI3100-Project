@@ -3,17 +3,17 @@
   "name": "Simplified Social Media",
   "icons": [
     {
-      "src": "rettiwt.png",
+      "src": "doge.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "rettiwt.png",
+      "src": "doge.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "rettiwt.png",
+      "src": "doge.png",
       "type": "image/png",
       "sizes": "512x512"
     }

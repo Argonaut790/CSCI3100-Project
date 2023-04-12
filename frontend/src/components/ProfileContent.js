@@ -11,14 +11,11 @@ const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
-const ProfileContent = ({ maskBackgroundRef , showNotification }) => {
+const ProfileContent = ({ maskBackgroundRef }) => {
   return (
     <>
       <TopMid />
-      <Content
-          maskBackgroundRef={maskBackgroundRef}
-          showNotification = {showNotification}
-      />
+      <Content maskBackgroundRef={maskBackgroundRef} />
     </>
   );
 };
@@ -33,7 +30,7 @@ const TopMid = () => {
   );
 };
 
-const Content = ({ maskBackgroundRef, showNotification }) => {
+const Content = ({ maskBackgroundRef }) => {
   const [deleteButton, setdeleteButton] = useState(false);
   // const [deleteConfirmation, setdeleteConfirmation] = useState(null);
 
@@ -55,7 +52,6 @@ const Content = ({ maskBackgroundRef, showNotification }) => {
         userId={userId} // this is to tell FetchPost that it is in profile page
         deleteButton={deleteButton}
         maskBackgroundRef={maskBackgroundRef}
-        showNotification={showNotification}
       />
     </div>
   );

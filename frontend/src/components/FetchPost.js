@@ -231,7 +231,6 @@ class FetchPost extends Component {
     this.handleCommentChange = this.handleCommentChange.bind(this);
     // this.postListRef = createRef();
   }
-
   async componentDidMount() {
     const { maskBackgroundRef } = await this.props;
     const { current } = maskBackgroundRef;
@@ -268,12 +267,16 @@ class FetchPost extends Component {
    * */
 
   handleLikeClick = async (postId, userId) => {
+    const { showNotification } = this.props;
     try {
       // check if the user has already disliked the post
       if (this.state.dislikedPosts.includes(postId)) {
-        alert(
-          "You have already disliked this post. Please undislike it before liking."
+        showNotification(
+          "You have already disliked this post. Please undislike it before liking.",
+          "error"
         );
+        //  alert(
+        //    "You have already disliked this post. Please undislike it before liking.");
         return;
       }
       // limit the user to only like or dislike once every 10 seconds
@@ -284,7 +287,11 @@ class FetchPost extends Component {
       const currentTime = Date.now();
 
       if (lastLikeTime && currentTime - lastLikeTime < 3 * 1000) {
-        alert("You can only like or unlike once every 3 seconds.");
+        showNotification(
+          "You can only like or unlike once every 3 seconds.",
+          "error"
+        );
+        //alert("You can only like or unlike once every 3 seconds.");
         return;
       }
 
@@ -308,6 +315,7 @@ class FetchPost extends Component {
             userId,
           },
         });
+        showNotification("Unliked successfully!", "success");
         console.log("Unliked successfully:", response.data);
         this.setState(
           (prevState) => ({
@@ -326,6 +334,7 @@ class FetchPost extends Component {
           postId,
           userId,
         });
+        showNotification("Liked successfully!", "success");
         console.log("Liked successfully:", response.data);
         this.setState(
           (prevState) => ({
@@ -340,18 +349,23 @@ class FetchPost extends Component {
         );
       }
     } catch (error) {
+      showNotification("Error liking post!", "error");
       console.error("Error liking post:", error);
-      alert("Debug 3");
+      //alert("Debug 3");
     }
   };
 
   handleDislikeClick = async (postId, userId) => {
+    const { showNotification } = this.props;
     try {
       // check if the user has already liked the post
       if (this.state.likedPosts.includes(postId)) {
-        alert(
-          "You have already liked this post. Please unlike it before disliking."
+        showNotification(
+          "You have already liked this post. Please unlike it before disliking.",
+          "error"
         );
+        //  alert(
+        //    "You have already liked this post. Please unlike it before disliking.");
         return;
       }
       // limit the user to only like or dislike once every 10 seconds
@@ -362,7 +376,11 @@ class FetchPost extends Component {
       const currentTime = Date.now();
 
       if (lastdislikeTime && currentTime - lastdislikeTime < 2 * 1000) {
-        alert("You can only dislike or undislike once every 2 seconds.");
+        showNotification(
+          "You can only dislike or undislike once every 2 seconds.",
+          "error"
+        );
+        //alert("You can only dislike or undislike once every 2 seconds.");
         return;
       }
 
@@ -385,6 +403,7 @@ class FetchPost extends Component {
             userId,
           },
         });
+        showNotification("UnDisliked successfully!", "success");
         console.log("UnDisliked successfully:", response.data);
         this.setState(
           (prevState) => ({
@@ -405,6 +424,7 @@ class FetchPost extends Component {
           postId,
           userId,
         });
+        showNotification("Disliked successfully!", "success");
         console.log("Disliked successfully:", response.data);
         this.setState(
           (prevState) => ({
@@ -419,8 +439,9 @@ class FetchPost extends Component {
         );
       }
     } catch (error) {
+      showNotification("Error disliking post.", "error");
       console.error("Error disliking post:", error);
-      alert("Debug 3");
+      //alert("Debug 3");
     }
   };
 
@@ -461,11 +482,12 @@ class FetchPost extends Component {
       e.target.scrollHeight > 200 ? "scroll" : "hidden";
   };
 
-  submitComment = async (postId) => {
+  submitComment = async (postId, userId) => {
+    const { showNotification } = this.props;
     try {
-      console.log("postId" + postId);
-      console.log("userId" + userId);
-      console.log("comment" + this.state.commentText);
+      // console.log("postId" + postId);
+      // console.log("userId" + userId);
+      // console.log("comment" + this.state.commentText);
       const response = await axios.post(
         process.env.REACT_APP_DEV_API_PATH + "/comment",
         {
@@ -476,7 +498,12 @@ class FetchPost extends Component {
       );
 
       console.log("Comment submitted:", response.data);
+      // Use a timeout to delay showing the message after the page has reloaded
+      showNotification("Comment Submitted", "success");
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      window.location.reload(); // refresh the page
     } catch (error) {
+      showNotification("Error submitting comment:", "error");
       console.error("Error submitting comment:", error);
     }
 
@@ -510,7 +537,7 @@ class FetchPost extends Component {
   };
 
   //Retweet part
-  handleRetweet = (post) => {
+  handleRetweet = async (post) => {
     this.setState((prevState) => ({
       selectedPost: post,
       retweetHandled: !prevState.retweetHandled,
@@ -604,6 +631,7 @@ class FetchPost extends Component {
   render() {
     const { posts, isLoading } = this.state;
     const { deleteButton } = this.props;
+    const { showNotification } = this.props;
     return (
       <div className="container-fluid p-0" id="mid-center">
         <div
@@ -964,6 +992,7 @@ class FetchPost extends Component {
                           username={username}
                           userAvatar={userAvatar}
                           selectedPost={this.state.selectedPost}
+                          showNotification={showNotification}
                         />
                       </div>
                     )}

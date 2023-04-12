@@ -328,6 +328,14 @@ class FetchPost extends Component {
             );
           }
         );
+        // Update the like count in the state
+        this.setState((prevState) => ({
+          posts: prevState.posts.map((post) =>
+              post._id === postId
+                  ? { ...post, likeCount: post.likeCount - 1 }
+                  : post
+          ),
+        }));
       } else {
         // If the post is not liked yet, send a POST request to like it
         await axios.post(process.env.REACT_APP_DEV_API_PATH + "/like", {
@@ -347,6 +355,14 @@ class FetchPost extends Component {
             );
           }
         );
+        // Update the like count in the state
+        this.setState((prevState) => ({
+          posts: prevState.posts.map((post) =>
+              post._id === postId
+                  ? { ...post, likeCount: post.likeCount + 1 }
+                  : post
+          ),
+        }));
       }
     } catch (error) {
       showNotification("Error liking post!", "error");
@@ -418,6 +434,14 @@ class FetchPost extends Component {
             );
           }
         );
+        // Update the dislike count in the state
+        this.setState((prevState) => ({
+          posts: prevState.posts.map((post) =>
+              post._id === postId
+                  ? { ...post, dislikeCount: post.dislikeCount - 1 }
+                  : post
+          ),
+        }));
       } else {
         // If the post is not liked yet, send a POST request to like it
         await axios.post(process.env.REACT_APP_DEV_API_PATH + "/dislike", {
@@ -437,6 +461,14 @@ class FetchPost extends Component {
             );
           }
         );
+        // Update the dislike count in the state
+        this.setState((prevState) => ({
+          posts: prevState.posts.map((post) =>
+              post._id === postId
+                  ? { ...post, dislikeCount: post.dislikeCount + 1 }
+                  : post
+          ),
+        }));
       }
     } catch (error) {
       showNotification("Error disliking post.", "error");
@@ -594,8 +626,43 @@ class FetchPost extends Component {
           })
         );
 
+        const postsWithDislikeCounts = await Promise.all(
+            postsWithImages.map(async (post) => {
+              const response = await axios.get(process.env.REACT_APP_DEV_API_PATH + "/dislike", {
+                params: {
+                  postId: post._id,
+                  userId,
+                },
+              });
+              const dislikeCount = response.data.dislikeNum;
+              return { ...post, dislikeCount };
+            })
+        );
+
+        const postsWithLikeCounts = await Promise.all(
+            postsWithImages.map(async (post) => {
+              const response = await axios.get(process.env.REACT_APP_DEV_API_PATH + "/like", {
+                params: {
+                  postId: post._id,
+                  userId,
+                },
+              });
+              const likeCount = response.data.likeNum;
+              return { ...post, likeCount };
+            })
+        );
+
+        const combinedPosts = postsWithImages.map((post, index) => {
+          return {
+            ...post,
+            dislikeCount: postsWithDislikeCounts[index].dislikeCount,
+            likeCount: postsWithLikeCounts[index].likeCount,
+          };
+        });
+
+
         this.setState((prevState) => ({
-          posts: [...prevState.posts, ...postsWithImages],
+          posts: [...prevState.posts, ...combinedPosts],
           page: prevState.page + 1,
         }));
       }
@@ -797,6 +864,10 @@ class FetchPost extends Component {
                       }
                       alt="like"
                     />
+                    {/* like count */}
+                    <div className="d-flex justify-content-between">
+                      <p>{post.likeCount || 0}</p>
+                    </div>
                   </div>
                   {/* Dislike button */}
                   <div
@@ -812,6 +883,10 @@ class FetchPost extends Component {
                       }
                       alt="like"
                     />
+                    {/* dislike count */}
+                    <div>
+                      <p>{post.dislikeCount || 0}</p>
+                    </div>
                   </div>
                   {/* Comment button */}
                   <div

@@ -4,7 +4,7 @@ import UserItem from "./UserItem";
 import { useContext } from "react";
 import { FollowContext } from "./Follow";
 import ImportAll from "./ImportAll";
-
+import { useNotification } from "../NotificationContext";
 // Params:
 // @userId: userId of current user
 // @isFollowerList: true if want to render follower list, false if want to render followed list
@@ -16,7 +16,9 @@ const images = ImportAll(
 );
 
 const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
+  const { showNotification } = useNotification();
   const [follows, setFollows] = useState([]);
+  const [followCompleted, setFollowCompleted] = useState(false);
   let apiString = isFollowerList ? "/follower/" : "/followed/";
   let title = isFollowerList ? "Follower" : "Following";
   const { followListUpdated } = useContext(FollowContext);
@@ -28,9 +30,15 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
       );
       if (!res.error) {
         setFollows(res.data);
+        setFollowCompleted(true);
+        if (followCompleted) {
+          showNotification("Follow successfully!", "success");
+          setFollowCompleted(false); // Reset the followCompleted state
+        }
       } else {
         console.log(res);
       }
+
     };
     fetchUserData().catch(console.error);
   }, [userId, apiString, followListUpdated]);
@@ -52,6 +60,7 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
       console.log(res);
       // Update follow list
       setFollows(follows.filter((follow) => follow.userId !== followUserId));
+      showNotification("Unfollow successfully!", "success");
     } else {
       console.log(res);
     }

@@ -163,6 +163,7 @@ class Retweet extends Component {
   }
 
   async handleSubmit(e) {
+    const { showNotification } = this.props;
     e.preventDefault();
 
     this.setState({ isLoading: true });
@@ -174,6 +175,10 @@ class Retweet extends Component {
         userId,
         retweetedPostId: selectedPost.postId,
       });
+      // Use a timeout to delay showing the message after the page has reloaded
+      showNotification("Retweet successfully", "success");
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      window.location.reload(); // refresh the page
       console.log("Retweet Success!");
       // this.props.handlePostStatus(200);
 

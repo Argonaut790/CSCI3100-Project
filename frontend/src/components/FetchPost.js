@@ -498,7 +498,6 @@ class FetchPost extends Component {
           `/tweet?limit=10&page=${page}&userId=${targetUserId}`
       );
       const posts = response.data;
-
       if (posts.length === 0) {
         this.setState({ hasMore: false });
       } else {
@@ -938,18 +937,20 @@ class FetchPost extends Component {
                     </div>
                   )}
                   {/* Retweet button */}
-                  <div
-                    onClick={() => {
-                      this.handleRetweet(post);
-                    }}
-                    className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
-                  >
-                    <img
-                      className="white-img"
-                      src={images["arrows-retweet.svg"]}
-                      alt="retweet"
-                    />
-                  </div>
+                  {!post.isPrivate && (
+                      <div
+                          onClick={() => {
+                            this.handleRetweet(post);
+                          }}
+                          className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
+                      >
+                        <img
+                            className="white-img"
+                            src={images["arrows-retweet.svg"]}
+                            alt="retweet"
+                        />
+                      </div>
+                  )}
                   {/* display retweet section  */}
                   {this.state.retweetHandled &&
                     this.state.selectedPost._id === post._id && (

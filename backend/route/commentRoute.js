@@ -6,6 +6,7 @@ const router = express.Router();
 // Post comment
 router.post("/", async (req, res) => {
   try {
+    console.log(req.body);
     const comment = new Comment({
       postId: req.body.postId,
       userId: req.body.userId,
@@ -46,7 +47,6 @@ router.get("/:postId", async (req, res) => {
         const user = await Account.findOne({ userId: comment.userId });
         const username = user ? user.username : "";
         const userAvatar = user.avatar.filename || null;
-        console.log(userAvatar);
         const avatarURL = userAvatar
           ? `http://${req.headers.host}/account/profile/avatar/${userAvatar}`
           : null;

@@ -18,7 +18,6 @@ const images = ImportAll(
 const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
   const { showNotification } = useNotification();
   const [follows, setFollows] = useState([]);
-  const [followCompleted, setFollowCompleted] = useState(false);
   let apiString = isFollowerList ? "/follower/" : "/followed/";
   let title = isFollowerList ? "Follower" : "Following";
   const { followListUpdated } = useContext(FollowContext);
@@ -30,15 +29,9 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
       );
       if (!res.error) {
         setFollows(res.data);
-        setFollowCompleted(true);
-        if (followCompleted) {
-          showNotification("Follow successfully!", "success");
-          setFollowCompleted(false); // Reset the followCompleted state
-        }
       } else {
         console.log(res);
       }
-
     };
     fetchUserData().catch(console.error);
   }, [userId, apiString, followListUpdated]);

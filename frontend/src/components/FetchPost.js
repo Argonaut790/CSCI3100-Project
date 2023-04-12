@@ -482,12 +482,12 @@ class FetchPost extends Component {
       e.target.scrollHeight > 200 ? "scroll" : "hidden";
   };
 
-  submitComment = async (postId, userId) => {
+  submitComment = async (postId) => {
     const { showNotification } = this.props;
     try {
-      // console.log("postId" + postId);
-      // console.log("userId" + userId);
-      // console.log("comment" + this.state.commentText);
+      console.log("postId" + postId);
+      console.log("userId" + userId);
+      console.log("comment" + this.state.commentText);
       const response = await axios.post(
         process.env.REACT_APP_DEV_API_PATH + "/comment",
         {
@@ -500,8 +500,6 @@ class FetchPost extends Component {
       console.log("Comment submitted:", response.data);
       // Use a timeout to delay showing the message after the page has reloaded
       showNotification("Comment Submitted", "success");
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      window.location.reload(); // refresh the page
     } catch (error) {
       showNotification("Error submitting comment:", "error");
       console.error("Error submitting comment:", error);

@@ -6,7 +6,7 @@ import Search from "./Search";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 //function needs to be Capital Letter in the first
-const UserProfile = ({ userId }) => {
+const UserProfile = ({ userId, maskBackgroundRef }) => {
   const [searchParams] = useSearchParams();
   const targetUserId = searchParams.get("userId");
   const navigate = useNavigate();
@@ -18,7 +18,10 @@ const UserProfile = ({ userId }) => {
   return (
     <>
       <div className="col-lg-6" id="content">
-        <UserProfileContent targetUserId={targetUserId} />
+        <UserProfileContent
+          targetUserId={targetUserId}
+          maskBackgroundRef={maskBackgroundRef}
+        />
       </div>
       <div className="col-lg-3 vh-100" id="explore">
         <div className="container-fluid p-0 mt-4" id="rhs">

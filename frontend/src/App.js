@@ -411,7 +411,12 @@ function App() {
               <Route path="/confirm" element={<AccountConfirm />} />
               <Route
                 path="/user"
-                element={<UserProfile userId={userId} />}
+                element={
+                  <UserProfile
+                    userId={userId}
+                    maskBackgroundRef={maskBackgroundRef}
+                  />
+                }
               ></Route>
               <Route path="/reset-password" element={<ResetPassword />} />
             </Routes>

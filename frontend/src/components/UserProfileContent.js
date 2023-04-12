@@ -11,11 +11,14 @@ const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
-const UserProfileContent = ({ targetUserId }) => {
+const UserProfileContent = ({ targetUserId, maskBackgroundRef }) => {
   return (
     <>
       <TopMid />
-      <Content targetUserId={targetUserId} />
+      <Content
+        targetUserId={targetUserId}
+        maskBackgroundRef={maskBackgroundRef}
+      />
     </>
   );
 };
@@ -30,7 +33,7 @@ const TopMid = () => {
   );
 };
 
-const Content = ({ targetUserId }) => {
+const Content = ({ targetUserId, maskBackgroundRef }) => {
   const [followedNum, setFollowedNum] = useState(0);
   const [followerNum, setFollowerNum] = useState(0);
   const [userBio, setUserBio] = useState("");
@@ -240,7 +243,13 @@ const Content = ({ targetUserId }) => {
         <div> {followerNum} Followers</div>
         <div> {followedNum} Followings</div>
       </div>
-      {isVisible && <FetchPost userId={targetUserId} deleteButton={false} />}
+      {isVisible && (
+        <FetchPost
+          userId={targetUserId}
+          maskBackgroundRef={maskBackgroundRef}
+          deleteButton={false}
+        />
+      )}
     </div>
   );
 };

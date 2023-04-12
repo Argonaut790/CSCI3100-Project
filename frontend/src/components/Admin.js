@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import moment from "moment";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUser = async () => {
       const res = await axios.get(
         process.env.REACT_APP_DEV_API_PATH + "/account/"
       );
@@ -15,7 +17,19 @@ const Admin = () => {
         console.log(res);
       }
     };
-    fetchData().catch(console.error);
+    fetchUser().catch(console.error);
+
+    const fetchPost = async () => {
+      const res = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + "/tweet/info"
+      );
+      if (!res.error) {
+        setPosts(res.data);
+      } else {
+        console.log(res);
+      }
+    };
+    fetchPost().catch(console.error);
   }, []);
 
   const changeUserStatus = async (userId, isActivated) => {
@@ -50,6 +64,21 @@ const Admin = () => {
     }
   };
 
+  const deletePost = async (postId) => {
+    try {
+      const res = await axios.delete(
+        process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
+      );
+      if (!res.error) {
+        window.location.reload();
+      } else {
+        console.log(res.error);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="col-lg-9 mask-background text-light">
       <a href="/admin" className="btn btn-dark my-2">
@@ -61,7 +90,7 @@ const Admin = () => {
       ) : (
         <div>
           <p>
-            Your Total Users: <strong>{users.length}</strong>
+            Total Users: <strong>{users.length}</strong>
           </p>
           <table className="table table-hover">
             <thead>
@@ -116,6 +145,54 @@ const Admin = () => {
                       </button>
                     </td>
                   )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <br />
+      <br />
+      <h1> Posts </h1>
+      {posts.length === 0 ? (
+        <h3>No posts yet</h3>
+      ) : (
+        <div>
+          <p>
+            Total Posts: <strong>{posts.length}</strong>
+          </p>
+          <table className="postTable table table-hover">
+            <thead>
+              <tr className="table-dark">
+                <th scope="col">PostId</th>
+                <th scope="col">Username</th>
+                <th scope="col">Description</th>
+                <th scope="col">Posted Time</th>
+                <th scope="col">Retweet from</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody className="mask-background">
+              {posts.map((post) => (
+                <tr key={post.postId} className="text-light">
+                  <th scope="row">{post.postId}</th>
+                  <th scope="row">{post.username}</th>
+                  <td>{post.desc}</td>
+                  <td>
+                    <div>{moment(post.timestamp).format("MMMM Do")}</div>
+                    <div>{moment(post.timestamp).format("h:mm a")}</div>
+                  </td>
+                  <td>{post.retweetId}</td>
+                  <td>
+                    N {"  "}
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      onClick={() => deletePost(post.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

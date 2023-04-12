@@ -927,3 +927,10 @@ input:checked + .slider:before {
   top: 0;
   left: 0;
 }
+
+.postTable td {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

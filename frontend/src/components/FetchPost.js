@@ -216,6 +216,7 @@ class FetchPost extends Component {
     super();
     this.state = {
       posts: [],
+      selectedPostcomments: [],
       selectedPost: null,
       isLoading: false,
       page: 0,
@@ -226,7 +227,8 @@ class FetchPost extends Component {
       commentTextCount: 0,
       showCommentInput: false,
       retweetHandled: false,
-    }
+    };
+    this.handleCommentChange = this.handleCommentChange.bind(this);
     // this.postListRef = createRef();
   }
   async componentDidMount() {
@@ -269,9 +271,12 @@ class FetchPost extends Component {
     try {
       // check if the user has already disliked the post
       if (this.state.dislikedPosts.includes(postId)) {
-        showNotification("You have already disliked this post. Please undislike it before liking.", "error");
-      //  alert(
-      //    "You have already disliked this post. Please undislike it before liking.");
+        showNotification(
+          "You have already disliked this post. Please undislike it before liking.",
+          "error"
+        );
+        //  alert(
+        //    "You have already disliked this post. Please undislike it before liking.");
         return;
       }
       // limit the user to only like or dislike once every 10 seconds
@@ -282,7 +287,10 @@ class FetchPost extends Component {
       const currentTime = Date.now();
 
       if (lastLikeTime && currentTime - lastLikeTime < 3 * 1000) {
-        showNotification("You can only like or unlike once every 3 seconds.", "error");
+        showNotification(
+          "You can only like or unlike once every 3 seconds.",
+          "error"
+        );
         //alert("You can only like or unlike once every 3 seconds.");
         return;
       }
@@ -325,7 +333,7 @@ class FetchPost extends Component {
         await axios.post(process.env.REACT_APP_DEV_API_PATH + "/like", {
           postId,
           userId,
-        })
+        });
         showNotification("Liked successfully!", "success");
         console.log("Liked successfully:", response.data);
         this.setState(
@@ -352,9 +360,12 @@ class FetchPost extends Component {
     try {
       // check if the user has already liked the post
       if (this.state.likedPosts.includes(postId)) {
-        showNotification("You have already liked this post. Please unlike it before disliking.", "error");
-      //  alert(
-      //    "You have already liked this post. Please unlike it before disliking.");
+        showNotification(
+          "You have already liked this post. Please unlike it before disliking.",
+          "error"
+        );
+        //  alert(
+        //    "You have already liked this post. Please unlike it before disliking.");
         return;
       }
       // limit the user to only like or dislike once every 10 seconds
@@ -365,7 +376,10 @@ class FetchPost extends Component {
       const currentTime = Date.now();
 
       if (lastdislikeTime && currentTime - lastdislikeTime < 2 * 1000) {
-        showNotification("You can only dislike or undislike once every 2 seconds.", "error");
+        showNotification(
+          "You can only dislike or undislike once every 2 seconds.",
+          "error"
+        );
         //alert("You can only dislike or undislike once every 2 seconds.");
         return;
       }
@@ -437,17 +451,18 @@ class FetchPost extends Component {
       selectedPost: post,
       showCommentInput: !prevState.showCommentInput,
     }));
+    this.fetchComments(post.postId);
   };
 
   handleCommentChange = (e) => {
     // Get the input value
     let inputValue = e.target.value;
+    console.log("inputValue" + inputValue);
 
     // Update the state only if the limited input value is shorter than the current desc
     if (inputValue.split(/\s+/).length <= 200) {
       this.setState({ commentText: e.target.value });
     }
-
     // const descWordCount = this.state.desc.split(/\s+/).length;
     let inputLength = inputValue.split(/\s+/).length;
     const inputArray = inputValue.split(/\s+/);
@@ -470,9 +485,11 @@ class FetchPost extends Component {
   submitComment = async (postId, userId) => {
     const { showNotification } = this.props;
     try {
-      // Replace this with the actual API endpoint for submitting a comment
+      // console.log("postId" + postId);
+      // console.log("userId" + userId);
+      // console.log("comment" + this.state.commentText);
       const response = await axios.post(
-        process.env.REACT_APP_DEV_API_PATH + "/submitComment",
+        process.env.REACT_APP_DEV_API_PATH + "/comment",
         {
           postId,
           userId,
@@ -490,7 +507,33 @@ class FetchPost extends Component {
       console.error("Error submitting comment:", error);
     }
 
+    this.setState((prevState) => ({
+      selectedPostcomments: [
+        ...prevState.selectedPostcomments,
+        {
+          userId: userId,
+          comment: this.state.commentText,
+          timestamp: Date.now(),
+          username: username,
+          avatarURL: userAvatar,
+        },
+      ],
+    }));
+
     this.setState({ commentText: "", showCommentInput: false });
+  };
+
+  //fetech comments
+  fetchComments = async (postId) => {
+    try {
+      const response = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + `/comment/${postId}`
+      );
+
+      this.setState({ selectedPostcomments: response.data });
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
   };
 
   //Retweet part
@@ -529,16 +572,11 @@ class FetchPost extends Component {
               return { ...post, imageURL };
             } else {
               // handle the retweet post
-              console.log("retweet post id: ", post.retweetedPostId);
               const retweetedPostResponse = await axios.get(
                 process.env.REACT_APP_DEV_API_PATH +
                   `/tweet/post/${post.retweetedPostId}`
               );
-              console.log("post response: ", post);
-              console.log(
-                "retweet post response: ",
-                retweetedPostResponse.data
-              );
+
               const retweetedPostImageResponse = await axios.get(
                 retweetedPostResponse.data.imageUrl,
                 {
@@ -588,7 +626,7 @@ class FetchPost extends Component {
       // console.log("Fetching more posts...");
       this.fetchPosts();
     }
-  };;
+  };
 
   render() {
     const { posts, isLoading } = this.state;
@@ -849,54 +887,19 @@ class FetchPost extends Component {
                               // style={{ height: "80%" }}
                             >
                               {/* Display previous comments */}
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
+
+                              {this.state.selectedPostcomments.map(
+                                (comment, index) => (
+                                  <Comment
+                                    key={index}
+                                    comment={comment.comment}
+                                    userId={comment.userId}
+                                    username={comment.username}
+                                    userAvatar={comment.avatarURL}
+                                    timestamp={comment.timestamp}
+                                  />
+                                )
+                              )}
                             </div>
                           </div>
                           <div
@@ -944,7 +947,11 @@ class FetchPost extends Component {
                                 className="white-img"
                                 id="comment-submit"
                                 alt="comment-submit"
-                                onClick={this.submitComment}
+                                onClick={() =>
+                                  this.submitComment(
+                                    this.state.selectedPost.postId
+                                  )
+                                }
                                 style={{ cursor: "pointer" }}
                               />
                             </div>

@@ -46,11 +46,12 @@ router.get("/:postId", async (req, res) => {
         const user = await Account.findOne({ userId: comment.userId });
         const username = user ? user.username : "";
         const userAvatar = user.avatar.filename || null;
+        console.log(userAvatar);
         const avatarURL = userAvatar
           ? `http://${req.headers.host}/account/profile/avatar/${userAvatar}`
           : null;
-
         return {
+          userId: comment.userId,
           comment: comment.comment,
           timestamp: comment.timestamp,
           username: username,

@@ -1,15 +1,9 @@
 import HomeContent from "./HomeContent";
 import Search from "./Search";
 import Follow from "./Follow";
-import { useEffect } from "react";
 
 //function needs to be Capital Letter in the first
 const Home = ({ userId, maskBackgroundRef }) => {
-  // useEffect(() => {
-  //   if (maskBackgroundRef.current) {
-  //     console.log("maskBackgroundRef in Home:", maskBackgroundRef);
-  //   }
-  // }, [maskBackgroundRef]);
   return (
     <>
       <div className="col-lg-6" id="content">

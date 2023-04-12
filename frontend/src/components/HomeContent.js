@@ -1,4 +1,5 @@
 import FetchPost from "./FetchPost";
+import { useNotification } from "../NotificationContext";
 //function needs to be Capital Letter in the first
 import { useEffect } from "react";
 import axios from "axios";
@@ -28,9 +29,10 @@ const TopMid = () => {
 };
 
 const Content = ({ maskBackgroundRef }) => {
+  const { showNotification } = useNotification();
   return (
     <div className="container-fluid p-0" id="mid-center">
-      <FetchPost profile={false} maskBackgroundRef={maskBackgroundRef} />
+      <FetchPost profile={false} maskBackgroundRef={maskBackgroundRef} showNotification={showNotification}/>
     </div>
   );
 };

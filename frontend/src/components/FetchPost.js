@@ -216,6 +216,7 @@ class FetchPost extends Component {
     super();
     this.state = {
       posts: [],
+      selectedPostcomments: [],
       selectedPost: null,
       isLoading: false,
       page: 0,
@@ -227,6 +228,7 @@ class FetchPost extends Component {
       showCommentInput: false,
       retweetHandled: false,
     };
+    this.handleCommentChange = this.handleCommentChange.bind(this);
     // this.postListRef = createRef();
   }
 
@@ -428,17 +430,18 @@ class FetchPost extends Component {
       selectedPost: post,
       showCommentInput: !prevState.showCommentInput,
     }));
+    this.fetchComments(post.postId);
   };
 
   handleCommentChange = (e) => {
     // Get the input value
     let inputValue = e.target.value;
+    console.log("inputValue" + inputValue);
 
     // Update the state only if the limited input value is shorter than the current desc
     if (inputValue.split(/\s+/).length <= 200) {
       this.setState({ commentText: e.target.value });
     }
-
     // const descWordCount = this.state.desc.split(/\s+/).length;
     let inputLength = inputValue.split(/\s+/).length;
     const inputArray = inputValue.split(/\s+/);
@@ -458,11 +461,13 @@ class FetchPost extends Component {
       e.target.scrollHeight > 200 ? "scroll" : "hidden";
   };
 
-  submitComment = async (postId, userId) => {
+  submitComment = async (postId) => {
     try {
-      // Replace this with the actual API endpoint for submitting a comment
+      console.log("postId" + postId);
+      console.log("userId" + userId);
+      console.log("comment" + this.state.commentText);
       const response = await axios.post(
-        process.env.REACT_APP_DEV_API_PATH + "/submitComment",
+        process.env.REACT_APP_DEV_API_PATH + "/comment",
         {
           postId,
           userId,
@@ -475,7 +480,33 @@ class FetchPost extends Component {
       console.error("Error submitting comment:", error);
     }
 
+    this.setState((prevState) => ({
+      selectedPostcomments: [
+        ...prevState.selectedPostcomments,
+        {
+          userId: userId,
+          comment: this.state.commentText,
+          timestamp: Date.now(),
+          username: username,
+          avatarURL: userAvatar,
+        },
+      ],
+    }));
+
     this.setState({ commentText: "", showCommentInput: false });
+  };
+
+  //fetech comments
+  fetchComments = async (postId) => {
+    try {
+      const response = await axios.get(
+        process.env.REACT_APP_DEV_API_PATH + `/comment/${postId}`
+      );
+
+      this.setState({ selectedPostcomments: response.data });
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
   };
 
   //Retweet part
@@ -514,16 +545,11 @@ class FetchPost extends Component {
               return { ...post, imageURL };
             } else {
               // handle the retweet post
-              console.log("retweet post id: ", post.retweetedPostId);
               const retweetedPostResponse = await axios.get(
                 process.env.REACT_APP_DEV_API_PATH +
                   `/tweet/post/${post.retweetedPostId}`
               );
-              console.log("post response: ", post);
-              console.log(
-                "retweet post response: ",
-                retweetedPostResponse.data
-              );
+
               const retweetedPostImageResponse = await axios.get(
                 retweetedPostResponse.data.imageUrl,
                 {
@@ -833,54 +859,19 @@ class FetchPost extends Component {
                               // style={{ height: "80%" }}
                             >
                               {/* Display previous comments */}
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
-                              <Comment
-                                comment="hello hello hello hello hello hello hello hello hello hello hello hello "
-                                postId={this.state.selectedPost._id}
-                                userId={this.state.selectedPost.userId}
-                                username={this.state.selectedPost.username}
-                                userAvatar={this.state.selectedPost.avatarURL}
-                                timestamp={this.state.selectedPost.timestamp}
-                              />
+
+                              {this.state.selectedPostcomments.map(
+                                (comment, index) => (
+                                  <Comment
+                                    key={index}
+                                    comment={comment.comment}
+                                    userId={comment.userId}
+                                    username={comment.username}
+                                    userAvatar={comment.avatarURL}
+                                    timestamp={comment.timestamp}
+                                  />
+                                )
+                              )}
                             </div>
                           </div>
                           <div
@@ -928,7 +919,11 @@ class FetchPost extends Component {
                                 className="white-img"
                                 id="comment-submit"
                                 alt="comment-submit"
-                                onClick={this.submitComment}
+                                onClick={() =>
+                                  this.submitComment(
+                                    this.state.selectedPost.postId
+                                  )
+                                }
                                 style={{ cursor: "pointer" }}
                               />
                             </div>

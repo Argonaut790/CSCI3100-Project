@@ -96,7 +96,6 @@ function App() {
         );
         setIsAdmin(res.data.isAdmin);
         setOpacity(res.data.backgroundOpacity);
-        // console.log("Opacity : " + opacity);
         if (!res.data.avatar) {
           setUserAvatar(images["avatar.png"]);
           return;
@@ -137,13 +136,10 @@ function App() {
     } else {
       setTweetHandled(true);
     }
-    console.log("TweetHandled : " + tweetHandled);
-    console.log("LoggedIn : " + loggedIn);
   };
 
   const handlePostStatus = (status) => {
     setPostStatus(status);
-    console.log("Post Status : " + postStatus);
   };
 
   const User = () => {

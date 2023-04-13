@@ -925,38 +925,42 @@ class FetchPost extends Component {
                 >
                   {/* Like button */}
                   <div
-                    className="btn rounded-0 px-5 w-30 d-flex justify-content-center border-0"
+                    className="btn rounded-0 px-5 w-30 d-flex flex-column justify-content-center border-0"
                     onClick={() => this.handleLikeClick(post._id, userId)}
                   >
-                    <img
-                      className="white-img"
-                      src={
-                        this.state.likedPosts.includes(post._id)
-                          ? images["clickedLike.svg"]
-                          : images["like.svg"]
-                      }
-                      alt="like"
-                    />
-                    <div className="d-flex justify-content-between">
-                      <button>{post.likeCount || 0}</button>
+                    <div>
+                      <img
+                        className="white-img"
+                        src={
+                          this.state.likedPosts.includes(post._id)
+                            ? images["clickedLike.svg"]
+                            : images["like.svg"]
+                        }
+                        alt="like"
+                      />
+                    </div>
+                    <div className="d-flex justify-content-center align-items-center text-white p-1">
+                      <div>{post.likeCount || 0}</div>
                     </div>
                   </div>
                   {/* Dislike button */}
                   <div
-                    className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex justify-content-center"
+                    className="btn rounded-0 px-5 w-30 border-light border-opacity-50 border-top-0 border-end-0 border-bottom-0 d-flex flex-column justify-content-center"
                     onClick={() => this.handleDislikeClick(post._id, userId)}
                   >
-                    <img
-                      className="white-img"
-                      src={
-                        this.state.dislikedPosts.includes(post._id)
-                          ? images["clickedDislike.svg"]
-                          : images["dislike.svg"]
-                      }
-                      alt="like"
-                    />
-                    <div className="d-flex justify-content-between">
-                      <button>{post.dislikeCount || 0}</button>
+                    <div>
+                      <img
+                        className="white-img"
+                        src={
+                          this.state.dislikedPosts.includes(post._id)
+                            ? images["clickedDislike.svg"]
+                            : images["dislike.svg"]
+                        }
+                        alt="like"
+                      />
+                    </div>
+                    <div className="d-flex justify-content-center align-items-center text-white p-1">
+                      <div>{post.dislikeCount || 0}</div>
                     </div>
                   </div>
                   {/* Comment button */}

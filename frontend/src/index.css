@@ -940,3 +940,9 @@ p.private-account-warning {
   position: absolute;
   top: 500px;
 }
+
+p.no-post-warning {
+  left: 360px;
+  position: absolute;
+  top: 200px;
+}

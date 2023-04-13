@@ -3,6 +3,7 @@ import axios from "axios";
 import UserItem from "./UserItem";
 import { useContext } from "react";
 import { FollowContext } from "./Follow";
+import { useNotification } from "../NotificationContext";
 import ImportAll from "./ImportAll";
 
 // Params:
@@ -14,6 +15,7 @@ const images = ImportAll(
 );
 
 const PendingFollowList = ({ userId, openedList, setOpenedList }) => {
+  const { showNotification } = useNotification();
   const [follows, setFollows] = useState([]);
   const [isPrivate, setIsPrivate] = useState(false);
   const { setFollowListUpdated } = useContext(FollowContext);
@@ -59,6 +61,8 @@ const PendingFollowList = ({ userId, openedList, setOpenedList }) => {
       setFollows(follows.filter((follow) => follow.userId !== followerUserId));
       // Update follower list
       setFollowListUpdated((prevState) => !prevState);
+
+      showNotification("Accept successfully!", "success");
     } else {
       console.log(res);
     }
@@ -78,6 +82,8 @@ const PendingFollowList = ({ userId, openedList, setOpenedList }) => {
     if (!res.error) {
       // Update pending list
       setFollows(follows.filter((follow) => follow.userId !== followerUserId));
+
+      showNotification("Reject successfully!", "success");
     } else {
       console.log(res);
     }

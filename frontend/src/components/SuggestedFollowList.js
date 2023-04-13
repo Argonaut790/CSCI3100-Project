@@ -4,6 +4,7 @@ import UserItem from "./UserItem";
 import { useContext } from "react";
 import { FollowContext } from "./Follow";
 import ImportAll from "./ImportAll";
+import { useNotification } from "../NotificationContext";
 
 // Params:
 // @userId: userId of current user
@@ -16,6 +17,7 @@ const images = ImportAll(
 const SuggestedFollowList = ({ userId, openedList, setOpenedList }) => {
   const [follows, setFollows] = useState([]);
   const { setFollowListUpdated } = useContext(FollowContext);
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     const fetchFollowData = async () => {
@@ -46,6 +48,12 @@ const SuggestedFollowList = ({ userId, openedList, setOpenedList }) => {
       setFollows(follows.filter((follow) => follow.userId !== followedUserId));
       // Update follower list
       setFollowListUpdated((prevState) => !prevState);
+      console.log(res.data.isAccepted);
+      if (res.data.isAccepted) {
+        showNotification("Follow successfully!", "success");
+      } else {
+        showNotification("Request Sent!", "success");
+      }
     } else {
       console.log(res);
     }

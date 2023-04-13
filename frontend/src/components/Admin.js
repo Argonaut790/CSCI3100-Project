@@ -142,18 +142,67 @@ const Admin = () => {
 
   const deleteUser = async (userId) => {
     try {
-      const res = await axios.delete(
-        process.env.REACT_APP_DEV_API_PATH + "/account/admin/delete/" + userId
-      );
-      if (!res.error) {
-        window.location.reload();
-      } else {
-        console.log(res.error);
+      // follower following comment like dislike retweet post user
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/follow/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting follow data:", error);
+        return;
       }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/comment/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting comment data:", error);
+        return;
+      }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/like/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting like data:", error);
+        return;
+      }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/dislike/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting dislike data:", error);
+        return;
+      }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/tweet/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting tweet data:", error);
+        return;
+      }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/account/admin/delete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting account data:", error);
+        return;
+      }
+
+      window.location.reload();
     } catch (err) {
-      console.log(err);
+      console.error("Error in deleteUser function:", err);
     }
   };
+
 
   return (
     <div className="col-lg-9 mask-background text-light">

@@ -145,7 +145,7 @@ const Admin = () => {
       // follower following comment like dislike retweet post user
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/follow/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/follow/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting follow data:", error);
@@ -154,7 +154,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/comment/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/comment/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting comment data:", error);
@@ -163,7 +163,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/like/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/like/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting like data:", error);
@@ -172,7 +172,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/dislike/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/dislike/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting dislike data:", error);
@@ -181,7 +181,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/tweet/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/tweet/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting tweet data:", error);
@@ -190,7 +190,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/account/admin/delete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/account/admin/delete/" + userId
         );
       } catch (error) {
         console.error("Error deleting account data:", error);
@@ -202,7 +202,6 @@ const Admin = () => {
       console.error("Error in deleteUser function:", err);
     }
   };
-
 
   return (
     <div className="col-lg-9 mask-background text-light">
@@ -345,20 +344,20 @@ const Admin = () => {
       <div>
         <h5> Cumulative User Register </h5>
         <LineChart width={400} height={400} data={userChartData}>
-          <Line type="monotone" dataKey="userCount" stroke="black" />
-          <YAxis stroke="black" />
+          <Line type="monotone" dataKey="userCount" stroke="white" />
+          <YAxis stroke="white" />
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="day" stroke="black" />
+          <XAxis dataKey="day" stroke="white" />
         </LineChart>
       </div>
       <br /> <br />
       <div>
         <h5> Cumulative Tweet </h5>
         <LineChart width={400} height={400} data={postChartData}>
-          <Line type="monotone" dataKey="userCount" stroke="black" />
-          <YAxis stroke="black" />
+          <Line type="monotone" dataKey="userCount" stroke="white" />
+          <YAxis stroke="white" />
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="day" stroke="black" />
+          <XAxis dataKey="day" stroke="white" />
         </LineChart>
       </div>
       <br /> <br /> <br /> <br /> <br /> <br /> <br />

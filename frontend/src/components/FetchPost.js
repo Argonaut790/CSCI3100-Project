@@ -329,9 +329,9 @@ class FetchPost extends Component {
         // Update the like count in the state
         this.setState((prevState) => ({
           posts: prevState.posts.map((post) =>
-              post._id === postId
-                  ? { ...post, likeCount: post.likeCount - 1 }
-                  : post
+            post._id === postId
+              ? { ...post, likeCount: post.likeCount - 1 }
+              : post
           ),
         }));
       } else {
@@ -356,9 +356,9 @@ class FetchPost extends Component {
         // Update the like count in the state
         this.setState((prevState) => ({
           posts: prevState.posts.map((post) =>
-              post._id === postId
-                  ? { ...post, likeCount: post.likeCount + 1 }
-                  : post
+            post._id === postId
+              ? { ...post, likeCount: post.likeCount + 1 }
+              : post
           ),
         }));
       }
@@ -432,9 +432,9 @@ class FetchPost extends Component {
         // Update the dislike count in the state
         this.setState((prevState) => ({
           posts: prevState.posts.map((post) =>
-              post._id === postId
-                  ? { ...post, dislikeCount: post.dislikeCount - 1 }
-                  : post
+            post._id === postId
+              ? { ...post, dislikeCount: post.dislikeCount - 1 }
+              : post
           ),
         }));
       } else {
@@ -458,9 +458,9 @@ class FetchPost extends Component {
         // Update the dislike count in the state
         this.setState((prevState) => ({
           posts: prevState.posts.map((post) =>
-              post._id === postId
-                  ? { ...post, dislikeCount: post.dislikeCount + 1 }
-                  : post
+            post._id === postId
+              ? { ...post, dislikeCount: post.dislikeCount + 1 }
+              : post
           ),
         }));
       }
@@ -571,17 +571,16 @@ class FetchPost extends Component {
   fetchPosts = async () => {
     const { page } = this.state;
     const targetUserId = this.props.targetUserId ? this.props.targetUserId : "";
-    const userId = this.props.userId ? this.props.userId : "";
+    const currentUserId = this.props.userId ? this.props.userId : "";
     try {
       this.setState({ isLoading: true });
       const response = await axios.get(
         process.env.REACT_APP_DEV_API_PATH +
-          `/tweet?limit=10&page=${page}&targetUserId=${targetUserId}&userId=${userId}`
+          `/tweet?limit=10&page=${page}&targetUserId=${targetUserId}&userId=${currentUserId}`
       );
       const posts = response.data;
-      console.log(userId);
       if (posts.length === 0) {
-        if (userId !== "" && page === 0) {
+        if (currentUserId !== "" && page === 0) {
           this.setState({ isNoPost: true, hasMore: false });
         } else {
           this.setState({ hasMore: false });
@@ -624,29 +623,35 @@ class FetchPost extends Component {
         );
 
         const postsWithDislikeCounts = await Promise.all(
-            postsWithImages.map(async (post) => {
-              const response = await axios.get(process.env.REACT_APP_DEV_API_PATH + "/dislike", {
+          postsWithImages.map(async (post) => {
+            const response = await axios.get(
+              process.env.REACT_APP_DEV_API_PATH + "/dislike",
+              {
                 params: {
                   postId: post._id,
                   userId,
                 },
-              });
-              const dislikeCount = response.data.dislikeNum;
-              return { ...post, dislikeCount };
-            })
+              }
+            );
+            const dislikeCount = response.data.dislikeNum;
+            return { ...post, dislikeCount };
+          })
         );
 
         const postsWithLikeCounts = await Promise.all(
-            postsWithImages.map(async (post) => {
-              const response = await axios.get(process.env.REACT_APP_DEV_API_PATH + "/like", {
+          postsWithImages.map(async (post) => {
+            const response = await axios.get(
+              process.env.REACT_APP_DEV_API_PATH + "/like",
+              {
                 params: {
                   postId: post._id,
                   userId,
                 },
-              });
-              const likeCount = response.data.likeNum;
-              return { ...post, likeCount };
-            })
+              }
+            );
+            const likeCount = response.data.likeNum;
+            return { ...post, likeCount };
+          })
         );
 
         const combinedPosts = postsWithImages.map((post, index) => {

@@ -53,7 +53,11 @@ const FollowList = ({ userId, isFollowerList, openedList, setOpenedList }) => {
       console.log(res);
       // Update follow list
       setFollows(follows.filter((follow) => follow.userId !== followUserId));
-      showNotification("Unfollow successfully!", "success");
+      if (isFollowerList) {
+        showNotification("Remove follower successfully!", "success");
+      } else {
+        showNotification("Unfollow successfully!", "success");
+      }
     } else {
       console.log(res);
     }

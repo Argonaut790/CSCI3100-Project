@@ -934,3 +934,9 @@ input:checked + .slider:before {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+p.private-account-warning {
+  left: 430px;
+  position: absolute;
+  top: 500px;
+}

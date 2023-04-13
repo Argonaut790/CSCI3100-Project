@@ -539,6 +539,7 @@ class FetchPost extends Component {
   fetchPosts = async () => {
     const { page } = this.state;
     const targetUserId = this.props.targetUserId ? this.props.targetUserId : "";
+    const userId = this.props.userId ? this.props.userId : "";
     try {
       this.setState({ isLoading: true });
       const response = await axios.get(
@@ -546,8 +547,9 @@ class FetchPost extends Component {
           `/tweet?limit=10&page=${page}&targetUserId=${targetUserId}&userId=${userId}`
       );
       const posts = response.data;
+      console.log(userId);
       if (posts.length === 0) {
-        if (page === 0) {
+        if (userId !== "" && page === 0) {
           this.setState({ isNoPost: true, hasMore: false });
         } else {
           this.setState({ hasMore: false });

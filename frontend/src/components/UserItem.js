@@ -1,8 +1,10 @@
 import ImportAll from "./ImportAll";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // buttons: object array with buttonOnClick & buttonText
 const UserItem = ({ userId, username, userAvatar, buttons }) => {
+  const navigate = useNavigate();
+
   const images = ImportAll(
     require.context("../images", false, /\.(png|jpe?g|svg)$/)
   );
@@ -19,18 +21,23 @@ const UserItem = ({ userId, username, userAvatar, buttons }) => {
     avatarURL = null;
   }
 
+  const HandleImgOnClicked = (userId) => {
+    console.log("image clicked");
+    navigate("/user?userId=" + userId);
+    window.location.reload();
+  };
+
   return (
     <li key={userId} className="list-group-item">
       <div className="d-flex flex-row">
         <div className="d-flex justify-content-center align-items-center w-25">
-          <Link to={"/user?userId=" + userId}>
-            <img
-              src={avatarURL ? avatarURL : images["avatar.png"]}
-              className="float-start post-user-avatar m-0"
-              alt="user-avatar"
-              style={avatarURL ? {} : { filter: "brightness(0) invert(1)" }}
-            />
-          </Link>
+          <img
+            src={avatarURL ? avatarURL : images["avatar.png"]}
+            className="float-start post-user-avatar m-0"
+            alt="user-avatar"
+            style={avatarURL ? {} : { filter: "brightness(0) invert(1)" }}
+            onClick={() => HandleImgOnClicked(userId)}
+          />
         </div>
         <div className="d-flex align-items-md-center h-100 m-0 ps-2 pe-2 post-user-id w-75">
           <div className="fw-bold">{username}</div>

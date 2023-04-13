@@ -1,3 +1,4 @@
+import TextareaAutosize from 'react-textarea-autosize';
 import { useState, useEffect } from "react";
 import { useNotification } from "../NotificationContext";
 // import DeleteButtonContext from "./DeleteButtonContext";
@@ -442,7 +443,7 @@ const PersonalInfo = () => {
 
             {/* bio */}
             <div className="form-floating ">
-              <textarea
+              <TextareaAutosize
                 type="text"
                 name="Bio"
                 className="overflow-hidden form-control floating"

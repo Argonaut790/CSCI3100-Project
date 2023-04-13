@@ -27,6 +27,7 @@ const LoginModal = ({ setShowModal, setShowForgotPasswordModal }) => {
           );
 
           navigate("/");
+          window.location.reload();
         }
       })
       .catch((err) => {

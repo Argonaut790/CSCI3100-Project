@@ -45,6 +45,7 @@ const SignUp = () => {
             })
           );
           navigate("/");
+          window.location.reload();
         }
       })
       .catch((err) => {

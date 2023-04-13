@@ -245,7 +245,7 @@ const Content = ({ targetUserId, maskBackgroundRef }) => {
       </div>
       {isVisible ? (
         <FetchPost
-          userId={targetUserId}
+          targetUserId={targetUserId}
           maskBackgroundRef={maskBackgroundRef}
           deleteButton={false}
         />

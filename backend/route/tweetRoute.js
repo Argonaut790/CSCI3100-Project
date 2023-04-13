@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Post = require("../model/post");
 const Account = require("../model/account");
+const Follower = require("../model/follower");
 const { GridFSBucket } = require("mongodb");
 const sharp = require("sharp");
 
@@ -114,15 +115,30 @@ router.get("/", async (req, res) => {
     const limit = parseInt(req.query.limit) || 10; //using the URL /tweet?limit=10&page=${page} to pass the limit and page variable
     const page = parseInt(req.query.page) || 0; //10 post each page
     const skip = limit * page; //bias, skipping how many posts
-    const userId = req.query.userId;
 
-    //if userId is not null, then we will only get the posts that belong to the user
-    const query = userId ? { userId } : {};
-    //get all posts
-    const posts = await Post.find(query)
-      .sort({ timestamp: -1 })
-      .skip(skip) //base on which page to show only the following posts
-      .limit(limit);
+    /*
+    For Profile & User pages: if targetUserId is not null, then we will only get the posts that belong to the user
+    For home page: if targetUserId is null, then we will only get the posts from following of the user
+    */
+    let posts;
+    if (req.query.targetUserId) {
+      posts = await Post.find({ userId: req.query.targetUserId })
+        .sort({ timestamp: -1 })
+        .skip(skip) //base on which page to show only the following posts
+        .limit(limit);
+    } else {
+      const followedList = await Follower.find({
+        followerUserId: req.query.userId,
+        isAccepted: true,
+      });
+      if (!followedList || followedList == []) {
+        res.json("Follow people to view posts");
+      }
+      const followedUserIds = followedList.map(
+        (followed) => followed["followedUserId"]
+      );
+      posts = await Post.find({ userId: { $in: followedUserIds } });
+    }
 
     // getting username and passing image url to fetch the whole chunks not 1 by 1
     const postsWithImageUrls = await Promise.all(

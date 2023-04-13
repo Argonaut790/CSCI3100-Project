@@ -27,9 +27,6 @@ const userAvatar = localStorage.getItem("userAvatar")
   ? JSON.parse(localStorage.getItem("userAvatar")).userAvatar
   : images["avatar.png"];
 
-// print the userId in console
-// console.log("userId is: " + userId);
-
 const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
   const { showNotification } = useNotification();
 
@@ -350,8 +347,6 @@ class FetchPost extends Component {
       }
     } catch (error) {
       showNotification("Error liking post!", "error");
-      console.error("Error liking post:", error);
-      //alert("Debug 3");
     }
   };
 
@@ -404,7 +399,6 @@ class FetchPost extends Component {
           },
         });
         showNotification("UnDisliked successfully!", "success");
-        console.log("UnDisliked successfully:", response.data);
         this.setState(
           (prevState) => ({
             dislikedPosts: prevState.dislikedPosts.filter(
@@ -425,7 +419,6 @@ class FetchPost extends Component {
           userId,
         });
         showNotification("Disliked successfully!", "success");
-        console.log("Disliked successfully:", response.data);
         this.setState(
           (prevState) => ({
             dislikedPosts: [...prevState.dislikedPosts, postId],
@@ -440,7 +433,6 @@ class FetchPost extends Component {
       }
     } catch (error) {
       showNotification("Error disliking post.", "error");
-      console.error("Error disliking post:", error);
       //alert("Debug 3");
     }
   };
@@ -545,13 +537,12 @@ class FetchPost extends Component {
   // don't fetch the pictures again if the user scroll back to the top
   fetchPosts = async () => {
     const { page } = this.state;
-    const targetUserId = this.props.userId ? this.props.userId : "";
+    const targetUserId = this.props.targetUserId ? this.props.targetUserId : "";
     try {
       this.setState({ isLoading: true });
-
       const response = await axios.get(
         process.env.REACT_APP_DEV_API_PATH +
-          `/tweet?limit=10&page=${page}&userId=${targetUserId}`
+          `/tweet?limit=10&page=${page}&targetUserId=${targetUserId}&userId=${userId}`
       );
       const posts = response.data;
 

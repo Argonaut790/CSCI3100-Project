@@ -602,6 +602,7 @@ class FetchPost extends Component {
     const currentUserId = localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user")).userId
       : "";
+    console.log(currentUserId);
     try {
       this.setState({ isLoading: true });
       const response = await axios.get(
@@ -611,11 +612,7 @@ class FetchPost extends Component {
       const posts = response.data;
       console.log(userId);
       if (posts.length === 0) {
-        if (
-          currentUserId !== "" &&
-          window.location.pathname === "/home" &&
-          page === 0
-        ) {
+        if (window.location.pathname === "/home" && page === 0) {
           this.setState({ isNoPost: true, hasMore: false });
         } else {
           this.setState({ hasMore: false });

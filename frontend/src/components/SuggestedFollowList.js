@@ -38,7 +38,6 @@ const SuggestedFollowList = ({ userId, openedList, setOpenedList }) => {
       followedUserId: followedUserId,
       followerUserId: userId,
     };
-    console.log(followData);
     const res = await axios.post(
       process.env.REACT_APP_DEV_API_PATH + "/follow/",
       followData
@@ -48,7 +47,6 @@ const SuggestedFollowList = ({ userId, openedList, setOpenedList }) => {
       setFollows(follows.filter((follow) => follow.userId !== followedUserId));
       // Update follower list
       setFollowListUpdated((prevState) => !prevState);
-      console.log(res.data.isAccepted);
       if (res.data.isAccepted) {
         showNotification("Follow successfully!", "success");
       } else {

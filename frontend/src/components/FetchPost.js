@@ -216,6 +216,7 @@ class FetchPost extends Component {
       selectedPostcomments: [],
       selectedPost: null,
       isLoading: false,
+      isNoPost: false,
       page: 0,
       hasMore: true,
       likedPosts: JSON.parse(localStorage.getItem("likedPosts")) || [],
@@ -545,9 +546,12 @@ class FetchPost extends Component {
           `/tweet?limit=10&page=${page}&targetUserId=${targetUserId}&userId=${userId}`
       );
       const posts = response.data;
-
       if (posts.length === 0) {
-        this.setState({ hasMore: false });
+        if (page === 0) {
+          this.setState({ isNoPost: true, hasMore: false });
+        } else {
+          this.setState({ hasMore: false });
+        }
       } else {
         const postsWithImages = await Promise.all(
           posts.map(async (post) => {
@@ -628,6 +632,9 @@ class FetchPost extends Component {
           id="post-list"
           // ref={this.postListRef}
         >
+          {this.state.isNoPost && (
+            <p className="no-post-warning">Follow more people to view posts</p>
+          )}
           {posts.map((post, index) => (
             <div className="mask-post p-0" id="post" key={index}>
               <UserID

@@ -132,12 +132,15 @@ router.get("/", async (req, res) => {
         isAccepted: true,
       });
       if (!followedList || followedList == []) {
-        res.json("Follow people to view posts");
+        res.json([]);
       }
       const followedUserIds = followedList.map(
         (followed) => followed["followedUserId"]
       );
-      posts = await Post.find({ userId: { $in: followedUserIds } });
+      posts = await Post.find({ userId: { $in: followedUserIds } })
+        .sort({ timestamp: -1 })
+        .skip(skip) //base on which page to show only the following posts
+        .limit(limit);
     }
 
     // getting username and passing image url to fetch the whole chunks not 1 by 1

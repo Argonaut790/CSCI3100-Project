@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import moment from "moment";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid } from "recharts";
 
 const Admin = () => {
+  // Get userId from localStorage
+  const localuserId = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")).userId
+    : "defaultUserId";
+
   const [users, setUsers] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [userChartData, setUserChartData] = useState([]);
+  const [postChartData, setPostChartData] = useState([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,6 +40,60 @@ const Admin = () => {
     fetchPost().catch(console.error);
   }, []);
 
+  useMemo(() => {
+    const fetchUserAnalysis = async () => {
+      const userData = users.map((user) => moment(user.timestamp)) || null;
+      const sortedUserData = userData.sort((a, b) => a.diff(b));
+      const userCounts = {};
+      sortedUserData.forEach((time) => {
+        const day = time.startOf("day").format("MM/DD/YYYY");
+        if (!userCounts[day]) {
+          userCounts[day] = 1;
+        } else {
+          userCounts[day]++;
+        }
+      });
+      let cumulativeCount = 0;
+      const chartData = [];
+      for (let day in userCounts) {
+        cumulativeCount += userCounts[day];
+        chartData.push({
+          day: day,
+          userCount: cumulativeCount,
+        });
+      }
+      setUserChartData(chartData);
+    };
+
+    fetchUserAnalysis().catch(console.error);
+
+    const fetchPostAnalysis = async () => {
+      const postData = posts.map((post) => moment(post.timestamp)) || null;
+      const sortedPostData = postData.sort((a, b) => a.diff(b));
+      const postCounts = {};
+      sortedPostData.forEach((time) => {
+        const day = time.startOf("day").format("MM/DD/YYYY");
+        if (!postCounts[day]) {
+          postCounts[day] = 1;
+        } else {
+          postCounts[day]++;
+        }
+      });
+      let cumulativeCount = 0;
+      const chartData = [];
+      for (let day in postCounts) {
+        cumulativeCount += postCounts[day];
+        chartData.push({
+          day: day,
+          userCount: cumulativeCount,
+        });
+      }
+      setPostChartData(chartData);
+    };
+
+    fetchPostAnalysis().catch(console.error);
+  }, [users, posts]);
+
   const changeUserStatus = async (userId, isActivated) => {
     try {
       const res = await axios.patch(
@@ -53,7 +115,6 @@ const Admin = () => {
       const res = await axios.patch(
         process.env.REACT_APP_DEV_API_PATH + "/account/admin/" + userId
       );
-      console.log(res);
       if (!res.error) {
         window.location.reload();
       } else {
@@ -79,6 +140,70 @@ const Admin = () => {
     }
   };
 
+  const deleteUser = async (userId) => {
+    try {
+      // follower following comment like dislike retweet post user
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/follow/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting follow data:", error);
+        return;
+      }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/comment/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting comment data:", error);
+        return;
+      }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/like/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting like data:", error);
+        return;
+      }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/dislike/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting dislike data:", error);
+        return;
+      }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/tweet/adminDelete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting tweet data:", error);
+        return;
+      }
+
+      try {
+        await axios.delete(
+            process.env.REACT_APP_DEV_API_PATH + "/account/admin/delete/" + userId
+        );
+      } catch (error) {
+        console.error("Error deleting account data:", error);
+        return;
+      }
+
+      window.location.reload();
+    } catch (err) {
+      console.error("Error in deleteUser function:", err);
+    }
+  };
+
+
   return (
     <div className="col-lg-9 mask-background text-light">
       <a href="/admin" className="btn btn-dark my-2">
@@ -100,6 +225,7 @@ const Admin = () => {
                 <th scope="col">Email</th>
                 <th scope="col">Status</th>
                 <th scope="col">Admin?</th>
+                <th scope="col">Delete</th>
               </tr>
             </thead>
             <tbody className="mask-background">
@@ -131,6 +257,7 @@ const Admin = () => {
                       </button>
                     </td>
                   )}
+
                   {user.isAdmin ? (
                     <td> Y </td>
                   ) : (
@@ -145,6 +272,19 @@ const Admin = () => {
                       </button>
                     </td>
                   )}
+                  <td>
+                    {user.userId !== localuserId ? (
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => deleteUser(user.userId)}
+                      >
+                        Delete
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -198,7 +338,30 @@ const Admin = () => {
             </tbody>
           </table>
         </div>
-      )}
+      )}{" "}
+      <br />
+      <br />
+      <h1> Analysis </h1>
+      <div>
+        <h5> Cumulative User Register </h5>
+        <LineChart width={400} height={400} data={userChartData}>
+          <Line type="monotone" dataKey="userCount" stroke="black" />
+          <YAxis stroke="black" />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="day" stroke="black" />
+        </LineChart>
+      </div>
+      <br /> <br />
+      <div>
+        <h5> Cumulative Tweet </h5>
+        <LineChart width={400} height={400} data={postChartData}>
+          <Line type="monotone" dataKey="userCount" stroke="black" />
+          <YAxis stroke="black" />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="day" stroke="black" />
+        </LineChart>
+      </div>
+      <br /> <br /> <br /> <br /> <br /> <br /> <br />
     </div>
   );
 };

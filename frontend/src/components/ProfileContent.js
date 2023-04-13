@@ -50,7 +50,7 @@ const Content = ({ maskBackgroundRef }) => {
       <FetchPost
         // userID={userId}
         // handleDeletePost={handleDeletePost}
-        userId={userId} // this is to tell FetchPost that it is in profile page
+        targetUserId={userId} // this is to tell FetchPost that it is in profile page
         deleteButton={deleteButton}
         maskBackgroundRef={maskBackgroundRef}
       />

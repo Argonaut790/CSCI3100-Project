@@ -57,7 +57,7 @@ const AccountSchema = new Schema({
     contentType: String,
   },
   timestamp: {
-    type: String,
+    type: Date,
     default: Date.now(),
   },
   backgroundOpacity: {

@@ -34,6 +34,19 @@ router.delete("/:postId/:userId", async (req, res) => {
     });
 });
 
+router.delete(("/adminDelete/:userId"), async (req, res) => {
+  await Comment.deleteMany({
+    postId: req.params.postId,
+    userId: req.params.userId,
+  })
+      .then(() => {
+        res.json("deleted successfully");
+      })
+      .catch((err) => {
+        res.status(401).json(err);
+      });
+});
+
 // Get comments by post
 router.get("/:postId", async (req, res) => {
   try {

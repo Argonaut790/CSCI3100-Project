@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Post = require("../model/post");
 const Account = require("../model/account");
+const Follower = require("../model/follower");
 const { GridFSBucket } = require("mongodb");
 const sharp = require("sharp");
 
@@ -114,15 +115,33 @@ router.get("/", async (req, res) => {
     const limit = parseInt(req.query.limit) || 10; //using the URL /tweet?limit=10&page=${page} to pass the limit and page variable
     const page = parseInt(req.query.page) || 0; //10 post each page
     const skip = limit * page; //bias, skipping how many posts
-    const userId = req.query.userId;
 
-    //if userId is not null, then we will only get the posts that belong to the user
-    const query = userId ? { userId } : {};
-    //get all posts
-    const posts = await Post.find(query)
-      .sort({ timestamp: -1 })
-      .skip(skip) //base on which page to show only the following posts
-      .limit(limit);
+    /*
+    For Profile & User pages: if targetUserId is not null, then we will only get the posts that belong to the user
+    For home page: if targetUserId is null, then we will only get the posts from following of the user
+    */
+    let posts;
+    if (req.query.targetUserId) {
+      posts = await Post.find({ userId: req.query.targetUserId })
+        .sort({ timestamp: -1 })
+        .skip(skip) //base on which page to show only the following posts
+        .limit(limit);
+    } else {
+      const followedList = await Follower.find({
+        followerUserId: req.query.userId,
+        isAccepted: true,
+      });
+      if (!followedList || followedList == []) {
+        res.json([]);
+      }
+      const followedUserIds = followedList.map(
+        (followed) => followed["followedUserId"]
+      );
+      posts = await Post.find({ userId: { $in: followedUserIds } })
+        .sort({ timestamp: -1 })
+        .skip(skip) //base on which page to show only the following posts
+        .limit(limit);
+    }
 
     // getting username and passing image url to fetch the whole chunks not 1 by 1
     const postsWithImageUrls = await Promise.all(
@@ -289,5 +308,51 @@ router.delete("/:postId", async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
+// Delete all posts and retweets associated with a user
+router.delete("/adminDelete/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Find all posts and retweets associated with the userId
+    const posts = await Post.find({ userId });
+
+    // Remove all posts and retweets associated with the userId
+    const result = await Post.deleteMany({ userId });
+
+    // Update the retweeted posts that are retweeted by the user with that userId
+    await Post.updateMany(
+        { retweetedPostId: { $in: posts.map((post) => post.postId) } },
+        { $unset: { retweetedPostId: "" } }
+    );
+
+    // Delete the images associated with the posts using GridFSBucket
+    const bucket = new GridFSBucket(mongoose.connection.db, {
+      bucketName: "posts",
+    });
+
+    for (const post of posts) {
+      if (post.image && post.image.filename) {
+        // Find the image file in the posts.files collection
+        const imageFile = await bucket
+            .find({ filename: post.image.filename })
+            .toArray();
+
+        if (imageFile.length > 0) {
+          // Delete the image file and its associated chunks
+          await bucket.delete(imageFile[0]._id);
+        }
+      }
+    }
+
+    res.json({
+      success: true,
+      message: "All posts, retweets, and images associated with the userId were deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 
 module.exports = router;

@@ -75,4 +75,17 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Delete all likes associated with a user
+router.delete("/adminDelete/:userId", async (req, res) => {
+  try {
+    await Dislike.deleteMany({
+      userId: req.params.userId,
+    });
+
+    res.json("All dislikes associated with the userId were deleted successfully");
+  } catch (err) {
+    res.status(401).json(err);
+  }
+});
+
 module.exports = router;

@@ -243,12 +243,14 @@ const Content = ({ targetUserId, maskBackgroundRef }) => {
         <div> {followerNum} Followers</div>
         <div> {followedNum} Followings</div>
       </div>
-      {isVisible && (
+      {isVisible ? (
         <FetchPost
-          userId={targetUserId}
+          targetUserId={targetUserId}
           maskBackgroundRef={maskBackgroundRef}
           deleteButton={false}
         />
+      ) : (
+        <p className="private-account-warning">The account is private</p>
       )}
     </div>
   );

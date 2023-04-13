@@ -18,6 +18,7 @@ const sharp = require("sharp");
 
 //multer
 const multer = require("multer");
+const Comment = require("../model/comment");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -480,6 +481,19 @@ router.get("/profile/:userId", async (req, res) => {
   } catch (err) {
     res.status(401).json({ message: err });
   }
+});
+
+// Delete user
+router.delete("/admin/delete/:userId", async (req, res) => {
+  await Account.deleteOne({
+    userId: req.params.userId,
+  })
+      .then(() => {
+        res.json("deleted successfully");
+      })
+      .catch((err) => {
+        res.status(401).json(err);
+      });
 });
 
 // Fuzzy Search username & userId

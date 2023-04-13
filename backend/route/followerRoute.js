@@ -208,4 +208,23 @@ router.delete("/", async (req, res) => {
   }
 });
 
+// Delete all relationships associated with a user
+router.delete("/adminDelete/:userId", async (req, res) => {
+  try {
+    // Delete relationships where the user is a follower
+    await Follower.deleteMany({
+      followerUserId: req.params.userId,
+    });
+
+    // Delete relationships where the user is being followed
+    await Follower.deleteMany({
+      followedUserId: req.params.userId,
+    });
+
+    res.json("All relationships associated with the userId were deleted successfully");
+  } catch (err) {
+    res.status(401).json(err);
+  }
+});
+
 module.exports = router;

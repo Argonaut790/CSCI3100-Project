@@ -229,6 +229,23 @@ class FetchPost extends Component {
     this.handleCommentChange = this.handleCommentChange.bind(this);
     // this.postListRef = createRef();
   }
+
+  validateLikedDislikedPosts = (userId) => {
+    const likedPosts = JSON.parse(localStorage.getItem("likedPosts")) || [];
+    const dislikedPosts = JSON.parse(localStorage.getItem("dislikedPosts")) || [];
+
+    const validatedLikedPosts = likedPosts.filter((post) => post.userId === userId);
+    const validatedDislikedPosts = dislikedPosts.filter((post) => post.userId === userId);
+
+    localStorage.setItem("likedPosts", JSON.stringify(validatedLikedPosts));
+    localStorage.setItem("dislikedPosts", JSON.stringify(validatedDislikedPosts));
+
+    this.setState({
+      likedPosts: validatedLikedPosts,
+      dislikedPosts: validatedDislikedPosts,
+    });
+  };
+
   async componentDidMount() {
     const { maskBackgroundRef } = await this.props;
     const { current } = maskBackgroundRef;
@@ -242,6 +259,9 @@ class FetchPost extends Component {
     } catch (error) {
       console.log(error);
     }
+
+    // Validate liked and disliked posts for the current user
+    this.validateLikedDislikedPosts(this.props.userId);
 
     this.fetchPosts();
   }
@@ -329,9 +349,9 @@ class FetchPost extends Component {
         // Update the like count in the state
         this.setState((prevState) => ({
           posts: prevState.posts.map((post) =>
-            post._id === postId
-              ? { ...post, likeCount: post.likeCount - 1 }
-              : post
+              post._id === postId
+                  ? { ...post, likeCount: post.likeCount - 1 }
+                  : post
           ),
         }));
       } else {
@@ -356,9 +376,9 @@ class FetchPost extends Component {
         // Update the like count in the state
         this.setState((prevState) => ({
           posts: prevState.posts.map((post) =>
-            post._id === postId
-              ? { ...post, likeCount: post.likeCount + 1 }
-              : post
+              post._id === postId
+                  ? { ...post, likeCount: post.likeCount + 1 }
+                  : post
           ),
         }));
       }
@@ -432,9 +452,9 @@ class FetchPost extends Component {
         // Update the dislike count in the state
         this.setState((prevState) => ({
           posts: prevState.posts.map((post) =>
-            post._id === postId
-              ? { ...post, dislikeCount: post.dislikeCount - 1 }
-              : post
+              post._id === postId
+                  ? { ...post, dislikeCount: post.dislikeCount - 1 }
+                  : post
           ),
         }));
       } else {
@@ -458,9 +478,9 @@ class FetchPost extends Component {
         // Update the dislike count in the state
         this.setState((prevState) => ({
           posts: prevState.posts.map((post) =>
-            post._id === postId
-              ? { ...post, dislikeCount: post.dislikeCount + 1 }
-              : post
+              post._id === postId
+                  ? { ...post, dislikeCount: post.dislikeCount + 1 }
+                  : post
           ),
         }));
       }
@@ -579,6 +599,7 @@ class FetchPost extends Component {
           `/tweet?limit=10&page=${page}&targetUserId=${targetUserId}&userId=${currentUserId}`
       );
       const posts = response.data;
+      console.log(userId);
       if (posts.length === 0) {
         if (currentUserId !== "" && page === 0) {
           this.setState({ isNoPost: true, hasMore: false });
@@ -623,43 +644,57 @@ class FetchPost extends Component {
         );
 
         const postsWithDislikeCounts = await Promise.all(
-          postsWithImages.map(async (post) => {
-            const response = await axios.get(
-              process.env.REACT_APP_DEV_API_PATH + "/dislike",
-              {
+            postsWithImages.map(async (post) => {
+              const response = await axios.get(process.env.REACT_APP_DEV_API_PATH + "/dislike", {
                 params: {
                   postId: post._id,
                   userId,
                 },
-              }
-            );
-            const dislikeCount = response.data.dislikeNum;
-            return { ...post, dislikeCount };
-          })
+              });
+              const dislikeCount = response.data.dislikeNum;
+              const isDisliked = response.data.isDisliked;
+              return { ...post, dislikeCount, isDisliked };
+            })
         );
 
         const postsWithLikeCounts = await Promise.all(
-          postsWithImages.map(async (post) => {
-            const response = await axios.get(
-              process.env.REACT_APP_DEV_API_PATH + "/like",
-              {
+            postsWithImages.map(async (post) => {
+              const response = await axios.get(process.env.REACT_APP_DEV_API_PATH + "/like", {
                 params: {
                   postId: post._id,
                   userId,
                 },
-              }
-            );
-            const likeCount = response.data.likeNum;
-            return { ...post, likeCount };
-          })
+              });
+              const isLiked = response.data.isLiked;
+              const likeCount = response.data.likeNum;
+              return { ...post, likeCount, isLiked };
+            })
         );
 
         const combinedPosts = postsWithImages.map((post, index) => {
-          return {
+          const updatedPost = {
             ...post,
             dislikeCount: postsWithDislikeCounts[index].dislikeCount,
             likeCount: postsWithLikeCounts[index].likeCount,
           };
+
+          if (postsWithDislikeCounts[index].isDisliked && !this.state.dislikedPosts.includes(post._id)) {
+            this.setState((prevState) => ({
+              dislikedPosts: [...prevState.dislikedPosts, post._id],
+            }), () => {
+              localStorage.setItem("dislikedPosts", JSON.stringify(this.state.dislikedPosts));
+            });
+          }
+
+          if (postsWithLikeCounts[index].isLiked && !this.state.likedPosts.includes(post._id)) {
+            this.setState((prevState) => ({
+              likedPosts: [...prevState.likedPosts, post._id],
+            }), () => {
+              localStorage.setItem("likedPosts", JSON.stringify(this.state.likedPosts));
+            });
+          }
+
+          return updatedPost;
         });
 
         this.setState((prevState) => ({

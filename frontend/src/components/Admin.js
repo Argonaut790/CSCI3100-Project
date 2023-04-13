@@ -351,20 +351,20 @@ const Admin = () => {
         <div className="p-2">
           <h5> Cumulative User Register </h5>
           <LineChart width={400} height={400} data={userChartData}>
-            <Line type="monotone" dataKey="userCount" stroke="black" />
-            <YAxis stroke="black" />
+            <Line type="monotone" dataKey="userCount" stroke="white" />
+            <YAxis stroke="white" />
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="day" stroke="black" />
+            <XAxis dataKey="day" stroke="white" />
           </LineChart>
         </div>
         <br /> <br />
         <div className="p-2">
           <h5> Cumulative Tweet </h5>
           <LineChart width={400} height={400} data={postChartData}>
-            <Line type="monotone" dataKey="userCount" stroke="black" />
-            <YAxis stroke="black" />
+            <Line type="monotone" dataKey="userCount" stroke="white" />
+            <YAxis stroke="white" />
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="day" stroke="black" />
+            <XAxis dataKey="day" stroke="white" />
           </LineChart>
         </div>
       </div>

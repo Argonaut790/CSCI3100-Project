@@ -611,7 +611,11 @@ class FetchPost extends Component {
       const posts = response.data;
       console.log(userId);
       if (posts.length === 0) {
-        if (window.location.pathname === "/home" && page === 0) {
+        if (
+          currentUserId !== "" &&
+          window.location.pathname === "/home" &&
+          page === 0
+        ) {
           this.setState({ isNoPost: true, hasMore: false });
         } else {
           this.setState({ hasMore: false });

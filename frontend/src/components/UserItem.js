@@ -35,7 +35,10 @@ const UserItem = ({ userId, username, userAvatar, buttons }) => {
             src={avatarURL ? avatarURL : images["avatar.png"]}
             className="float-start post-user-avatar m-0"
             alt="user-avatar"
-            style={avatarURL ? {} : { filter: "brightness(0) invert(1)" }}
+            style={
+              (avatarURL ? {} : { filter: "brightness(0) invert(1)" },
+              { cursor: "pointer" })
+            }
             onClick={() => HandleImgOnClicked(userId)}
           />
         </div>

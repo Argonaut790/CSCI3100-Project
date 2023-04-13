@@ -609,7 +609,6 @@ class FetchPost extends Component {
           `/tweet?limit=10&page=${page}&targetUserId=${targetUserId}&userId=${currentUserId}`
       );
       const posts = response.data;
-      console.log(userId);
       if (posts.length === 0) {
         if (
           (window.location.pathname === "/" ||

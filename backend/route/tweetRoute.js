@@ -137,6 +137,7 @@ router.get("/", async (req, res) => {
       const followedUserIds = followedList.map(
         (followed) => followed["followedUserId"]
       );
+      followedUserIds.push(req.query.userId);
       posts = await Post.find({ userId: { $in: followedUserIds } })
         .sort({ timestamp: -1 })
         .skip(skip) //base on which page to show only the following posts
@@ -322,8 +323,8 @@ router.delete("/adminDelete/:userId", async (req, res) => {
 
     // Update the retweeted posts that are retweeted by the user with that userId
     await Post.updateMany(
-        { retweetedPostId: { $in: posts.map((post) => post.postId) } },
-        { $unset: { retweetedPostId: "" } }
+      { retweetedPostId: { $in: posts.map((post) => post.postId) } },
+      { $unset: { retweetedPostId: "" } }
     );
 
     // Delete the images associated with the posts using GridFSBucket
@@ -335,8 +336,8 @@ router.delete("/adminDelete/:userId", async (req, res) => {
       if (post.image && post.image.filename) {
         // Find the image file in the posts.files collection
         const imageFile = await bucket
-            .find({ filename: post.image.filename })
-            .toArray();
+          .find({ filename: post.image.filename })
+          .toArray();
 
         if (imageFile.length > 0) {
           // Delete the image file and its associated chunks
@@ -347,12 +348,12 @@ router.delete("/adminDelete/:userId", async (req, res) => {
 
     res.json({
       success: true,
-      message: "All posts, retweets, and images associated with the userId were deleted successfully",
+      message:
+        "All posts, retweets, and images associated with the userId were deleted successfully",
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
-
 
 module.exports = router;

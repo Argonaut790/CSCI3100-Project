@@ -3,6 +3,11 @@ import axios from "axios";
 import moment from "moment";
 
 const Admin = () => {
+  // Get userId from localStorage
+  const localuserId = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user")).userId
+      : "defaultUserId";
+
   const [users, setUsers] = useState([]);
   const [posts, setPosts] = useState([]);
 
@@ -77,6 +82,21 @@ const Admin = () => {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  const deleteUser = async (userId) => {
+    try {
+      const res = await axios.delete(
+          process.env.REACT_APP_DEV_API_PATH + "/account/admin/delete/" + userId
+      );
+      if (!res.error) {
+        window.location.reload();
+      } else {
+        console.log(res.error);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -99,6 +119,7 @@ const Admin = () => {
                 <th scope="col">Username</th>
                 <th scope="col">Email</th>
                 <th scope="col">Status</th>
+                <th scope="col">Delete?</th>
                 <th scope="col">Admin?</th>
               </tr>
             </thead>
@@ -131,6 +152,20 @@ const Admin = () => {
                       </button>
                     </td>
                   )}
+                  <td>
+                    {user.userId !== localuserId ? (
+                        <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={() => deleteUser(user.userId)}
+                        >
+                          Delete
+                        </button>
+                      ) : (
+                          <div></div>
+                      )
+                    }
+                  </td>
                   {user.isAdmin ? (
                     <td> Y </td>
                   ) : (

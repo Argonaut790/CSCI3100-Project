@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNotification } from "../NotificationContext";
-import TextareaAutosize from 'react-textarea-autosize';
 // import DeleteButtonContext from "./DeleteButtonContext";
 import FetchPost from "./FetchPost";
 //function needs to be Capital Letter in the first
@@ -439,7 +438,7 @@ const PersonalInfo = () => {
 
             {/* bio */}
             <div className="form-floating ">
-              <TextareaAutosize
+              <textarea
                 type="text"
                 name="Bio"
                 className="overflow-hidden form-control floating"

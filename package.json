@@ -24,8 +24,7 @@
     "express-rate-limit": "^6.7.0",
     "mongoose-fuzzy-searching": "^2.0.2",
     "nodemon": "^2.0.21",
-    "react-scripts": "^5.0.1",
-    "react-textarea-autosize": "^8.4.1"
+    "react-scripts": "^5.0.1"
   },
   "workspaces": [
     "frontend",

@@ -145,7 +145,7 @@ const Admin = () => {
       // follower following comment like dislike retweet post user
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/follow/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/follow/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting follow data:", error);
@@ -154,7 +154,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/comment/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/comment/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting comment data:", error);
@@ -163,7 +163,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/like/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/like/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting like data:", error);
@@ -172,7 +172,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/dislike/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/dislike/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting dislike data:", error);
@@ -181,7 +181,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/tweet/adminDelete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/tweet/adminDelete/" + userId
         );
       } catch (error) {
         console.error("Error deleting tweet data:", error);
@@ -190,7 +190,7 @@ const Admin = () => {
 
       try {
         await axios.delete(
-            process.env.REACT_APP_DEV_API_PATH + "/account/admin/delete/" + userId
+          process.env.REACT_APP_DEV_API_PATH + "/account/admin/delete/" + userId
         );
       } catch (error) {
         console.error("Error deleting account data:", error);
@@ -203,9 +203,14 @@ const Admin = () => {
     }
   };
 
-
   return (
-    <div className="col-lg-9 mask-background text-light">
+    <div
+      className="col-lg-9 mask-background text-light"
+      style={{
+        backgroundColor: "#000000a8",
+        boxShadow: "0 0rem 1rem rgba(0, 0, 0, 1)",
+      }}
+    >
       <a href="/admin" className="btn btn-dark my-2">
         Reload Data
       </a>
@@ -342,24 +347,26 @@ const Admin = () => {
       <br />
       <br />
       <h1> Analysis </h1>
-      <div>
-        <h5> Cumulative User Register </h5>
-        <LineChart width={400} height={400} data={userChartData}>
-          <Line type="monotone" dataKey="userCount" stroke="black" />
-          <YAxis stroke="black" />
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="day" stroke="black" />
-        </LineChart>
-      </div>
-      <br /> <br />
-      <div>
-        <h5> Cumulative Tweet </h5>
-        <LineChart width={400} height={400} data={postChartData}>
-          <Line type="monotone" dataKey="userCount" stroke="black" />
-          <YAxis stroke="black" />
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="day" stroke="black" />
-        </LineChart>
+      <div className="d-flex flex-row justify-content-evenly">
+        <div className="p-2">
+          <h5> Cumulative User Register </h5>
+          <LineChart width={400} height={400} data={userChartData}>
+            <Line type="monotone" dataKey="userCount" stroke="black" />
+            <YAxis stroke="black" />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="day" stroke="black" />
+          </LineChart>
+        </div>
+        <br /> <br />
+        <div className="p-2">
+          <h5> Cumulative Tweet </h5>
+          <LineChart width={400} height={400} data={postChartData}>
+            <Line type="monotone" dataKey="userCount" stroke="black" />
+            <YAxis stroke="black" />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="day" stroke="black" />
+          </LineChart>
+        </div>
       </div>
       <br /> <br /> <br /> <br /> <br /> <br /> <br />
     </div>

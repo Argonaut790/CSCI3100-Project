@@ -775,7 +775,12 @@ class FetchPost extends Component {
           // ref={this.postListRef}
         >
           {this.state.isNoPost && (
-            <p className="no-post-warning">Follow more people to view posts</p>
+            <div
+              className="no-post-warning mask-post d-flex justify-content-center align-items-center"
+              style={{ height: "50rem" }}
+            >
+              <div className="fw-bold h3">Follow more people to view posts</div>
+            </div>
           )}
           {posts.map((post, index) => (
             <div className="mask-post p-0" id="post" key={index}>

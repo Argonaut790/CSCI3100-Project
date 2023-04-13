@@ -250,7 +250,14 @@ const Content = ({ targetUserId, maskBackgroundRef }) => {
           deleteButton={false}
         />
       ) : (
-        <p className="private-account-warning">The account is private</p>
+        <div className="w-100 d-flex justify-content-center align-items-center">
+          <div
+            className="no-post-warning mask-post d-flex justify-content-center align-items-center"
+            style={{ height: "50rem" }}
+          >
+            <div className="fw-bold h3">The account is private</div>
+          </div>
+        </div>
       )}
     </div>
   );

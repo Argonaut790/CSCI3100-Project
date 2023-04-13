@@ -946,3 +946,8 @@ p.no-post-warning {
   position: absolute;
   top: 200px;
 }
+
+/* Admin  */
+.table-hover > tbody > tr:hover > * {
+  color: unset;
+}

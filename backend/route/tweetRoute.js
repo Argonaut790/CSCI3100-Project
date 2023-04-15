@@ -283,6 +283,9 @@ router.delete("/:postId", async (req, res) => {
     // Remove the post with the provided postId
     const result = await Post.deleteOne({ _id: postId });
 
+    // Delete all retweeted post
+    const retweet = await Post.deleteMany({ retweetedPostId: post.postId });
+
     if (result.deletedCount === 1) {
       // Delete the image using GridFSBucket
       const bucket = new GridFSBucket(mongoose.connection.db, {

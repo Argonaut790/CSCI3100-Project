@@ -359,7 +359,11 @@ class Retweet extends Component {
                     className=" px-3 d-flex justify-content-center align-items-center"
                     // style={{ aspectRatio: "3/4" }}
                   >
-                    <div className="spinner"></div>
+                    <img
+                      className="spinner"
+                      src={images["doge.png"]}
+                      alt="spinner"
+                    ></img>
                   </div>
                 )}
               </div>

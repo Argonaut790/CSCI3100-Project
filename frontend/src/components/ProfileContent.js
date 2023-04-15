@@ -1,4 +1,4 @@
-import TextareaAutosize from 'react-textarea-autosize';
+import TextareaAutosize from "react-textarea-autosize";
 import { useState, useEffect } from "react";
 import { useNotification } from "../NotificationContext";
 // import DeleteButtonContext from "./DeleteButtonContext";
@@ -12,13 +12,13 @@ const images = ImportAll(
   require.context("../images", false, /\.(png|jpe?g|svg)$/)
 );
 
-const ProfileContent = ({ maskBackgroundRef , showNotification  }) => {
+const ProfileContent = ({ maskBackgroundRef, showNotification }) => {
   return (
     <>
       <TopMid />
       <Content
-          maskBackgroundRef={maskBackgroundRef}
-          showNotification = {showNotification}
+        maskBackgroundRef={maskBackgroundRef}
+        showNotification={showNotification}
       />
     </>
   );
@@ -34,7 +34,7 @@ const TopMid = () => {
   );
 };
 
-const Content = ({  maskBackgroundRef, showNotification }) => {
+const Content = ({ maskBackgroundRef, showNotification }) => {
   const [deleteButton, setdeleteButton] = useState(false);
   // const [deleteConfirmation, setdeleteConfirmation] = useState(null);
 
@@ -75,7 +75,7 @@ const PersonalInfo = () => {
   const [isPrivate, setIsPrivate] = useState(false);
   const [isPrivateChecked, setIsPrivateChecked] = useState(isPrivate);
   const [opacity, setOpacity] = useState(0.1);
-  const [profileStatus, setProfileStatus] = useState(null);
+  // const [profileStatus, setProfileStatus] = useState(null);
 
   const [edit, setEdit] = useState(false);
   const [editedUsername, setEditedUsername] = useState(username);

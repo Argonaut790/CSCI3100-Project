@@ -471,29 +471,17 @@ router.patch(
   }
 );
 
-// Get user by Id
-router.get("/profile/:userId", async (req, res) => {
-  try {
-    const user = await Account.findOne({
-      userId: req.params.userId,
-    });
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(401).json({ message: err });
-  }
-});
-
 // Delete user
 router.delete("/admin/delete/:userId", async (req, res) => {
   await Account.deleteOne({
     userId: req.params.userId,
   })
-      .then(() => {
-        res.json("deleted successfully");
-      })
-      .catch((err) => {
-        res.status(401).json(err);
-      });
+    .then(() => {
+      res.json("deleted successfully");
+    })
+    .catch((err) => {
+      res.status(401).json(err);
+    });
 });
 
 // Fuzzy Search username & userId

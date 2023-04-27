@@ -188,6 +188,16 @@ const PersonalInfo = () => {
     setEditNameCount(e.target.value.length);
   };
 
+  /* Module: onChangeBio
+
+  * Version: 3.0 (6/4/2023)
+  * Description: This module is used to handle the change event of the bio input box.
+  * It updates the state with the current edited bio text and edited bio text count.
+  * It will limit the word limit of the bio input box to 200.
+  * It also updates the input element's height to fit its content.
+  * Parameter: e - the change event object of the bio input box
+  */
+
   const onChangeBio = (e) => {
     let inputValue = e.target.value;
     // Update the state only if the limited input value is shorter than the current desc
@@ -206,40 +216,10 @@ const PersonalInfo = () => {
     setEditBioCount(inputLength);
 
     // Update the input element's height to fit its content
-    // it's not working
     e.target.style.height = "auto";
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
-  // const onPaste = (e) => {
-  //   // Prevent the default paste behavior
-  //   e.preventDefault();
-
-  //   // Get the pasted text from the event
-  //   const pastedText = e.clipboardData.getData("text");
-
-  //   // Calculate the number of words in the current bio and the pasted text
-  //   const currentWordCount = editedBio.split(/\s+/).length;
-  //   const pastedWordCount = pastedText.split(/\s+/).length;
-
-  //   // Calculate the remaining words allowed in the bio
-  //   const remainingWords = 200 - currentWordCount;
-
-  //   // If the pasted text has more words than allowed, truncate it
-  //   const allowedPastedWords = pastedText.split(/\s+/).slice(0, remainingWords);
-  //   const allowedPastedText = allowedPastedWords.join(" ");
-
-  //   // Concatenate the current bio and the allowed pasted text
-  //   const newBio = editedBio + " " + allowedPastedText;
-
-  //   // Update the state with the new bio and its word count
-  //   setEditedBio(newBio);
-  //   setEditBioCount(newBio.split(/\s+/).length);
-
-  //   // Update the input element's height to fit its content
-  //   e.target.style.height = "auto";
-  //   e.target.style.height = `${e.target.scrollHeight}px`;
-  // };
 
   const onChangeOpacity = (e) => {
     setEditedOpacity(e.target.value);

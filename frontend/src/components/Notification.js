@@ -1,4 +1,15 @@
-// Notification.js
+/* Module: Notification
+
+    * Version: 1.0 (7/4/2023)
+    * Description: This module is used to display the current notification to the user.
+    * It imports the useNotification hook from the NotificationContext module to access
+    * the current notification.
+    * If there is no notification, it returns null and does not display anything.
+    * If there is a notification, it displays a toast notification at the bottom right
+    * corner of the screen.
+    * The notification contains the message and an X button to dismiss it.
+    * Parameter: None
+*/
 import React from 'react';
 import { useNotification } from '../NotificationContext';
 

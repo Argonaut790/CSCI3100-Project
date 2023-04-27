@@ -140,9 +140,15 @@ const Admin = () => {
     }
   };
 
+  /* Module: deleteUser
+  * Version: 2.0 (13/4/2023)
+  * Description: This module is used to delete a user's data from the database.
+  * It deletes the user's follow, comment, like, dislike, tweet and account data.
+  * Parameter: userId - the ID of the user whose data is to be deleted
+  */
+
   const deleteUser = async (userId) => {
     try {
-      // follower following comment like dislike retweet post user
       try {
         await axios.delete(
           process.env.REACT_APP_DEV_API_PATH + "/follow/adminDelete/" + userId

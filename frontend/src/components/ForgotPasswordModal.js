@@ -6,6 +6,14 @@ const ForgotPasswordModal = ({ setShowModal }) => {
   const [email, setEmail] = useState("");
   const captchaRef = useRef(null);
 
+  /* Module: resetPassword
+  * Version: 1.0??? (4/27/2023???)
+  * Description: This module is used to send a PATCH request to the server to reset the user's password.
+  * It uses the axios.patch method to send the request with the user's email.
+  * If the request is successful and the status is 200, it updates the result element with the response data.
+  * If there is an error, it updates the result element with the error response data.
+  * Parameter: None
+  */
   const resetPassword = () => {
     axios
       .patch(process.env.REACT_APP_DEV_API_PATH + "/account/password/", {

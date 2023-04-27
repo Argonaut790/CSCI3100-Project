@@ -51,7 +51,6 @@ const LoginModal = ({ setShowModal, setShowForgotPasswordModal }) => {
     let isEmailInvalid = false;
     let isPasswordInvalid = false;
 
-    //TODO: client-side validation
     e.preventDefault();
     document.getElementById("result").innerText = "";
     if (email === "") {

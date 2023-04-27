@@ -67,19 +67,6 @@ const UserID = ({ postId, userId, username, deleteButton, userAvatar }) => {
     </div>
   );
 
-  /*
-  const handleDeletePost = async (postId) => {
-    // setdeleteButton(true);
-    const res = await axios.delete(
-      process.env.REACT_APP_DEV_API_PATH + "/tweet/" + postId
-    );
-    if (!res.error) {
-      console.log(res);
-    } else {
-      console.log(res);
-    }
-  };*/
-
   return (
     <div className="post-user-info d-flex flex-row justify-content-between">
       <div>
@@ -273,21 +260,13 @@ class FetchPost extends Component {
 
     this.fetchPosts();
   }
-
-  // componentWillUnmount() {
-  //   const { profile, maskBackgroundRef } = this.props;
-  //   const { current } = maskBackgroundRef;
-
-  //   if (maskBackgroundRef && maskBackgroundRef.current) {
-  //     current.removeEventListener("scroll", this.handleScroll);
-  //   }
-  // }
+  
 
   /*  Module: handleLickClick and handleDislikeClick
    *   Version: 3.0 (3/4/2023)
    *   Description: This module is used to handle the like and dislike button
    *   and send the request to the backend. It will also limit the user to
-   *   only like or dislike once every 10 seconds (otherwise warning message will be given).
+   *   only like or dislike once every 2 seconds (otherwise warning message will be given).
    *
    *   Parameter: postId, userId to post
    * */
@@ -408,7 +387,7 @@ class FetchPost extends Component {
         //    "You have already liked this post. Please unlike it before disliking.");
         return;
       }
-      // limit the user to only like or dislike once every 10 seconds
+      // limit the user to only like or dislike once every 2 seconds
       // I check the last time the user like or dislike the post
       const lastdislikeTime = localStorage.getItem(
         `lastDislikeTime_${postId}_${userId}`
@@ -498,7 +477,14 @@ class FetchPost extends Component {
     }
   };
 
-  //Comment part
+  /* Module: handleCommentClick
+  ＊　Version: 1.0 (4/27/2023)
+  ＊　Description: This module is used to handle the click event of the comment button on a post.
+ 　＊ It sets the selected post to the one that was clicked and toggles the display of the comment input box.
+  *　It also calls the fetchComments function to retrieve the comments for the selected post.
+  * Parameter: post - the post object that was clicked on
+  */
+
   handleCommentClick = (post) => {
     this.setState((prevState) => ({
       selectedPost: post,
@@ -507,6 +493,15 @@ class FetchPost extends Component {
     this.fetchComments(post.postId);
   };
 
+  /* Module: handleCommentChange
+
+  ＊　Version: 1.0 (12/4/2023)
+  ＊　Description: This module is used to handle the change event of the comment input box.
+  ＊　It updates the state with the current comment text and comment text count.
+  ＊　It limits the comment text to 200 words.
+  ＊  It also updates the input element's height to fit its content.
+  ＊　Parameter: e - the change event object of the comment input box
+  */
   handleCommentChange = (e) => {
     // Get the input value
     let inputValue = e.target.value;
